@@ -11,17 +11,7 @@
 </head>
 <body>
 
-    <div class="navbar">
-        <div class="logo">Tool Library</div>
-
-        <div class="nav-links">
-            <a href="../index.php">Home</a>
-        </div>
-
-        <div class="nav-auth">
-            <a href="register.php" class="btn">Register</a>
-        </div>
-    </div>
+    <?php require_once('header.php'); ?>
 
     <div class="form-container">
         <div class="form-box">
