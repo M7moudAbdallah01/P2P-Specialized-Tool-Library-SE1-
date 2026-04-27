@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    width: 360px;
+    padding: 40px;
+    border-radius: 20px;
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    text-align: center;
+    color: #eee;
+    animation: fadeIn 1s ease;
+    border: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    margin-bottom: 20px;
+}
+
+.logo img {
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+}
+
+h2 {
+    margin-bottom: 25px;
+    font-weight: 600;
+    color: #ff2e2e;
+}
+
+.input-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 12px 45px 12px 40px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    outline: none;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.input-box input:focus {
+    border-color: #ff2e2e;
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+}
+
+.input-box i {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.input-box i:not(.toggle-password) {
+    left: 12px;
+    color: #aaa;
+}
+
+.toggle-password {
+    right: 12px;
+    left: auto;
+    color: #aaa;
+    cursor: pointer;
+}
+
+input::placeholder {
+    color: #777;
+}
+
+.remember {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 20px;
+    color: #bbb;
+}
+
+.remember a {
+    color: #ff4d4d;
+    text-decoration: none;
+}
+
+.remember a:hover {
+    text-decoration: underline;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(to right, #ff0000, #990000);
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.register {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #aaa;
+}
+
+.register a {
+    color: #ff2e2e;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register a:hover {
+    text-decoration: underline;
+}
