@@ -5,10 +5,19 @@
 }
 
 body {
-    height: 100vh;
+    min-height: 100vh;
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
@@ -24,6 +33,7 @@ body {
     color: #eee;
     animation: fadeIn 1s ease;
     border: 1px solid rgba(255, 0, 0, 0.2);
+    margin-bottom: 65px;
 }
 
 @keyframes fadeIn {
@@ -145,4 +155,26 @@ button:hover {
 
 .register a:hover {
     text-decoration: underline;
+}
+
+.footer {
+    margin-top: 25px;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 13px;
+    color: #888;
+    border-top: 1px solid rgba(255, 0, 0, 0.2);
+    background: rgba(10, 10, 10, 0.6);
+    backdrop-filter: blur(8px);
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+.footer p:hover {
+    color: #ff2e2e;
+    transition: 0.3s;
 }
