@@ -17,7 +17,7 @@
     <div class="login-container">
 
         <div class="logo">
-            <img src="logo.png" alt="Tool Hub Logo">
+            <img src="../../images/logo.png" alt="Tool Hub Logo">
         </div>
 
         <h2>Create Account</h2>
