@@ -35,12 +35,6 @@
                 <input type="password" name="password" placeholder="Password" required>
             </div>
 
-            <div class="remember">
-                <label>
-                    <input type="checkbox" name="remember"> Remember me
-                </label>
-                <a href="#">Forgot password?</a>
-            </div>
 
             <button type="submit">Login</button>
 
