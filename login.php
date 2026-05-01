@@ -1,22 +1,53 @@
 <?php 
+session_start();
 
 require_once "Controllers/conn.php";
 
 $db = Database::getInstance();
 $conn = $db->getConnection();
 
-$email = $password = "";
-$Err = "";
+$email = "";
+$error = "";
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
 
+    $stmt = $conn->prepare("SELECT * FROM user WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
 
+    $result = $stmt->get_result();
 
+    if ($result->num_rows === 1) {
 
+        $user = $result->fetch_assoc();
 
+        if (password_verify($password, $user['password'])) {
 
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['name'] = $user['name'];
+            $_SESSION['role'] = $user['role'];
+
+            if ($user['role'] == "admin") {
+                header("Location: Views/Admin/dashboard.php");
+            } elseif ($user['role'] == "technical") {
+                header("Location: Views/Tech/dashboard.php");
+            } else {
+                header("Location: Views/Client/dashboard.php");
+            }
+            exit();
+        } else {
+            $error = "Incorrect password";
+        }
+    } else {
+        $error = "Email not found";
+    }
+
+    $stmt->close();
+}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -55,7 +86,7 @@ $Err = "";
                 <input type="password" name="password" placeholder="Password" required>
             </div>
 
-            <span style="color:red;"><?php echo $Err; ?></span>
+            <span style="color:red;"><?php echo $error; ?></span>
 
 
             <button type="submit">Login</button>
