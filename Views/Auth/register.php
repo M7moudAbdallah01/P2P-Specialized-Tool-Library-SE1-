@@ -1,3 +1,56 @@
+<?php
+session_start();
+
+require_once "../../Controllers/conn.php";
+
+$db = Database::getInstance();
+$conn = $db->getConnection();
+
+$username = "";
+$email = "";
+$error = "";
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    if ($password !== $confirm_password) {
+        $error = "Passwords do not match";
+    } else {
+
+        $stmt = $conn->prepare("SELECT user_id FROM user WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            $error = "Email already exists";
+        } else {
+
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $role = "client";
+
+            $stmt = $conn->prepare("INSERT INTO user (name, email, password, role) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $username, $email, $hashedPassword, $role);
+
+            if ($stmt->execute()) {
+                header("Location: login.php");
+                exit();
+            } else {
+                $error = "Something went wrong. Try again.";
+            }
+        }
+
+        $stmt->close();
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,6 +96,14 @@
                 <i class="fa fa-lock"></i>
                 <input type="password" name="confirm_password" placeholder="Confirm Password" required>
             </div>
+
+            <?php if (!empty($error)) { ?>
+                <p style="color:red; text-align:center;"><?php echo $error; ?></p>
+            <?php } ?>
+
+            <?php if (!empty($success)) { ?>
+                <p style="color:green; text-align:center;"><?php echo $success; ?></p>
+            <?php } ?>
 
             <button type="submit">Register</button>
 
