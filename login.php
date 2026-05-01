@@ -1,3 +1,17 @@
+<?php 
+
+require_once "Controllers/conn.php";
+
+$db = Database::getInstance();
+$conn = $db->getConnection();
+
+$Err = "";
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,6 +48,8 @@
                 <i class="fa fa-lock"></i>
                 <input type="password" name="password" placeholder="Password" required>
             </div>
+
+            <span style="color:red;"><?php echo $Err; ?></span>
 
 
             <button type="submit">Login</button>
