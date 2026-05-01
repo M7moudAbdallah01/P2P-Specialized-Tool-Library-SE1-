@@ -5,7 +5,13 @@ require_once "Controllers/conn.php";
 $db = Database::getInstance();
 $conn = $db->getConnection();
 
+$email = $password = "";
 $Err = "";
+
+
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-<?php
+<?php 
 class Database
 {
     private static $instance = null;
@@ -8,7 +8,6 @@ class Database
     private $username = "root";
     private $password = "";
     private $dbname = "tool_library";
-
 
     private function __construct()
     {
@@ -23,10 +22,8 @@ class Database
             die("Database Connection Failed: " . $this->conn->connect_error);
         }
 
-        // Important for Arabic or UTF8 text
         $this->conn->set_charset("utf8mb4");
     }
-
     public static function getInstance()
     {
         if (self::$instance === null) {
@@ -34,10 +31,9 @@ class Database
         }
         return self::$instance;
     }
-
     public function getConnection()
     {
         return $this->conn;
     }
 }
-?>
+
