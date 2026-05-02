@@ -1,7 +1,7 @@
 <?php 
 session_start();
 
-require_once "Controllers/conn.php";
+require_once "../../Controllers/conn.php";
 
 $db = Database::getInstance();
 $conn = $db->getConnection();
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Tool Hub - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="Css/auth.css">
+    <link rel="stylesheet" href="../../assets/Css/auth.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="login-container">
 
         <div class="logo">
-            <img src="images/logo.png" alt="Tool Hub Logo">
+            <img src="../../assets/images/logo.png" alt="Tool Hub Logo">
         </div>
 
         <h2>Tool Hub Login</h2>
