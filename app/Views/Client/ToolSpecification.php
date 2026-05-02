@@ -61,8 +61,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 
 <head>
-    <link rel="stylesheet" href="../../../assets/Css/auth.css">
-    <link rel="stylesheet" href="../../../assets/Css/ToolSpecification.css">
+    <link rel="stylesheet" href="../../assets/Css/auth.css">
+    <link rel="stylesheet" href="../../assets/Css/ToolSpecification.css">
 </head>
 
 <body>
