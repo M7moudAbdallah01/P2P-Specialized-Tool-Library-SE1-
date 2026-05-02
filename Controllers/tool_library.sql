@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2026 at 02:03 PM
+-- Generation Time: May 02, 2026 at 11:41 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -48,6 +48,20 @@ CREATE TABLE `available_date` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `battery_logs`
+--
+
+CREATE TABLE `battery_logs` (
+  `id` int(11) NOT NULL,
+  `tool_id` int(11) NOT NULL,
+  `charge_cycles` int(11) DEFAULT 0,
+  `health_status` varchar(50) DEFAULT NULL,
+  `last_checked` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `campaign`
 --
 
@@ -70,6 +84,20 @@ CREATE TABLE `campaign` (
 CREATE TABLE `category` (
   `category_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `certifications`
+--
+
+CREATE TABLE `certifications` (
+  `id` int(11) NOT NULL,
+  `tool_id` int(11) NOT NULL,
+  `type` varchar(100) DEFAULT NULL,
+  `issue_date` date DEFAULT NULL,
+  `expiry_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -122,6 +150,20 @@ CREATE TABLE `insurance_claim` (
   `dispute_id` int(11) NOT NULL,
   `payment_id` int(11) NOT NULL,
   `status` enum('submitted','approved','rejected') NOT NULL DEFAULT 'submitted'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `maintenance_logs`
+--
+
+CREATE TABLE `maintenance_logs` (
+  `id` int(11) NOT NULL,
+  `tool_id` int(11) NOT NULL,
+  `action` varchar(100) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -203,10 +245,10 @@ CREATE TABLE `reservation` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tool`
+-- Table structure for table `tools`
 --
 
-CREATE TABLE `tool` (
+CREATE TABLE `tools` (
   `tool_id` int(11) NOT NULL,
   `owner_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -214,7 +256,9 @@ CREATE TABLE `tool` (
   `description` text DEFAULT NULL,
   `base_price` decimal(10,2) NOT NULL,
   `state` varchar(50) NOT NULL DEFAULT 'good',
-  `availability` tinyint(1) NOT NULL DEFAULT 1
+  `availability` tinyint(1) NOT NULL DEFAULT 1,
+  `warranty_expiry_date` date DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -269,18 +313,27 @@ CREATE TABLE `trust_score` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Table structure for table `users`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `email` varchar(150) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('admin','owner','member') NOT NULL DEFAULT 'member',
+  `role` enum('technical','client','admin') DEFAULT 'client',
   `membership_tier` enum('basic','premium','vip') NOT NULL DEFAULT 'basic',
   `trust_score` decimal(3,2) DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `role`, `membership_tier`, `trust_score`) VALUES
+(3, 'Mahmoud', 'mahmoud@gmail.com', '$2y$10$V1J9qk9v8b3cYh8m2x0vOe0nK1lGfXl8pQk8rZcQmZ8h0lWwE2m6e', 'admin', 'basic', 0.00),
+(6, 'Hassan', 'hass@gmail.com', '$2y$10$vQ8cWYe90o94.rI241CbyuxaLkCNnnU.vvDobcifn4Ve4fMvkJbsa', 'client', 'basic', 0.00),
+(7, 'aaa', 'aaa@gmail.com', '$2y$10$Noyvw9TKjyttG/94u56VH.L4MgGiTyZbOp1a.e.HXleSkL45MiBi6', 'client', 'basic', 0.00);
 
 --
 -- Indexes for dumped tables
@@ -301,6 +354,13 @@ ALTER TABLE `available_date`
   ADD KEY `tool_id` (`tool_id`);
 
 --
+-- Indexes for table `battery_logs`
+--
+ALTER TABLE `battery_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tool_id` (`tool_id`);
+
+--
 -- Indexes for table `campaign`
 --
 ALTER TABLE `campaign`
@@ -313,6 +373,13 @@ ALTER TABLE `campaign`
 ALTER TABLE `category`
   ADD PRIMARY KEY (`category_id`),
   ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `certifications`
+--
+ALTER TABLE `certifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tool_id` (`tool_id`);
 
 --
 -- Indexes for table `consumable`
@@ -342,6 +409,13 @@ ALTER TABLE `insurance_claim`
   ADD PRIMARY KEY (`claim_id`),
   ADD UNIQUE KEY `dispute_id` (`dispute_id`),
   ADD KEY `payment_id` (`payment_id`);
+
+--
+-- Indexes for table `maintenance_logs`
+--
+ALTER TABLE `maintenance_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tool_id` (`tool_id`);
 
 --
 -- Indexes for table `message`
@@ -383,9 +457,9 @@ ALTER TABLE `reservation`
   ADD KEY `tool_id` (`tool_id`);
 
 --
--- Indexes for table `tool`
+-- Indexes for table `tools`
 --
-ALTER TABLE `tool`
+ALTER TABLE `tools`
   ADD PRIMARY KEY (`tool_id`),
   ADD KEY `owner_id` (`owner_id`),
   ADD KEY `category_id` (`category_id`);
@@ -419,9 +493,9 @@ ALTER TABLE `trust_score`
   ADD UNIQUE KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `user`
+-- Indexes for table `users`
 --
-ALTER TABLE `user`
+ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
 
@@ -442,6 +516,12 @@ ALTER TABLE `available_date`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `battery_logs`
+--
+ALTER TABLE `battery_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `campaign`
 --
 ALTER TABLE `campaign`
@@ -452,6 +532,12 @@ ALTER TABLE `campaign`
 --
 ALTER TABLE `category`
   MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `certifications`
+--
+ALTER TABLE `certifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `consumable`
@@ -476,6 +562,12 @@ ALTER TABLE `dispute`
 --
 ALTER TABLE `insurance_claim`
   MODIFY `claim_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `maintenance_logs`
+--
+ALTER TABLE `maintenance_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `message`
@@ -508,9 +600,9 @@ ALTER TABLE `reservation`
   MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tool`
+-- AUTO_INCREMENT for table `tools`
 --
-ALTER TABLE `tool`
+ALTER TABLE `tools`
   MODIFY `tool_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -526,10 +618,10 @@ ALTER TABLE `trust_score`
   MODIFY `trust_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT for table `users`
 --
-ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -539,13 +631,25 @@ ALTER TABLE `user`
 -- Constraints for table `availability_calendar`
 --
 ALTER TABLE `availability_calendar`
-  ADD CONSTRAINT `availability_calendar_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tool` (`tool_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `availability_calendar_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `available_date`
 --
 ALTER TABLE `available_date`
-  ADD CONSTRAINT `available_date_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tool` (`tool_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `available_date_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `battery_logs`
+--
+ALTER TABLE `battery_logs`
+  ADD CONSTRAINT `battery_logs_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `certifications`
+--
+ALTER TABLE `certifications`
+  ADD CONSTRAINT `certifications_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `deposit`
@@ -558,7 +662,7 @@ ALTER TABLE `deposit`
 --
 ALTER TABLE `dispute`
   ADD CONSTRAINT `dispute_ibfk_1` FOREIGN KEY (`rental_id`) REFERENCES `rental` (`rental_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `dispute_ibfk_2` FOREIGN KEY (`handled_by`) REFERENCES `user` (`user_id`);
+  ADD CONSTRAINT `dispute_ibfk_2` FOREIGN KEY (`handled_by`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `insurance_claim`
@@ -568,17 +672,23 @@ ALTER TABLE `insurance_claim`
   ADD CONSTRAINT `insurance_claim_ibfk_2` FOREIGN KEY (`payment_id`) REFERENCES `payment` (`payment_id`);
 
 --
+-- Constraints for table `maintenance_logs`
+--
+ALTER TABLE `maintenance_logs`
+  ADD CONSTRAINT `maintenance_logs_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `message`
 --
 ALTER TABLE `message`
-  ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `message_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `message_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `notification`
 --
 ALTER TABLE `notification`
-  ADD CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `payment`
@@ -591,48 +701,48 @@ ALTER TABLE `payment`
 --
 ALTER TABLE `rental`
   ADD CONSTRAINT `rental_ibfk_1` FOREIGN KEY (`reservation_id`) REFERENCES `reservation` (`reservation_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `rental_ibfk_2` FOREIGN KEY (`tool_id`) REFERENCES `tool` (`tool_id`),
-  ADD CONSTRAINT `rental_ibfk_3` FOREIGN KEY (`renter_id`) REFERENCES `user` (`user_id`);
+  ADD CONSTRAINT `rental_ibfk_2` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`),
+  ADD CONSTRAINT `rental_ibfk_3` FOREIGN KEY (`renter_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `reservation`
 --
 ALTER TABLE `reservation`
-  ADD CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`tool_id`) REFERENCES `tool` (`tool_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `tool`
+-- Constraints for table `tools`
 --
-ALTER TABLE `tool`
-  ADD CONSTRAINT `tool_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `tool_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`);
+ALTER TABLE `tools`
+  ADD CONSTRAINT `tools_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `tools_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`);
 
 --
 -- Constraints for table `tool_campaign`
 --
 ALTER TABLE `tool_campaign`
-  ADD CONSTRAINT `tool_campaign_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tool` (`tool_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `tool_campaign_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `tool_campaign_ibfk_2` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`campaign_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tool_consumable`
 --
 ALTER TABLE `tool_consumable`
-  ADD CONSTRAINT `tool_consumable_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tool` (`tool_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `tool_consumable_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `tool_consumable_ibfk_2` FOREIGN KEY (`consumable_id`) REFERENCES `consumable` (`consumable_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tool_document`
 --
 ALTER TABLE `tool_document`
-  ADD CONSTRAINT `tool_document_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tool` (`tool_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `tool_document_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `trust_score`
 --
 ALTER TABLE `trust_score`
-  ADD CONSTRAINT `trust_score_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `trust_score_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
