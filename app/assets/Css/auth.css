@@ -179,3 +179,14 @@ button:hover {
     color: #ff2e2e;
     transition: 0.3s;
 }
+
+.input-box input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    background: #1a1a1a;
+    color: #aaa;
+    font-size: 13px;
+    cursor: pointer;
+}
