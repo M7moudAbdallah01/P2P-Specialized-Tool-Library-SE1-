@@ -1,24 +1,23 @@
 <?php
-require_once "../Models/User.php";
+require_once __DIR__ . "/../Models/Zone.php";
 
-$userModel = new User();
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
-    $id = $_POST['user_id'];
-    $action = $_POST['action'];
-
-    // تحديد الحالة بناءً على الزرار اللي انداس
-    $status = 'active';
-    if ($action == 'suspend') {
-        $status = 'suspended';
-    } elseif ($action == 'blacklist') {
-        $status = 'blacklisted';
+// أولاً: كود المسح (بيشتغل لما تدوس على لينك الحذف)
+if (isset($_GET['delete_id'])) {
+    $id = $_GET['delete_id'];
+    if (Zone::delete($id)) {
+        header("Location: ../Views/Admin/zones.php?deleted=1");
+        exit();
     }
+}
 
-    if ($userModel->updateStatus($id, $status)) {
-        header("Location: ../Views/Admin/users.php?status=updated");
-    } else {
-        echo "حدث خطأ أثناء تحديث الحالة.";
+// ثانياً: كود الإضافة (بيشتغل لما تملأ الفورم)
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['zone_name'])) {
+    $zoneName = trim($_POST['zone_name']);
+    if (!empty($zoneName)) {
+        $zoneModel = new Zone();
+        if ($zoneModel->addZone($zoneName)) {
+            header("Location: ../Views/Admin/zones.php?success=1");
+            exit();
+        }
     }
-    exit();
 }
