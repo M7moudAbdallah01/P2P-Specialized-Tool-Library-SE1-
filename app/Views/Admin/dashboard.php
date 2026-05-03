@@ -54,6 +54,10 @@ $disputes = $r->fetch_assoc()['c'];
         <div class="brand-text">TOOL HUB</div>
     </div>
 
+    <div class="role-badge role-admin">
+        ADMIN
+    </div>
+
     <div class="sidebar-nav">
         <a href="dashboard.php" class="nav-link active">
             <i class="fa fa-gauge"></i> Dashboard
@@ -80,9 +84,7 @@ $disputes = $r->fetch_assoc()['c'];
         </a>
     </div>
 
-    <div class="role-badge role-admin">
-        ADMIN
-    </div>
+
 
 </div>
 
