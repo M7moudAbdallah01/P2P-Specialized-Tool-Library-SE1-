@@ -1,23 +1,24 @@
 <?php
-require_once __DIR__ . "/../Models/Zone.php";
+require_once "../Models/User.php";
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['zone'])) {
-    
-    $zoneName = trim($_POST['zone']);
+$userModel = new User();
 
-    if (!empty($zoneName)) {
-        $result = Zone::add($zoneName);
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
+    $id = $_POST['user_id'];
+    $action = $_POST['action'];
 
-        if ($result) {
-            header("Location: ../Views/Admin/zones.php?success=1");
-            exit();
-        } else {
-            echo "Error: Could not add zone to database.";
-        }
-    } else {
-        echo "Please enter a valid zone name.";
+    // تحديد الحالة بناءً على الزرار اللي انداس
+    $status = 'active';
+    if ($action == 'suspend') {
+        $status = 'suspended';
+    } elseif ($action == 'blacklist') {
+        $status = 'blacklisted';
     }
-} else {
-    header("Location: ../Views/Admin/zones.php");
+
+    if ($userModel->updateStatus($id, $status)) {
+        header("Location: ../Views/Admin/users.php?status=updated");
+    } else {
+        echo "حدث خطأ أثناء تحديث الحالة.";
+    }
     exit();
 }
