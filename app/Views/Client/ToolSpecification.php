@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php if (isset($_GET['success'])): ?>
                 <div
                     style="color: #2eff2e; background: rgba(0,255,0,0.1); padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; border: 1px solid #2eff2e;">
-                    تم رفع البيانات بنجاح!
+                   The data has been uploaded successfully!
                 </div>
             <?php endif; ?>
             <h2>Add Tool Specification</h2>
