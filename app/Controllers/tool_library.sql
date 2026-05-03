@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 03, 2026 at 11:34 AM
+-- Generation Time: May 03, 2026 at 07:27 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -323,18 +323,19 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` enum('technical','client','admin') DEFAULT 'client',
   `membership_tier` enum('basic','premium','vip') NOT NULL DEFAULT 'basic',
-  `trust_score` decimal(3,2) DEFAULT 0.00
+  `trust_score` decimal(3,2) DEFAULT 0.00,
+  `status` enum('active','suspended','blacklisted') DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `role`, `membership_tier`, `trust_score`) VALUES
-(3, 'Mahmoud', 'mahmoud@gmail.com', '$2y$10$V1J9qk9v8b3cYh8m2x0vOe0nK1lGfXl8pQk8rZcQmZ8h0lWwE2m6e', 'admin', 'basic', 0.00),
-(6, 'Hassan', 'hass@gmail.com', '$2y$10$vQ8cWYe90o94.rI241CbyuxaLkCNnnU.vvDobcifn4Ve4fMvkJbsa', 'client', 'basic', 0.00),
-(7, 'aaa', 'aaa@gmail.com', '$2y$10$Noyvw9TKjyttG/94u56VH.L4MgGiTyZbOp1a.e.HXleSkL45MiBi6', 'client', 'basic', 0.00),
-(8, 'ali amr', 'aliamrali069@gmail.com', '$2y$10$eGsoASnAvaRP.wn1SWMiyub9rFxYftveaHvHKWsF58bFs9exUb2r.', 'client', 'basic', 0.00);
+INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `role`, `membership_tier`, `trust_score`, `status`) VALUES
+(3, 'Mahmoud', 'mahmoud@gmail.com', '$2y$10$V1J9qk9v8b3cYh8m2x0vOe0nK1lGfXl8pQk8rZcQmZ8h0lWwE2m6e', 'admin', 'basic', 0.00, 'active'),
+(6, 'Hassan', 'hass@gmail.com', '$2y$10$vQ8cWYe90o94.rI241CbyuxaLkCNnnU.vvDobcifn4Ve4fMvkJbsa', 'client', 'basic', 0.00, 'active'),
+(7, 'aaa', 'aaa@gmail.com', '$2y$10$Noyvw9TKjyttG/94u56VH.L4MgGiTyZbOp1a.e.HXleSkL45MiBi6', 'client', 'basic', 0.00, 'active'),
+(8, 'ali amr', 'aliamrali069@gmail.com', '$2y$10$eGsoASnAvaRP.wn1SWMiyub9rFxYftveaHvHKWsF58bFs9exUb2r.', 'admin', 'basic', 0.00, 'active');
 
 -- --------------------------------------------------------
 
@@ -353,7 +354,8 @@ CREATE TABLE `zones` (
 
 INSERT INTO `zones` (`id`, `name`) VALUES
 (1, 'cairo'),
-(2, 'cairo');
+(2, 'cairo'),
+(4, 'ali');
 
 --
 -- Indexes for dumped tables
@@ -653,7 +655,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `zones`
 --
 ALTER TABLE `zones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
