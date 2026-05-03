@@ -113,3 +113,5 @@ input[type="file"]:hover {
 .input-box input[type="file"]::file-selector-button:hover {
     background: #b30000; /* أحمر أغمق عند الوقوف عليه */
 }
+
+
