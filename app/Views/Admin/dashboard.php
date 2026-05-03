@@ -14,7 +14,7 @@ $conn = $db->getConnection();
 $db = Database::getInstance();
 $conn = $db->getConnection();
  
-$r = $conn->query("SELECT COUNT(*) AS c FROM users");
+$r = $conn->query("SELECT COUNT(*) AS c FROM users WHERE role = 'client' or role = 'technical'");
 $total_users = $r->fetch_assoc()['c'];
  
 $r = $conn->query("SELECT COUNT(*) AS c FROM tools");
@@ -166,7 +166,7 @@ $disputes = $r->fetch_assoc()['c'];
         </div>
 
         <!-- QUICK ACTIONS -->
-        <div class="card">
+        <!-- <div class="card">
             <div class="panel-header">
                 <div class="panel-title">Quick Actions</div>
             </div>
@@ -198,7 +198,7 @@ $disputes = $r->fetch_assoc()['c'];
                 </a>
 
             </div>
-        </div>
+        </div> -->
 
     </div>
 
