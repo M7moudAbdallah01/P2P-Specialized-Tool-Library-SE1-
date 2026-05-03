@@ -1,12 +1,22 @@
-<?phprequire_once __DIR__ . "/../Models/Zone.php";
+<?php
+require_once __DIR__ . "/../Models/Zone.php";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['zone'])) {
-    $zoneName = $_POST['zone'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['zone'])) {
+    
+    $zoneName = trim($_POST['zone']);
 
-    Zone::add($zoneName);
+    if (!empty($zoneName)) {
+        $result = Zone::add($zoneName);
 
-    header("Location: ../Views/Admin/zones.php");
-    exit();
+        if ($result) {
+            header("Location: ../Views/Admin/zones.php?success=1");
+            exit();
+        } else {
+            echo "Error: Could not add zone to database.";
+        }
+    } else {
+        echo "Please enter a valid zone name.";
+    }
 } else {
     header("Location: ../Views/Admin/zones.php");
     exit();
