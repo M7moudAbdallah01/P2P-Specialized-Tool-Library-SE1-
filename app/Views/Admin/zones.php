@@ -7,8 +7,7 @@ $zones = Zone::getAll();
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>إدارة المناطق | Zones Management</title>
-    <!-- ربط ملف الـ CSS -->
+    <title>| Zones Management</title>
     <link rel="stylesheet" href="../../assets/Css/zones.css">
 </head>
 <body>
