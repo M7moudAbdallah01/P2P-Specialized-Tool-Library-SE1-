@@ -67,7 +67,7 @@ $disputes = $r->fetch_assoc()['c'];
             <i class="fa fa-wrench"></i> Tools
         </a>
 
-        <a href="member-profile.php" class="nav-link">
+        <a href="members.php" class="nav-link">
             <i class="fa fa-users"></i> Members
         </a>
 
