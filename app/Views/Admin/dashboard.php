@@ -74,6 +74,10 @@ $disputes = $r->fetch_assoc()['c'];
         <a href="chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat
         </a>
+
+        <a class="nav-link" href="#">
+            <i class="fa fa-scale-balanced"></i> Disputes
+        </a>
     </div>
 
     <div class="role-badge role-admin">
