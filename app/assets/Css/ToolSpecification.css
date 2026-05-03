@@ -1,32 +1,29 @@
-/* 1. إلغاء شكل الـ Scrollbar مع الإبقاء على القدرة على التمرير */
 html, body {
-    scrollbar-width: none; /* لمتصفح Firefox */
-    -ms-overflow-style: none; /* لمتصفح IE و Edge */
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
 }
+
 
 html::-webkit-scrollbar, 
 body::-webkit-scrollbar {
-    display: none; /* لمتصفحات Chrome, Safari, Opera */
+    display: none; 
 }
 
-/* 2. تحسين توزيع الصفحة */
 .tool-page {
     width: 100%;
-    min-height: calc(100vh - 60px); /* يطرح طول الفوتر تقريباً */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    min-height: calc(100vh - 60px);
     padding: 20px;
 }
 
 .full-width {
-    width: 100% !important;
-    max-width: 800px !important; /* جعلناه أعرض قليلاً ليكون مريحاً */
-    margin: auto !important;
+    width: 100%;
+    max-width: 800px;
+    margin: 40px auto; /* ✅ ده التوسيط الصح */
+    
     text-align: left;
-    background: rgba(25, 25, 25, 0.95) !important;
-    border: 1px solid rgba(255, 46, 46, 0.3) !important;
-    padding: 40px !important;
+    background: rgba(25, 25, 25, 0.95);
+    border: 1px solid rgba(255, 46, 46, 0.3);
+    padding: 40px;
 }
 
 .full-width h2 {
@@ -38,7 +35,7 @@ body::-webkit-scrollbar {
     display: inline-block;
 }
 
-/* تنسيق المجموعات والحقول */
+
 .input-group {
     margin-bottom: 15px;
 }
@@ -51,14 +48,14 @@ body::-webkit-scrollbar {
     margin-left: 5px;
 }
 
-/* جعل الحقول بجانب بعضها في الشاشات الواسعة */
+
 .grid-inputs {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
-/* تحسين حقل الملف */
+
 input[type="file"] {
     padding: 8px !important;
     cursor: pointer;
@@ -69,7 +66,7 @@ input[type="file"]:hover {
     border-color: #ff2e2e !important;
 }
 
-/* تحسين الزر */
+
 .upload-btn {
     margin-top: 20px;
     height: 50px;
@@ -78,28 +75,26 @@ input[type="file"]:hover {
     text-transform: uppercase;
 }
 
-/* تنسيق حقل رفع الملفات */
+
 .input-box input[type="file"] {
     width: 100%;
     padding: 10px;
-    background: #111 !important; /* خلفية سوداء داكنة */
-    border: 1px solid #333 !important; /* خط مستقيم (Solid) مش منقط */
+    background: #111 !important; 
+    border: 1px solid #333 !important; 
     border-radius: 8px;
     color: #888;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-/* التنسيق عند الوقوف بالماوس على حقل الملف */
 .input-box input[type="file"]:hover {
-    border-color: #ff0000 !important; /* الإطار يقلب أحمر صريح */
+    border-color: #ff0000 !important; 
     background: #151515 !important;
     color: #fff;
 }
 
-/* تنسيق الجزء الخاص بكلمة "Choose File" أو الزر الداخلي للحقل */
 .input-box input[type="file"]::file-selector-button {
-    background: #ff0000; /* الزر الصغير داخله أحمر */
+    background: #ff0000; 
     border: none;
     border-radius: 4px;
     color: white;
@@ -111,7 +106,90 @@ input[type="file"]:hover {
 }
 
 .input-box input[type="file"]::file-selector-button:hover {
-    background: #b30000; /* أحمر أغمق عند الوقوف عليه */
+    background: #b30000; 
 }
 
 
+
+/* layout الرئيسي */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  background: #111;
+  color: #fff;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100vh;        /* ✅ */
+  position: sticky;     /* أو fixed */
+  top: 0;
+}
+
+/* اللوجو */
+.logo {
+  margin-bottom: 20px;
+}
+
+.logo img {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+}
+
+/* NAV LINKS عمودي */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-link {
+  display: block;
+  width: 100%;
+  color: #ccc;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 8px;
+
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: #222;
+  color: #fff;
+}
+
+/* RIGHT SIDE */
+.main-content {
+  flex: 1;
+  background: #0b0b0b;
+
+  display: flex;
+  flex-direction: column; /* مهم */
+}
+.brand-text{
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
+/* TOPBAR */
+.topbar {
+  height: 60px;
+  background: #111;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid #222;
+}
+
+.topbar-title {
+  margin-left: 10px;
+  color: #fff;
+}

@@ -19,5 +19,17 @@ class MaintenanceLog
 
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
+    public function add($tool_id, $action, $notes, $date)
+    {
+        $stmt = $this->conn->prepare("
+        INSERT INTO maintenance_logs (tool_id, action, notes, date)
+        VALUES (?, ?, ?, ?)
+    ");
+
+        $stmt->bind_param("isss", $tool_id, $action, $notes, $date);
+
+        return $stmt->execute();
+    }
+    
 }
 ?>

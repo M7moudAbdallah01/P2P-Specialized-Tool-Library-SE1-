@@ -1,14 +1,9 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db = "tool_library";
+session_start();
+require_once __DIR__ . "/../../../Core/database.php";
 
-$conn = new mysqli($host, $user, $pass, $db);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+$db = Database::getInstance();
+$conn = $db->getConnection();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -66,69 +61,88 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
+<div class="layout">
 
-    <div class="tool-page">
-        <div class="login-container full-width">
-            <?php if (isset($_GET['error'])): ?>
-                <div
-                    style="color: #ff2e2e; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; border: 1px solid #ff2e2e;">
-                    <?php echo htmlspecialchars($_GET['error']); ?>
-                </div>
-            <?php endif; ?>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">
+                <img src="../../assets/images/logo.png">
+            </div>
+            <div class="brand-text">TOOL HUB</div>
+        </div>
 
-            <?php if (isset($_GET['success'])): ?>
-                <div
-                    style="color: #2eff2e; background: rgba(0,255,0,0.1); padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; border: 1px solid #2eff2e;">
-                   The data has been uploaded successfully!
-                </div>
-            <?php endif; ?>
-            <h2>Add Tool Specification</h2>
-            <form action="add_tool.php" method="POST" enctype="multipart/form-data">
+        <div class="sidebar-nav">
+            <a href="dashboard.php" class="nav-link active">Dashboard</a>
+            <a href="tools.php" class="nav-link">Tools</a>
+            <a href="reservations.php" class="nav-link">Reservations</a>
+            <a href="chat.php" class="nav-link">Chat</a>
+        </div>
+    </div>
 
-                <div class="input-group">
-                    <label>Tool Name</label>
-                    <div class="input-box">
-                        <input type="text" name="tool_name" placeholder="e.g. Cordless Drill" required>
-                    </div>
-                </div>
+    <!-- RIGHT SIDE -->
+    <div class="main-content">
 
-                <div class="input-group">
-                    <label>Description</label>
-                    <div class="input-box">
-                        <input type="text" name="description" placeholder="Brief tool description" required>
-                    </div>
-                </div>
+        <div class="topbar">
+            <div class="topbar-title">Dashboard</div>
+        </div>
 
-                <div class="input-group">
-                    <label>Manual (PDF)</label>
-                    <div class="input-box">
-                        <input type="file" name="manual" required>
-                    </div>
-                </div>
+        <div class="tool-page">
 
-                <div class="grid-inputs">
+            <div class="login-container full-width">
+
+                <h2>Add Tool Specification</h2>
+
+                <form action="add_tool.php" method="POST" enctype="multipart/form-data">
+
                     <div class="input-group">
-                        <label>Safety Video URL</label>
+                        <label>Tool Name</label>
                         <div class="input-box">
-                            <input type="text" name="video_link" placeholder="https://youtube.com/...">
+                            <input type="text" name="tool_name" required>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>Warranty Info</label>
+                        <label>Description</label>
                         <div class="input-box">
-                            <input type="text" name="warranty" placeholder="e.g. 2 Years">
+                            <input type="text" name="description" required>
                         </div>
                     </div>
-                </div>
 
-                <button type="submit" class="upload-btn">Upload Tool Specification</button>
-            </form>
+                    <div class="input-group">
+                        <label>Manual (PDF)</label>
+                        <div class="input-box">
+                            <input type="file" name="manual" required>
+                        </div>
+                    </div>
+
+                    <div class="grid-inputs">
+                        <div class="input-group">
+                            <label>Video</label>
+                            <div class="input-box">
+                                <input type="text" name="video_link">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Warranty</label>
+                            <div class="input-box">
+                                <input type="text" name="warranty">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="upload-btn">Upload</button>
+
+                </form>
+
+            </div>
+
         </div>
 
     </div>
 
+</div>
 
 </body>
-
 </html>
