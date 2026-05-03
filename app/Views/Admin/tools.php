@@ -118,7 +118,7 @@ $categories = $conn->query("SELECT * FROM category ORDER BY name");
     <div class="sidebar-nav">
         <a href="dashboard.php" class="nav-link"><i class="fa fa-gauge"></i> Dashboard</a>
         <a href="tools.php" class="nav-link active"><i class="fa fa-wrench"></i> Tools</a>
-        <a href="member-profile.php" class="nav-link"><i class="fa fa-users"></i> Members</a>
+        <a href="members.php" class="nav-link"><i class="fa fa-users"></i> Members</a>
         <a href="reservations.php" class="nav-link"><i class="fa fa-calendar"></i> Reservations</a>
         <a href="chat.php" class="nav-link"><i class="fa fa-comments"></i> Chat</a>
     </div>
