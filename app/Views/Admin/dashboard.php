@@ -48,7 +48,9 @@ $disputes = $r->fetch_assoc()['c'];
 <div class="sidebar">
 
     <div class="sidebar-brand">
-        <div class="brand-icon">⚙</div>
+        <div class="logo">
+            <img src="../../assets/images/logo.png" alt="Tool Hub Logo">
+        </div>
         <div class="brand-text">TOOL HUB</div>
     </div>
 
@@ -119,10 +121,8 @@ $disputes = $r->fetch_assoc()['c'];
     </div>
 
 
-    <!-- MAIN CONTENT -->
     <div class="main-content">
 
-        <!-- WELCOME -->
         <div class="card">
             <h2 style="margin-bottom:6px;">
                 Welcome, <?= htmlspecialchars($_SESSION['name']) ?> 👋
