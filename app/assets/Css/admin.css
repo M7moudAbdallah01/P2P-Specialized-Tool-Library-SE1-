@@ -180,6 +180,57 @@
   color: var(--red);
 }
 
+
+.filters { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+.filters input, .filters select {
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    font-size: .85rem;
+    outline: none;
+}
+.filters input { flex: 1; min-width: 200px; }
+.filters input:focus, .filters select:focus { border-color: var(--red); }
+ 
+.btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Poppins', sans-serif; font-size: .82rem; font-weight: 600; transition: all .2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.btn-red    { background: var(--red); color: #fff; }
+.btn-red:hover { opacity: .85; }
+.btn-ghost  { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+.btn-ghost:hover { border-color: var(--red); color: var(--red); }
+.btn-sm { padding: 5px 12px; font-size: .75rem; }
+ 
+table { width:100%; border-collapse:collapse; font-size:.85rem; }
+th { text-align:left; padding:10px 14px; color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.8px; border-bottom:1px solid var(--border); font-weight:600; }
+td { padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background: var(--surface2); }
+ 
+.badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:.72rem; font-weight:600; }
+.badge-green  { background:#2dd4a018; color:#2dd4a0; }
+.badge-red    { background:#f8717118; color:#f87171; }
+.badge-yellow { background:#fbbf2418; color:#fbbf24; }
+ 
+.tool-name { font-weight:600; color:var(--text); }
+.tool-sub  { font-size:.75rem; color:var(--text-muted); margin-top:2px; }
+ 
+.actions { display:flex; gap:8px; }
+ 
+.alert { padding:12px 16px; border-radius:8px; margin-bottom:18px; font-size:.85rem; }
+.alert-success { background:#2dd4a015; border:1px solid #2dd4a040; color:#2dd4a0; }
+
+table a{
+  background: var(--red);
+  color: #fff;
+  padding: 5px;
+  text-decoration: none;
+  font-size: .85rem;
+  margin: 3px;
+  border-radius: var(--radius);
+}
+
 /* =========================================================
    RESPONSIVE
    ========================================================= */
