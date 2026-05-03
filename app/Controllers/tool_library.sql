@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 03, 2026 at 07:27 PM
+-- Generation Time: May 03, 2026 at 08:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -198,6 +198,29 @@ CREATE TABLE `notification` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `status` enum('pending','completed','cancelled') DEFAULT 'pending',
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `total_price`, `status`, `order_date`) VALUES
+(1, 1, 150.00, 'completed', '2026-05-03 18:15:34'),
+(2, 2, 200.00, 'completed', '2026-05-03 18:15:34'),
+(3, 3, 450.00, 'completed', '2026-05-03 18:15:34');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `payment`
 --
 
@@ -324,18 +347,19 @@ CREATE TABLE `users` (
   `role` enum('technical','client','admin') DEFAULT 'client',
   `membership_tier` enum('basic','premium','vip') NOT NULL DEFAULT 'basic',
   `trust_score` decimal(3,2) DEFAULT 0.00,
-  `status` enum('active','suspended','blacklisted') DEFAULT 'active'
+  `status` enum('active','suspended','blacklisted') DEFAULT 'active',
+  `zone_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `role`, `membership_tier`, `trust_score`, `status`) VALUES
-(3, 'Mahmoud', 'mahmoud@gmail.com', '$2y$10$V1J9qk9v8b3cYh8m2x0vOe0nK1lGfXl8pQk8rZcQmZ8h0lWwE2m6e', 'admin', 'basic', 0.00, 'active'),
-(6, 'Hassan', 'hass@gmail.com', '$2y$10$vQ8cWYe90o94.rI241CbyuxaLkCNnnU.vvDobcifn4Ve4fMvkJbsa', 'client', 'basic', 0.00, 'active'),
-(7, 'aaa', 'aaa@gmail.com', '$2y$10$Noyvw9TKjyttG/94u56VH.L4MgGiTyZbOp1a.e.HXleSkL45MiBi6', 'client', 'basic', 0.00, 'active'),
-(8, 'ali amr', 'aliamrali069@gmail.com', '$2y$10$eGsoASnAvaRP.wn1SWMiyub9rFxYftveaHvHKWsF58bFs9exUb2r.', 'admin', 'basic', 0.00, 'active');
+INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `role`, `membership_tier`, `trust_score`, `status`, `zone_id`) VALUES
+(3, 'Mahmoud', 'mahmoud@gmail.com', '$2y$10$V1J9qk9v8b3cYh8m2x0vOe0nK1lGfXl8pQk8rZcQmZ8h0lWwE2m6e', 'admin', 'basic', 0.00, 'active', 1),
+(6, 'Hassan', 'hass@gmail.com', '$2y$10$vQ8cWYe90o94.rI241CbyuxaLkCNnnU.vvDobcifn4Ve4fMvkJbsa', 'client', 'basic', 0.00, 'active', NULL),
+(7, 'aaa', 'aaa@gmail.com', '$2y$10$Noyvw9TKjyttG/94u56VH.L4MgGiTyZbOp1a.e.HXleSkL45MiBi6', 'client', 'basic', 0.00, 'active', NULL),
+(8, 'ali amr', 'aliamrali069@gmail.com', '$2y$10$eGsoASnAvaRP.wn1SWMiyub9rFxYftveaHvHKWsF58bFs9exUb2r.', 'admin', 'basic', 0.00, 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -344,18 +368,20 @@ INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `role`, `membership
 --
 
 CREATE TABLE `zones` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL
+  `zone_id` int(11) NOT NULL,
+  `zone_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `zones`
 --
 
-INSERT INTO `zones` (`id`, `name`) VALUES
-(1, 'cairo'),
-(2, 'cairo'),
-(4, 'ali');
+INSERT INTO `zones` (`zone_id`, `zone_name`) VALUES
+(1, 'Helwan'),
+(2, 'Maadi'),
+(3, 'ali'),
+(4, 'ali'),
+(5, 'ali');
 
 --
 -- Indexes for dumped tables
@@ -455,6 +481,12 @@ ALTER TABLE `notification`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`);
+
+--
 -- Indexes for table `payment`
 --
 ALTER TABLE `payment`
@@ -525,7 +557,7 @@ ALTER TABLE `users`
 -- Indexes for table `zones`
 --
 ALTER TABLE `zones`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`zone_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -610,6 +642,12 @@ ALTER TABLE `notification`
   MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
@@ -655,7 +693,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `zones`
 --
 ALTER TABLE `zones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `zone_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
