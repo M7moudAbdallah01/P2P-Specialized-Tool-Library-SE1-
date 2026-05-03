@@ -1,0 +1,48 @@
+:root {
+    --bg-color: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --text-color: #e0e0e0;
+    --accent-red: #e63946;
+    --accent-green: #4ade80;
+    --accent-yellow: #fbbf24;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
+    margin: 0; padding: 40px 20px;
+}
+
+.container { max-width: 1000px; margin: 0 auto; }
+.welcome h1 { color: #fff; margin: 0; }
+.welcome p { color: #888; margin-bottom: 30px; }
+
+.card {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; color: #888; border-bottom: 1px solid #444; padding: 12px; font-weight: 400; }
+td { padding: 15px 12px; border-bottom: 1px solid #3d3d3d; }
+
+.tool-name { font-weight: 600; color: #fff; }
+.tool-sub { font-size: 0.85rem; color: #888; }
+.status-tag { font-weight: 600; font-size: 0.8rem; }
+
+.btn {
+    padding: 8px 14px; border-radius: 6px; border: 1px solid transparent;
+    cursor: pointer; font-weight: 600; transition: 0.3s; font-size: 0.75rem;
+}
+
+.btn-ghost { background: rgba(255,255,255,0.05); color: #ccc; border-color: #444; }
+.btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+.btn-red { background: rgba(230,57,70,0.1); color: var(--accent-red); border-color: rgba(230,57,70,0.2); }
+.btn-red:hover { background: var(--accent-red); color: #fff; }
+
+.btn-green { background: rgba(74, 222, 128, 0.1); color: var(--accent-green); border-color: rgba(74, 222, 128, 0.2); }
+.btn-green:hover { background: var(--accent-green); color: #1a1a1a; }
