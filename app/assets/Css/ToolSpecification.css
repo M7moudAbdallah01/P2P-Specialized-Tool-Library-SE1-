@@ -11,21 +11,19 @@ body::-webkit-scrollbar {
 
 .tool-page {
     width: 100%;
-    min-height: calc(100vh - 60px); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    min-height: calc(100vh - 60px);
     padding: 20px;
 }
 
 .full-width {
-    width: 100% !important;
-    max-width: 800px !important; 
-    margin: auto !important;
+    width: 100%;
+    max-width: 800px;
+    margin: 40px auto; /* ✅ ده التوسيط الصح */
+    
     text-align: left;
-    background: rgba(25, 25, 25, 0.95) !important;
-    border: 1px solid rgba(255, 46, 46, 0.3) !important;
-    padding: 40px !important;
+    background: rgba(25, 25, 25, 0.95);
+    border: 1px solid rgba(255, 46, 46, 0.3);
+    padding: 40px;
 }
 
 .full-width h2 {
@@ -113,69 +111,80 @@ input[type="file"]:hover {
 
 
 
+/* layout الرئيسي */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
 
-
-
-
-
-
-.navbar {
-  width: 100%;
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
   background: #111;
-  border-bottom: 1px solid var(--border);
+  color: #fff;
+  padding: 20px;
 
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
 
-  padding: 0 30px;
-  height: 60px;
+  height: 100vh;        /* ✅ */
+  position: sticky;     /* أو fixed */
+  top: 0;
 }
 
-/* LEFT */
-.navbar .brand {
-  color: var(--red);
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-/* NAV LINKS */
-.navbar .nav-links {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: 30px;
-}
-
-.navbar a {
-  color: var(--text-muted);
-  text-decoration: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-size: .85rem;
-  transition: all .2s;
-}
-
-.navbar a:hover,
-.navbar a.active {
-  background: var(--surface2);
-  color: var(--text);
-}
-
-/* RIGHT */
-.navbar .right {
-  margin-left: auto;
-}
-
-.navbar .logout {
-  color: var(--red);
-}
+/* اللوجو */
 .logo {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .logo img {
-    width: 85px;
-    height: 85px;
-    object-fit: contain;
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+}
+
+/* NAV LINKS عمودي */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-link {
+  display: block;
+  width: 100%;
+  color: #ccc;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: #222;
+  color: #fff;
+}
+
+/* RIGHT SIDE */
+.main-content {
+  flex: 1;
+  background: #0b0b0b;
+
+  display: flex;
+  flex-direction: column; /* مهم */
+}
+
+/* TOPBAR */
+.topbar {
+  height: 60px;
+  background: #111;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid #222;
+}
+
+.topbar-title {
+  margin-left: 10px;
+  color: #fff;
 }
