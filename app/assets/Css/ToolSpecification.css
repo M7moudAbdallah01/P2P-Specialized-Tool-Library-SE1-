@@ -112,3 +112,70 @@ input[type="file"]:hover {
 }
 
 
+
+
+
+
+
+
+
+.navbar {
+  width: 100%;
+  background: #111;
+  border-bottom: 1px solid var(--border);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 30px;
+  height: 60px;
+}
+
+/* LEFT */
+.navbar .brand {
+  color: var(--red);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* NAV LINKS */
+.navbar .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 30px;
+}
+
+.navbar a {
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: .85rem;
+  transition: all .2s;
+}
+
+.navbar a:hover,
+.navbar a.active {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+/* RIGHT */
+.navbar .right {
+  margin-left: auto;
+}
+
+.navbar .logout {
+  color: var(--red);
+}
+.logo {
+    margin-bottom: 20px;
+}
+
+.logo img {
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+}
