@@ -1,7 +1,7 @@
 <?php 
 session_start();
 
-require_once "../../Controllers/conn.php";
+require_once __DIR__ . "../../../../Core/database.php";
 
 $db = Database::getInstance();
 $conn = $db->getConnection();
@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT * FROM user WHERE email = ?");
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
 
@@ -31,11 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['role'] = $user['role'];
 
             if ($user['role'] == "admin") {
-                header("Location: Views/Admin/dashboard.php");
+                header("Location: ../Admin/dashboard.php");
             } elseif ($user['role'] == "technical") {
-                header("Location: Views/Tech/dashboard.php");
+                header("Location: ../Tech/dashboard.php");
             } else {
-                header("Location: Views/Client/dashboard.php");
+                header("Location: ../Client/dashboard.php");
             }
             exit();
         } else {
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Tool Hub - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="../../../assets/Css/auth.css">
+    <link rel="stylesheet" href="../../assets/Css/auth.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="login-container">
 
         <div class="logo">
-            <img src="../../../assets/images/logo.png" alt="Tool Hub Logo">
+            <img src="../../assets/images/logo.png" alt="Tool Hub Logo">
         </div>
 
         <h2>Tool Hub Login</h2>
