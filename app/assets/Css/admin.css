@@ -1,0 +1,211 @@
+/* =========================================================
+   DASHBOARD (MATCHED WITH YOUR DARK RED SYSTEM)
+   ========================================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== Root Colors (from your system) ===== */
+:root {
+  --red:        #e63946;
+  --red-dim:    #c0303c;
+  --red-glow:   rgba(230,57,70,.18);
+
+  --bg:         #0d0d0d;
+  --surface:    #161616;
+  --surface2:   #1e1e1e;
+
+  --border:     #262626;
+  --border2:    #303030;
+
+  --text:       #eaeaea;
+  --text-muted: #7a7a7a;
+
+  --radius:     10px;
+  --radius-lg:  13px;
+
+  --shadow:     0 4px 24px rgba(0,0,0,.5);
+}
+
+/* ===== Base ===== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+.navbar {
+  background: #111;
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  gap: 8px;
+}
+
+.navbar .brand {
+  color: var(--red);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.navbar a {
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: .85rem;
+  transition: all .2s;
+}
+
+.navbar a:hover,
+.navbar a.active {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.navbar .spacer {
+  flex: 1;
+}
+
+.navbar .logout {
+  color: var(--red);
+}
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+.container {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* =========================================================
+   WELCOME + STATS
+   ========================================================= */
+.welcome-row {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.welcome {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
+
+.welcome h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.welcome p {
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-size: .85rem;
+}
+
+/* ===== Stats ===== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  text-align: center;
+  transition: all .2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--red);
+  box-shadow: 0 0 0 1px var(--red-glow);
+}
+
+.stat-card .icon {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+  color: var(--red);
+}
+
+.stat-card .num {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.stat-card .label {
+  font-size: .75rem;
+  color: var(--text-muted);
+}
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+.links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.link-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  transition: all .2s;
+  font-size: .85rem;
+  font-weight: 500;
+}
+
+.link-card i {
+  color: var(--red);
+  width: 20px;
+  text-align: center;
+}
+
+.link-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--red);
+  background: rgba(230,57,70,0.05);
+  color: var(--red);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 768px) {
+  .welcome-row {
+    grid-template-columns: 1fr;
+  }
+
+  .links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
