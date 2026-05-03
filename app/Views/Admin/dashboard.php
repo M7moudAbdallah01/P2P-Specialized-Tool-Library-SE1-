@@ -41,57 +41,168 @@ $disputes = $r->fetch_assoc()['c'];
 <link rel="stylesheet" href="../../assets/Css/admin.css">
 </head>
 <body>
- 
-<nav class="navbar">
-    <span class="brand">⚙ Tool Hub</span>
-    <a href="dashboard.php" class="active"><i class="fa fa-gauge-high"></i> Dashboard</a>
-    <a href="tools.php"><i class="fa fa-wrench"></i> Tools</a>
-    <a href="member-profile.php"><i class="fa fa-users"></i> Members</a>
-    <a href="reservations.php"><i class="fa fa-calendar"></i> Reservations</a>
-    <a href="chat.php"><i class="fa fa-comments"></i> Chat</a>
-    <div class="spacer"></div>
-    <a href="../Auth/login.php" class="logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
-</nav>
- 
-<div class="container">
- 
-    <div class="welcome">
-        <h1>Welcome, <?= htmlspecialchars($_SESSION['name']) ?> 👋</h1>
-        <p>Here's a quick overview — <?= date('l, d M Y') ?></p>
+
+<!-- ═══════════════════════════════
+     SIDEBAR
+═══════════════════════════════ -->
+<div class="sidebar">
+
+    <div class="sidebar-brand">
+        <div class="brand-icon">⚙</div>
+        <div class="brand-text">TOOL HUB</div>
     </div>
- 
-    <div class="stats">
-        <div class="stat-card">
-            <div class="icon">👥</div>
-            <div class="num"><?= $total_users ?></div>
-            <div class="label">Total Users</div>
-        </div>
-        <div class="stat-card">
-            <div class="icon">🔧</div>
-            <div class="num"><?= $total_tools ?></div>
-            <div class="label">Listed Tools</div>
-        </div>
-        <div class="stat-card">
-            <div class="icon">⏳</div>
-            <div class="num"><?= $pending ?></div>
-            <div class="label">Pending Reservations</div>
-        </div>
-        <div class="stat-card">
-            <div class="icon">⚠️</div>
-            <div class="num"><?= $disputes ?></div>
-            <div class="label">Open Disputes</div>
-        </div>
+
+    <div class="sidebar-nav">
+        <a href="dashboard.php" class="nav-link active">
+            <i class="fa fa-gauge"></i> Dashboard
+        </a>
+
+        <a href="tools.php" class="nav-link">
+            <i class="fa fa-wrench"></i> Tools
+        </a>
+
+        <a href="member-profile.php" class="nav-link">
+            <i class="fa fa-users"></i> Members
+        </a>
+
+        <a href="reservations.php" class="nav-link">
+            <i class="fa fa-calendar"></i> Reservations
+        </a>
+
+        <a href="chat.php" class="nav-link">
+            <i class="fa fa-comments"></i> Chat
+        </a>
     </div>
- 
-    <div class="links">
-        <a class="link-card" href="tools.php"><i class="fa fa-wrench"></i> Manage Tools</a>
-        <a class="link-card" href="member-profile.php"><i class="fa fa-users"></i> Manage Members</a>
-        <a class="link-card" href="reservations.php"><i class="fa fa-calendar-check"></i> Reservations</a>
-        <a class="link-card" href="tool_Details.php"><i class="fa fa-magnifying-glass"></i> Tool Details</a>
-        <a class="link-card" href="chat.php"><i class="fa fa-comments"></i> Messages</a>
-        <a class="link-card" href="#"><i class="fa fa-scale-balanced"></i> Disputes</a>
+
+    <div class="role-badge role-admin">
+        ADMIN
     </div>
- 
+
 </div>
+
+
+<!-- ═══════════════════════════════
+     RIGHT SIDE (TOPBAR + CONTENT)
+═══════════════════════════════ -->
+<div class="layout-right">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+
+        <button class="hamburger">
+            <i class="fa fa-bars"></i>
+        </button>
+
+        <div class="topbar-title">
+            Dashboard
+        </div>
+
+        <div class="topbar-right">
+
+            <div class="notif-wrap">
+                <button class="icon-btn">
+                    <i class="fa fa-bell"></i>
+                </button>
+                <div class="notif-dot">3</div>
+            </div>
+
+            <button class="avatar-btn admin-avatar">
+                <?= htmlspecialchars($_SESSION['name']) ?>
+                <span>Admin</span>
+            </button>
+
+            <a href="../Auth/login.php" class="icon-btn">
+                <i class="fa fa-right-from-bracket"></i>
+            </a>
+
+        </div>
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- WELCOME -->
+        <div class="card">
+            <h2 style="margin-bottom:6px;">
+                Welcome, <?= htmlspecialchars($_SESSION['name']) ?> 👋
+            </h2>
+            <p style="color: var(--text-muted); font-size: 12.5px;">
+                Here's a quick overview — <?= date('l, d M Y') ?>
+            </p>
+        </div>
+
+        <!-- STATS -->
+        <div class="panels-grid">
+
+            <div class="card panel">
+                <div class="panel-title">Users</div>
+                <div style="font-size:22px; font-weight:700;">
+                    <?= $total_users ?>
+                </div>
+            </div>
+
+            <div class="card panel">
+                <div class="panel-title">Tools</div>
+                <div style="font-size:22px; font-weight:700;">
+                    <?= $total_tools ?>
+                </div>
+            </div>
+
+            <div class="card panel">
+                <div class="panel-title">Pending</div>
+                <div style="font-size:22px; font-weight:700;">
+                    <?= $pending ?>
+                </div>
+            </div>
+
+            <div class="card panel">
+                <div class="panel-title">Disputes</div>
+                <div style="font-size:22px; font-weight:700;">
+                    <?= $disputes ?>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="card">
+            <div class="panel-header">
+                <div class="panel-title">Quick Actions</div>
+            </div>
+
+            <div class="links" style="margin-top:15px;">
+
+                <a class="link-card" href="tools.php">
+                    <i class="fa fa-wrench"></i> Manage Tools
+                </a>
+
+                <a class="link-card" href="member-profile.php">
+                    <i class="fa fa-users"></i> Manage Members
+                </a>
+
+                <a class="link-card" href="reservations.php">
+                    <i class="fa fa-calendar-check"></i> Reservations
+                </a>
+
+                <a class="link-card" href="tool_Details.php">
+                    <i class="fa fa-search"></i> Tool Details
+                </a>
+
+                <a class="link-card" href="chat.php">
+                    <i class="fa fa-comments"></i> Messages
+                </a>
+
+                <a class="link-card" href="#">
+                    <i class="fa fa-scale-balanced"></i> Disputes
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
 </body>
 </html>
