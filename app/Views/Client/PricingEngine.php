@@ -19,7 +19,6 @@
 
             <h2>Pricing Engine</h2>
 
-            <!-- Tool Selection -->
             <div class="pricing-section">
                 <div class="section-label">
                     <i class="fa-solid fa-wrench"></i> Select Tool
@@ -37,7 +36,6 @@
                 </div>
             </div>
 
-            <!-- Duration Type -->
             <div class="pricing-section">
                 <div class="section-label">
                     <i class="fa-solid fa-clock"></i> Duration Type
@@ -55,7 +53,6 @@
                 </div>
             </div>
 
-            <!-- Duration Amount -->
             <div class="pricing-section">
                 <div class="section-label">
                     <i class="fa-solid fa-hashtag"></i> Duration Amount
@@ -67,7 +64,6 @@
                 </div>
             </div>
 
-            <!-- Membership -->
             <div class="pricing-section">
                 <div class="section-label">
                     <i class="fa-solid fa-id-card"></i> Membership Tier
@@ -108,12 +104,10 @@
                 </div>
             </div>
 
-            <!-- Calculate Button -->
             <button type="button" id="calculateBtn">
                 <i class="fa-solid fa-calculator"></i> Calculate Price
             </button>
 
-            <!-- Result -->
             <div class="pricing-result" id="pricingResult">
                 <div class="result-row">
                     <span class="result-label">Base Rate</span>
