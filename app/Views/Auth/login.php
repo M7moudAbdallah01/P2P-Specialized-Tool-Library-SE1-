@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <h2>Tool Hub Login</h2>
 
-        <form method="POST" action="login.php">
+        <form method="POST" action="../Auth/login.php">
 
             <div class="input-box">
                 <i class="fa fa-envelope"></i>
@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Login</button>
 
             <div class="register">
-                Don't have an account? <a href="Views/Auth/register.php">Register</a>
+                Don't have an account? <a href="../Auth/register.php">Register</a>
             </div>
 
         </form>

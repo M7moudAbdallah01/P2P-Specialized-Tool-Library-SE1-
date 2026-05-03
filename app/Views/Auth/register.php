@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <h2>Create Account</h2>
 
-        <form method="POST" action="register.php">
+        <form method="POST" action="../Auth/register.php">
 
             <div class="input-box">
                 <i class="fa fa-user"></i>
@@ -112,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Register</button>
 
             <div class="register">
-                Already have an account? <a href="../../login.php">Login</a>
+                Already have an account? <a href="../Auth/login.php">Login</a>
             </div>
 
         </form>

@@ -19,4 +19,15 @@ class Certification
 
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
+    public function add($tool_id, $type, $issue_date, $expiry_date)
+    {
+        $stmt = $this->conn->prepare("
+        INSERT INTO certifications (tool_id, type, issue_date, expiry_date)
+        VALUES (?, ?, ?, ?)
+    ");
+
+        $stmt->bind_param("isss", $tool_id, $type, $issue_date, $expiry_date);
+
+        return $stmt->execute();
+    }
 }
