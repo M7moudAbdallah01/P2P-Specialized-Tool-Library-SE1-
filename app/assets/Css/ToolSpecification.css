@@ -157,6 +157,8 @@ input[type="file"]:hover {
   text-decoration: none;
   padding: 10px;
   border-radius: 6px;
+  margin-top: 8px;
+
 }
 
 .nav-link:hover,
@@ -173,7 +175,10 @@ input[type="file"]:hover {
   display: flex;
   flex-direction: column; /* مهم */
 }
-
+.brand-text{
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
 /* TOPBAR */
 .topbar {
   height: 60px;

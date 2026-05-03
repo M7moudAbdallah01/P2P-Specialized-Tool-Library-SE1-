@@ -72,15 +72,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="brand-text">TOOL HUB</div>
         </div>
 
-        <div class="role-badge role-admin">ADMIN</div>
-
         <div class="sidebar-nav">
             <a href="dashboard.php" class="nav-link active">Dashboard</a>
             <a href="tools.php" class="nav-link">Tools</a>
-            <a href="members.php" class="nav-link">Members</a>
             <a href="reservations.php" class="nav-link">Reservations</a>
             <a href="chat.php" class="nav-link">Chat</a>
-            <a class="nav-link">Disputes</a>
         </div>
     </div>
 
@@ -91,7 +87,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="topbar-title">Dashboard</div>
         </div>
 
-        <!-- 🔥 هنا بقى الصح -->
         <div class="tool-page">
 
             <div class="login-container full-width">
