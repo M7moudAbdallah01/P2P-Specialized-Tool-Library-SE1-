@@ -1,8 +1,37 @@
-html, body {
-    scrollbar-width: none; 
-    -ms-overflow-style: none; 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:        #e63946;
+  --red-dim:    #c0303c;
+  --red-glow:   rgba(230, 57, 70, .18);
+  --bg:         #0d0d0d;
+  --surface:    #161616;
+  --surface2:   #1e1e1e;
+  --border:     #252525;
+  --border2:    #303030;
+  --text:       #eaeaea;
+  --text-muted: #7a7a7a;
+  --text-dim:   #444;
+  --valid:      #2dbe6c;
+  --sidebar-w:  224px;
+  --radius:     9px;
+  --radius-lg:  13px;
+  --font-body:  'DM Sans', sans-serif;
+  --font-disp:  'Rajdhani', sans-serif;
+  --shadow:     0 4px 28px rgba(0, 0, 0, .55);
 }
 
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  display: flex;
+  min-height: 100vh;
+  line-height: 1.5;
+}
 
 html::-webkit-scrollbar, 
 body::-webkit-scrollbar {
@@ -16,7 +45,7 @@ body::-webkit-scrollbar {
 }
 
 .full-width {
-    width: 100%;
+    width: 3000px;
     max-width: 800px;
     margin: 40px auto; /* ✅ ده التوسيط الصح */
     
@@ -149,7 +178,7 @@ input[type="file"]:hover {
   flex-direction: column;
   gap: 10px;
 }
-
+ 
 .nav-link {
   display: block;
   width: 100%;
@@ -187,6 +216,7 @@ input[type="file"]:hover {
   align-items: center;
   padding: 0 20px;
   border-bottom: 1px solid #222;
+  width: 1400px;
 }
 
 .topbar-title {
