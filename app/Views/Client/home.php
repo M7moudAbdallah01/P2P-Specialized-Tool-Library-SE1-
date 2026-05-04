@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once __DIR__ . "../../../../Core/database.php";
 
 $db   = Database::getInstance();
@@ -12,7 +11,7 @@ $total_tools = $r->fetch_assoc()['c'];
 $r           = $conn->query("SELECT COUNT(*) AS c FROM users WHERE role IN ('client','technical')");
 $total_users = $r->fetch_assoc()['c'];
 
-$r            = $conn->query("SELECT COUNT(*) AS c FROM reservation");
+$r            = $conn->query("SELECT COUNT(*) AS c FROM reservations");
 $total_rents  = $r->fetch_assoc()['c'];
 
 /* ── Categories ── */
@@ -65,13 +64,13 @@ $action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Au
     <div class="role-badge" style="background:#6b7280;color:#fff;">GUEST</div>
 
     <div class="sidebar-nav">
-        <a href="home.php" class="nav-link active">
+        <a href="../app/Client/home.php" class="nav-link active">
             <i class="fa fa-home"></i> Home
         </a>
         <a href="../app/Views/Auth/login.php" class="nav-link">
             <i class="fa fa-right-to-bracket"></i> Login
         </a>
-        <a href="../Auth/register.php" class="nav-link">
+        <a href="../app/Views/Auth/register.php" class="nav-link">
             <i class="fa fa-user-plus"></i> Register
         </a>
     </div>
@@ -84,8 +83,8 @@ $action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Au
     <div class="topbar">
         <div class="topbar-title">Welcome</div>
         <div class="topbar-right">
-            <a href="../Auth/login.php"    class="btn btn-ghost btn-sm" style="margin-right:8px;">Log in</a>
-            <a href="../Auth/register.php" class="btn btn-red  btn-sm">Register</a>
+            <a href="../app/Views/Auth/login.php"    class="btn btn-ghost btn-sm" style="margin-right:8px;">Log in</a>
+            <a href="../app/Views/Auth/register.php" class="btn btn-red  btn-sm">Register</a>
         </div>
     </div>
 
@@ -95,7 +94,7 @@ $action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Au
         <div class="hero">
             <h1>Welcome to <span>Tool Hub</span> 👋</h1>
             <p>Rent, share and discover specialized tools — easily and securely.</p>
-            <a href="<?= $action_url ?>" class="btn-main">
+            <a href="../app/Views/Auth/login.php" class="btn-main">
                 <i class="fa fa-bolt"></i> Get Started
             </a>
         </div>
@@ -132,97 +131,6 @@ $action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Au
             </div>
         </div>
 
-        <!-- CATEGORIES -->
-        <div class="section-block">
-            <h2>Browse Categories</h2>
-            <div class="stats-grid">
-                <?php while ($cat = $categories->fetch_assoc()): ?>
-                <a href="../Auth/login.php" class="cat-card">
-                    <div class="cat-icon"><i class="fa fa-layer-group"></i></div>
-                    <div>
-                        <div class="cat-name"><?= htmlspecialchars($cat['name']) ?></div>
-                        <div class="cat-count"><?= $cat['tool_count'] ?> tools</div>
-                    </div>
-                </a>
-                <?php endwhile; ?>
-            </div>
-        </div>
-
-        <!-- HOW IT WORKS -->
-        <div class="section-block">
-            <h2>How it Works</h2>
-            <div class="stats-grid">
-
-                <div class="how-card">
-                    <div class="how-num">1</div>
-                    <h3>Register Account</h3>
-                    <p>Create your free account in seconds</p>
-                </div>
-
-                <div class="how-card">
-                    <div class="how-num">2</div>
-                    <h3>Browse Tools</h3>
-                    <p>Find the tool you need by category</p>
-                </div>
-
-                <div class="how-card">
-                    <div class="how-num">3</div>
-                    <h3>Make Reservation</h3>
-                    <p>Book instantly and chat with the owner</p>
-                </div>
-
-                <div class="how-card">
-                    <div class="how-num">4</div>
-                    <h3>Use &amp; Return</h3>
-                    <p>Get the job done, return and review</p>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- TOP TOOLS -->
-        <div class="section-block">
-            <h2>Latest Tools</h2>
-            <div class="stats-grid">
-                <?php while ($t = $top_tools->fetch_assoc()): ?>
-                <div class="tool-card">
-                    <div class="tool-cat"><?= htmlspecialchars($t['cat_name']) ?></div>
-                    <div class="tool-name"><?= htmlspecialchars($t['name']) ?></div>
-                    <div class="tool-foot">
-                        <div class="tool-price">
-                            $<?= $t['base_price'] ?> <small>/day</small>
-                        </div>
-                        <a href="../Auth/login.php" class="btn-rent">
-                            <i class="fa fa-calendar-plus"></i> Rent
-                        </a>
-                    </div>
-                </div>
-                <?php endwhile; ?>
-            </div>
-        </div>
-
-        <!-- PLATFORM STATS -->
-        <div class="section-block">
-            <h2>Platform Stats</h2>
-            <div class="stats-grid">
-
-                <div class="pstat-card">
-                    <div class="pstat-num"><?= $total_tools ?>+</div>
-                    <div class="pstat-lbl">Tools Available</div>
-                </div>
-
-                <div class="pstat-card">
-                    <div class="pstat-num"><?= $total_users ?>+</div>
-                    <div class="pstat-lbl">Active Members</div>
-                </div>
-
-                <div class="pstat-card">
-                    <div class="pstat-num"><?= $total_rents ?>+</div>
-                    <div class="pstat-lbl">Successful Rentals</div>
-                </div>
-
-            </div>
-        </div>
 
         <!-- FOOTER -->
         <div class="home-footer">
