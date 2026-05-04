@@ -440,6 +440,7 @@ tr:hover td { background:var(--surface2); }
     grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
     gap: 16px;
     margin-bottom: 28px;
+    margin-top: 28px;
 }
 .stat-card {
 background: #1b1b1b;

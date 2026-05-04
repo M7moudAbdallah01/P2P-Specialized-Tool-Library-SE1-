@@ -1,6 +1,10 @@
 <?php
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
+require_once __DIR__ . "/../../Models/Report.php";
+$reportModel = new Report();
+$totalRevenue = $reportModel->getTotalRevenue();
+$zoneRevenue = $reportModel->getRevenueByZone();
  
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../Auth/login.php");
@@ -85,7 +89,7 @@ $disputes = $r->fetch_assoc()['c'];
             <i class="fa fa-comments"></i> Chat
         </a>
 
-        <a class="nav-link" href="">
+        <a class="nav-link" href="reports.php">
             <i class="fa fa-scale-balanced"></i> Disputes & Reports
         </a>
     </div>
@@ -212,6 +216,63 @@ $disputes = $r->fetch_assoc()['c'];
             </div>
         </div> -->
 
+    </div>
+
+
+        <div class="welcome">
+        <h1>Financial Dashboard</h1>
+        <p>Real-time revenue tracking and zone performance.</p>
+    </div>
+
+    <!-- كروت الإحصائيات -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value">$<?php echo number_format($totalRevenue, 2); ?></div>
+            <div class="stat-label">Completed Transactions</div>
+        </div>
+        
+        <div class="stat-card" style="border-left-color: var(--accent-yellow);">
+            <div class="stat-label">Active Zones</div>
+            <div class="stat-value"><?php echo count($zoneRevenue); ?></div>
+            <div class="stat-label">Monitored Locations</div>
+        </div>
+    </div>
+
+    <!-- جدول أرباح المناطق -->
+    <div class="card">
+        <h3 style="margin-top:0; color: #fff;">Revenue by Zone</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Zone Name</th>
+                    <th style="text-align: right;">Total Revenue</th>
+                    <th style="text-align: right;">Performance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($zoneRevenue)): ?>
+                    <?php foreach($zoneRevenue as $zone): ?>
+                        <tr>
+                            <td><span class="tool-name"><?php echo htmlspecialchars($zone['zone_name']); ?></span></td>
+                            <td style="text-align: right; color: var(--accent-green); font-weight: 600;">
+                                $<?php echo number_format($zone['revenue'], 2); ?>
+                            </td>
+                            <td style="text-align: right;">
+                                <div class="progress-bar-bg">
+                                    <?php 
+                                        $percentage = ($totalRevenue > 0) ? ($zone['revenue'] / $totalRevenue) * 100 : 0; 
+                                    ?>
+                                    <div class="progress-bar-fill" style="width: <?php echo $percentage; ?>%;"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="3" style="text-align:center; padding:20px;">No data available yet.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 
 </div>

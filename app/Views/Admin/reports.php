@@ -1,6 +1,7 @@
 <?php
 require_once "../../Models/Report.php";
 
+
 $reportModel = new Report();
 $totalRevenue = $reportModel->getTotalRevenue();
 $zoneRevenue = $reportModel->getRevenueByZone();
