@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2026 at 02:35 PM
+-- Generation Time: May 04, 2026 at 02:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -463,17 +463,18 @@ INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `role`, `membership
 --
 
 CREATE TABLE `zones` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL
+  `zone_id` int(11) NOT NULL,
+  `zone_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `zones`
 --
 
-INSERT INTO `zones` (`id`, `name`) VALUES
-(1, 'cairo'),
-(2, 'cairo');
+INSERT INTO `zones` (`zone_id`, `zone_name`) VALUES
+(1, 'Helwan'),
+(2, 'Maadi'),
+(3, 'ali amr');
 
 --
 -- Indexes for dumped tables
@@ -660,6 +661,12 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `zones`
+--
+ALTER TABLE `zones`
+  ADD PRIMARY KEY (`zone_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -788,6 +795,12 @@ ALTER TABLE `trust_score`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `zones`
+--
+ALTER TABLE `zones`
+  MODIFY `zone_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
