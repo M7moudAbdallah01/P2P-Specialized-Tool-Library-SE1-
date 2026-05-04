@@ -2,32 +2,30 @@
 require_once __DIR__ . "/../../Core/database.php";
 
 class Zone {
-    private $conn;
-
-    public function __construct() {
-        $this->conn = Database::getInstance()->getConnection();
+    public static function addZone($name){
+        $db = Database::getInstance()->getConnection();
+        $safe_name = mysqli_real_escape_string($db, $name);
+        // بنستخدم zone_name عشان التقارير تشتغل
+        $query = "INSERT INTO zones (zone_name) VALUES ('$safe_name')";
+        return mysqli_query($db, $query);
     }
 
-    // إضافة منطقة جديدة
-    public function addZone($name) {
+    public static function getAll(){
         $db = Database::getInstance()->getConnection();
-        $sql = "INSERT INTO zones (zone_name) VALUES (?)";
-        $stmt = $db->prepare($sql);
-        
-        if ($stmt) {
-            $stmt->bind_param("s", $name);
-            $success = $stmt->execute();
-            $stmt->close();
-            return $success;
-        }
-        return false;
+        $query = "SELECT * FROM zones";
+        $result = mysqli_query($db, $query);
+        return ($result) ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
     }
 
-    // ضفنا كلمة static هنا عشان تحل مشكلة الـ Static Call في الـ View
-    public static function getAll() {
+    public static function updateZone($id, $newName) {
         $db = Database::getInstance()->getConnection();
-        $sql = "SELECT * FROM zones ORDER BY zone_id DESC";
-        $result = $db->query($sql);
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $query = "UPDATE zones SET zone_name = '".mysqli_real_escape_string($db, $newName)."' WHERE zone_id = ".intval($id);
+        return mysqli_query($db, $query);
+    }
+
+    public static function deleteZone($id) {
+        $db = Database::getInstance()->getConnection();
+        $query = "DELETE FROM zones WHERE zone_id = ".intval($id);
+        return mysqli_query($db, $query);
     }
 }
