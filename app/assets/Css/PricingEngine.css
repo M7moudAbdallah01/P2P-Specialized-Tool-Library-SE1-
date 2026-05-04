@@ -1,230 +1,389 @@
-.pricing-container {
-    width: 480px !important;
-    text-align: left !important;
-}
+/* ================= PRICING ENGINE PAGE ================= */
 
-.pricing-icon {
-    font-size: 48px;
-    color: #ff2e2e;
-}
-
-.pricing-section {
-    margin-bottom: 20px;
-}
-
-.section-label {
-    font-size: 12px;
-    color: #888;
-    margin-bottom: 8px;
-    margin-left: 4px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-.section-label i {
-    color: #ff2e2e;
-    margin-right: 6px;
-}
-
-.input-box select {
+/* PAGE LAYOUT */
+.pricing-page {
     width: 100%;
-    padding: 12px 45px 12px 40px;
-    border: 1px solid #333;
-    border-radius: 10px;
-    outline: none;
+    min-height: calc(100vh - 60px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 20px;
+}
+
+/* MAIN CONTAINER */
+.pricing-container {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* SECTION CARD */
+.pricing-card {
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid rgba(255, 46, 46, 0.25);
+    border-radius: 14px;
+    padding: 28px 32px;
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.08);
+    transition: border-color 0.3s;
+}
+
+.pricing-card:hover {
+    border-color: rgba(255, 46, 46, 0.5);
+}
+
+/* SECTION TITLE */
+.pricing-card h2 {
+    color: #ff2e2e;
+    font-size: 22px;
+    margin-bottom: 22px;
+    border-bottom: 2px solid #ff2e2e;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pricing-card h2 i {
+    font-size: 18px;
+    opacity: 0.85;
+}
+
+/* PAGE HEADER */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.page-header h1 {
+    color: #eee;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.page-header span {
+    font-size: 13px;
+    color: #666;
     background: #1a1a1a;
-    color: #fff;
+    border: 1px solid #333;
+    padding: 5px 14px;
+    border-radius: 20px;
+}
+
+/* ================= TOOL SELECTOR ================= */
+.tool-selector-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group label {
+    color: #aaa;
+    font-size: 13px;
+}
+
+.input-box select,
+.input-box input[type="number"],
+.input-box input[type="text"] {
+    width: 100%;
+    height: 45px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #111;
+    color: #eee;
     font-size: 14px;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
     transition: 0.3s;
     appearance: none;
     -webkit-appearance: none;
+    font-family: 'Poppins', sans-serif;
 }
 
-.input-box select:focus {
+.input-box select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+.input-box select:focus,
+.input-box input:focus {
     border-color: #ff2e2e;
-    box-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.25);
 }
 
 .input-box select option {
     background: #1a1a1a;
-    color: #fff;
+    color: #eee;
 }
 
-.duration-unit {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 12px;
-    color: #ff2e2e;
-    font-weight: 600;
-    pointer-events: none;
-}
-
+/* ================= DURATION TABS ================= */
 .duration-tabs {
     display: flex;
     gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .tab-btn {
     flex: 1;
-    padding: 10px 8px;
+    min-width: 100px;
+    padding: 12px 10px;
+    border-radius: 8px;
     border: 1px solid #333;
-    border-radius: 10px;
-    background: #1a1a1a;
+    background: #111;
     color: #888;
     font-size: 13px;
-    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     cursor: pointer;
     transition: 0.3s;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
-    width: auto !important;
-    transform: none !important;
-    box-shadow: none !important;
+    gap: 4px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.tab-btn i {
+    font-size: 16px;
 }
 
 .tab-btn:hover {
     border-color: #ff2e2e;
-    color: #fff;
-    transform: none !important;
-    box-shadow: none !important;
+    color: #ff2e2e;
+    background: rgba(255, 46, 46, 0.05);
 }
 
 .tab-btn.active {
-    background: linear-gradient(to right, #ff0000, #990000);
-    border-color: transparent;
-    color: #fff;
-    font-weight: 600;
-    transform: none !important;
-    box-shadow: none !important;
+    border-color: #ff2e2e;
+    background: rgba(255, 46, 46, 0.12);
+    color: #ff2e2e;
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.18);
 }
 
-.membership-grid {
+/* DURATION INPUT ROW */
+.duration-input-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 16px;
+    animation: fadeSlide 0.25s ease;
+}
+
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= MEMBERSHIP TIER ================= */
+.membership-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
 }
 
 .membership-card {
-    cursor: pointer;
-    border: 1px solid #333;
+    padding: 18px 14px;
     border-radius: 10px;
-    padding: 14px 10px;
-    background: #1a1a1a;
+    border: 2px solid #2a2a2a;
+    background: #0f0f0f;
+    cursor: pointer;
     transition: 0.3s;
-    display: block;
-}
-
-.membership-card input[type="radio"] {
-    display: none;
-}
-
-.membership-card:hover {
-    border-color: #ff2e2e;
-}
-
-.membership-card.selected,
-.membership-card input[type="radio"]:checked ~ .membership-inner {
-    color: #fff;
-}
-
-.membership-card:has(input:checked) {
-    border-color: #ff2e2e;
-    background: rgba(255, 46, 46, 0.1);
-}
-
-.membership-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
+    position: relative;
     text-align: center;
 }
 
-.membership-inner i {
-    font-size: 20px;
+.membership-card:hover {
+    border-color: #555;
+    background: #161616;
+}
+
+.membership-card.selected {
+    border-color: #ff2e2e;
+    background: rgba(255, 46, 46, 0.08);
+    box-shadow: 0 0 14px rgba(255, 0, 0, 0.18);
+}
+
+.membership-card.selected::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 10px;
+    right: 12px;
     color: #ff2e2e;
+    font-size: 12px;
 }
 
-.tier-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: #eee;
-}
-
-.tier-discount {
+.membership-badge {
+    display: inline-block;
     font-size: 11px;
-    color: #888;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
 }
 
-#calculateBtn {
-    margin-top: 5px;
+.badge-standard { background: #2a2a2a; color: #888; }
+.badge-silver   { background: rgba(192,192,192,0.15); color: #c0c0c0; }
+.badge-gold     { background: rgba(255,193,7,0.15); color: #ffc107; }
+.badge-platinum { background: rgba(100,200,255,0.15); color: #64c8ff; }
+
+.membership-card .discount-pct {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+
+.membership-card .discount-label {
+    font-size: 11px;
+    color: #666;
+    margin-top: 4px;
+}
+
+/* ================= COST BREAKDOWN ================= */
+.breakdown-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.breakdown-table td {
+    padding: 11px 14px;
+    font-size: 14px;
+    color: #aaa;
+    border-bottom: 1px solid #1e1e1e;
+}
+
+.breakdown-table td:last-child {
+    text-align: right;
+    color: #ddd;
+    font-weight: 500;
+}
+
+.breakdown-table tr:last-child td {
+    border-bottom: none;
+}
+
+.breakdown-table .row-total td {
+    color: #ff2e2e;
+    font-size: 18px;
+    font-weight: 700;
+    border-top: 1px solid rgba(255,46,46,0.3);
+    padding-top: 16px;
+}
+
+.breakdown-table .row-savings td {
+    color: #4ade80;
+    font-size: 13px;
+}
+
+.breakdown-table .row-savings td:first-child::before {
+    content: '✓ ';
+}
+
+/* EMPTY STATE */
+.empty-state {
+    text-align: center;
+    padding: 28px 0;
+    color: #444;
+    font-size: 14px;
+}
+
+.empty-state i {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 10px;
+    color: #2a2a2a;
+}
+
+/* ================= CALCULATE BUTTON ================= */
+.calculate-btn {
+    width: 100%;
+    height: 52px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #ff2e2e, #990000);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-}
-
-.pricing-result {
-    display: none;
-    flex-direction: column;
     gap: 10px;
-    margin-top: 20px;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 6px;
+}
+
+.calculate-btn:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 18px rgba(255, 0, 0, 0.4);
+}
+
+.calculate-btn:active {
+    transform: scale(0.99);
+}
+
+/* ================= RATE BADGES ROW ================= */
+.rate-info-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.rate-badge {
+    flex: 1;
+    min-width: 100px;
     background: #111;
-    border: 1px solid rgba(255, 46, 46, 0.3);
-    border-radius: 12px;
-    padding: 20px;
-    animation: fadeIn 0.4s ease;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 10px 14px;
+    text-align: center;
 }
 
-.pricing-result.visible {
-    display: flex;
-}
-
-.result-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-}
-
-.result-label {
-    color: #888;
-}
-
-.result-value {
-    color: #eee;
-    font-weight: 600;
-}
-
-.discount-value {
-    color: #2eff7e;
-}
-
-.result-divider {
-    height: 1px;
-    background: rgba(255, 46, 46, 0.2);
-    margin: 4px 0;
-}
-
-.total-row .result-label {
-    font-size: 15px;
-    font-weight: 700;
-    color: #eee;
-}
-
-.total-value {
-    font-size: 22px;
+.rate-badge .rate-val {
+    font-size: 17px;
     font-weight: 700;
     color: #ff2e2e;
 }
 
-.error-state .total-value {
-    font-size: 13px;
-    color: #ff2e2e;
+.rate-badge .rate-lbl {
+    font-size: 11px;
+    color: #555;
+    margin-top: 2px;
+}
+
+/* ================= HIGHLIGHT ROW ================= */
+.highlight-row {
+    background: rgba(255,46,46,0.04);
+    border-radius: 6px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .tool-selector-grid { grid-template-columns: 1fr; }
+    .membership-grid    { grid-template-columns: 1fr 1fr; }
+    .duration-input-row { grid-template-columns: 1fr; }
+    .pricing-card       { padding: 20px 18px; }
+    .page-header        { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
+@media (max-width: 480px) {
+    .membership-grid { grid-template-columns: 1fr; }
 }
