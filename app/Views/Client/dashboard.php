@@ -177,6 +177,9 @@ $my_tools = $conn->query("
                 <span class="nav-count"><?= $open_reports ?></span>
             <?php endif; ?>
         </a>
+        <a href="ToolCompatibility.php" class="nav-link">
+            <i class="fa fa-circle-check"></i> Compatibility Checker
+        </a>
 
     </div>
 </div>

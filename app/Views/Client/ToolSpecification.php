@@ -59,9 +59,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="../../../assets/Css/style.css">
-<link rel="stylesheet" href="../../../assets/Css/admin.css">
-<link rel="stylesheet" href="../../../assets/Css/ToolSpecification.css">
+<link rel="stylesheet" href="../../assets/Css/style.css">
+<link rel="stylesheet" href="../../assets/Css/admin.css">
+<link rel="stylesheet" href="../../assets/Css/ToolSpecification.css">
 </head>
 
 <body>
@@ -100,6 +100,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a href="reports.php" class="nav-link">
                 <i class="fa fa-scale-balanced"></i> Reports
             </a>
+
+        <a href="ToolCompatibility.php" class="nav-link">
+            <i class="fa fa-circle-check"></i> Compatibility Checker
+        </a>            
         </div>
     </div>
     <div class="layout-right">
