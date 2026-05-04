@@ -5,7 +5,7 @@
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+if (!isset($_SESSION['user_id'])) {
     header("Location: ../Auth/login.php");
     exit();
 }
@@ -25,6 +25,49 @@ $categories = $conn->query("
     LEFT JOIN tools t ON t.category_id = c.category_id
     GROUP BY c.category_id
     ORDER BY c.name
+");
+$uid  = intval($_SESSION['user_id']);
+$r = $conn->query("SELECT COUNT(*) AS cnt FROM tools WHERE owner_id = $uid");
+$total_tools = $r->fetch_assoc()['cnt'];
+
+$r = $conn->query("SELECT COUNT(*) AS cnt FROM reservations r
+                   JOIN tools t ON r.tool_id = t.tool_id
+                   WHERE t.owner_id = $uid AND r.status = 'active'");
+$active_res = $r->fetch_assoc()['cnt'];
+
+$r = $conn->query("SELECT COUNT(*) AS cnt FROM reservations r
+                   JOIN tools t ON r.tool_id = t.tool_id
+                   WHERE t.owner_id = $uid AND r.status = 'pending'");
+$pending_res = $r->fetch_assoc()['cnt'];
+
+$r = $conn->query("SELECT COUNT(*) AS cnt FROM messages
+                   WHERE receiver_id = $uid AND is_read = 0");
+$unread_msgs = $r->fetch_assoc()['cnt'];
+
+$r = $conn->query("
+    SELECT COUNT(*) AS cnt
+    FROM dispute d
+    JOIN reservations r ON d.rental_id = r.reservation_id
+    JOIN tools t ON r.tool_id = t.tool_id
+    WHERE t.owner_id = $uid AND d.status = 'open'
+");
+$open_reports = $r->fetch_assoc()['cnt'];
+
+// $r = $conn->query("SELECT COALESCE(SUM(total_price),0) AS total FROM reservations r
+//                    JOIN tools t ON r.tool_id = t.tool_id
+//                    WHERE t.owner_id = $uid AND r.status = 'completed'");
+// $total_earned = $r->fetch_assoc()['total'];
+
+/* =========================================================
+   4) MY TOOLS (latest 6)
+========================================================= */
+$my_tools = $conn->query("
+    SELECT t.*, c.name AS category_name
+    FROM tools t
+    JOIN category c ON t.category_id = c.category_id
+    WHERE t.owner_id = $uid
+    ORDER BY t.created_at DESC
+    LIMIT 6
 ");
 ?>
 <!DOCTYPE html>
@@ -74,6 +117,12 @@ $categories = $conn->query("
 
     <div class="sidebar-nav">
 
+        <?php if ($role === 'client'): ?>
+            <a href="../Client/dashboard.php" class="nav-link">
+                <i class="fa fa-gauge"></i> Dashboard
+            </a>
+        <?php endif; ?>
+
         <?php if ($role === 'admin'): ?>
             <a href="../Admin/dashboard.php" class="nav-link">
                 <i class="fa fa-gauge"></i> Dashboard
@@ -113,9 +162,38 @@ $categories = $conn->query("
                 <i class="fa fa-scale-balanced"></i> Reports
             </a>
         <?php else: ?>
-            <a href="reservations.php" class="nav-link">
-                <i class="fa fa-calendar"></i> My Reservations
-            </a>
+        <a href="my-tools.php" class="nav-link">
+            <i class="fa fa-wrench"></i> My Tools
+            <?php if ($total_tools > 0): ?>
+                <span class="nav-count"><?= $total_tools ?></span>
+            <?php endif; ?>
+        </a>
+
+        <a href="../ClientToolSpecification.php" class="nav-link">
+            <i class="fa fa-plus"></i> Add Tool
+        </a>
+
+        <a href="../Clientreservations.php" class="nav-link">
+            <i class="fa fa-calendar"></i> Reservations
+            <?php if ($pending_res > 0): ?>
+                <span class="nav-count"><?= $pending_res ?></span>
+            <?php endif; ?>
+        </a>
+
+        <a href="chat.php" class="nav-link">
+            <i class="fa fa-comments"></i> Messages
+            <?php if ($unread_msgs > 0): ?>
+                <span class="nav-count"><?= $unread_msgs ?></span>
+            <?php endif; ?>
+        </a>
+
+        <a href="reports.php" class="nav-link">
+            <i class="fa fa-scale-balanced"></i> Reports
+            <?php if ($open_reports > 0): ?>
+                <span class="nav-count"><?= $open_reports ?></span>
+            <?php endif; ?>
+        </a>
+
         <?php endif; ?>
 
     </div>

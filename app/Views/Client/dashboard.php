@@ -134,6 +134,10 @@ $my_tools = $conn->query("
             <i class="fa fa-gauge"></i> Dashboard
         </a>
 
+        <a href="../Tools/tools.php" class="nav-link">
+            <i class="fa fa-wrench"></i> Tools
+        </a>
+
         <a href="my-tools.php" class="nav-link">
             <i class="fa fa-wrench"></i> My Tools
             <?php if ($total_tools > 0): ?>
