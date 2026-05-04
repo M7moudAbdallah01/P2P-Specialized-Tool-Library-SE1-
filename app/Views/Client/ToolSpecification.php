@@ -1,5 +1,3 @@
-
-?>
 <!DOCTYPE html>
 <html>
 
@@ -53,7 +51,6 @@
     </div>
     <div class="layout-right">
 
-<<<<<<< HEAD
         <div class="topbar">
             <div class="topbar-title">Tool Specification</div>
             <div class="topbar-right">
@@ -63,61 +60,6 @@
                 <a href="../Auth/login.php" class="icon-btn">
                     <i class="fa fa-right-from-bracket"></i>
                 </a>
-=======
-
-<div class="main-content">
-
-
-        <div class="tool-page">
-
-            <div class="login-container full-width">
-
-                <h2>Add Tool Specification</h2>
-
-                <form action="my-tools.php" method="POST" enctype="multipart/form-data">
-
-                    <div class="input-group">
-                        <label>Tool Name</label>
-                        <div class="input-box">
-                            <input type="text" name="tool_name" required>
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Description</label>
-                        <div class="input-box">
-                            <input type="text" name="description" required>
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Manual (PDF)</label>
-                        <div class="input-box">
-                            <input type="file" name="manual" required>
-                        </div>
-                    </div>
-
-                    <div class="grid-inputs">
-                        <div class="input-group">
-                            <label>Video</label>
-                            <div class="input-box">
-                                <input type="text" name="video_link">
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Warranty</label>
-                            <div class="input-box">
-                                <input type="text" name="warranty">
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="upload-btn">Upload</button>
-
-                </form>
-
->>>>>>> 51ad0d949b27dbc1b464f3c0c1f1d6fe154fda89
             </div>
         </div>
         <div class="main-content">
