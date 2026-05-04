@@ -145,10 +145,10 @@ $total_members = $counts['technical'] + $counts['client'];
         <a href="dashboard.php" class="nav-link">
             <i class="fa fa-gauge"></i> Dashboard
         </a>
-        <a href="tools.php" class="nav-link">
+        <a href="../Tools/tools.php" class="nav-link">
             <i class="fa fa-wrench"></i> Tools
         </a>
-        <a href="categories.php" class="nav-link">
+        <a href="../Tools/categories.php" class="nav-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="2" y="3" width="20" height="14" rx="2"/>
                 <line x1="8" y1="21" x2="16" y2="21"/>
@@ -164,7 +164,7 @@ $total_members = $counts['technical'] + $counts['client'];
         <a href="chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat
         </a>
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="reports.php">
             <i class="fa fa-scale-balanced"></i> Disputes &amp; Reports
         </a>
     </div>

@@ -181,45 +181,9 @@ $disputes = $r->fetch_assoc()['c'];
 
         </div>
 
-        <!-- QUICK ACTIONS -->
-        <!-- <div class="card">
-            <div class="panel-header">
-                <div class="panel-title">Quick Actions</div>
-            </div>
-
-            <div class="links" style="margin-top:15px;">
-
-                <a class="link-card" href="tools.php">
-                    <i class="fa fa-wrench"></i> Manage Tools
-                </a>
-
-                <a class="link-card" href="member-profile.php">
-                    <i class="fa fa-users"></i> Manage Members
-                </a>
-
-                <a class="link-card" href="reservations.php">
-                    <i class="fa fa-calendar-check"></i> Reservations
-                </a>
-
-                <a class="link-card" href="tool_Details.php">
-                    <i class="fa fa-search"></i> Tool Details
-                </a>
-
-                <a class="link-card" href="chat.php">
-                    <i class="fa fa-comments"></i> Messages
-                </a>
-
-                <a class="link-card" href="#">
-                    <i class="fa fa-scale-balanced"></i> Disputes
-                </a>
-
-            </div>
-        </div> -->
-
-    </div>
 
 
-        <div class="welcome">
+            <div class="welcome">
         <h1>Financial Dashboard</h1>
         <p>Real-time revenue tracking and zone performance.</p>
     </div>
@@ -229,7 +193,6 @@ $disputes = $r->fetch_assoc()['c'];
         <div class="stat-card">
             <div class="stat-label">Total Revenue</div>
             <div class="stat-value">$<?php echo number_format($totalRevenue, 2); ?></div>
-            <div class="stat-label">Completed Transactions</div>
         </div>
         
         <div class="stat-card" style="border-left-color: var(--accent-yellow);">
@@ -274,6 +237,14 @@ $disputes = $r->fetch_assoc()['c'];
             </tbody>
         </table>
     </div>
+
+
+
+
+    </div>
+
+
+
 
 </div>
 
