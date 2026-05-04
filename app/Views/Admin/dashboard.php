@@ -22,7 +22,7 @@ $total_tools = $r->fetch_assoc()['c'];
  
 $r = $conn->query("SELECT COUNT(*) AS c FROM reservations WHERE status = 'pending'");
 $pending = $r->fetch_assoc()['c'];
- 
+
 $r = $conn->query("SELECT COUNT(*) AS c FROM dispute WHERE status = 'open'");
 $disputes = $r->fetch_assoc()['c'];
 
