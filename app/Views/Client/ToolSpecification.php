@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="sidebar-nav">
 
-        <a href="dashboard.php" class="nav-link active">
+        <a href="dashboard.php" class="nav-link">
             <i class="fa fa-gauge"></i> Dashboard
         </a>
 
@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         </a>
 
-        <a href="ToolSpecification.php" class="nav-link">
+        <a href="ToolSpecification.php" class="nav-link active">
             <i class="fa fa-plus"></i> Add Tool
         </a>
 
