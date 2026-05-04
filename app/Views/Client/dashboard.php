@@ -130,22 +130,22 @@ $open_reports = $r->fetch_assoc()['cnt'];
 
     <div class="sidebar-nav">
 
-        <a href="client_dashboard.php" class="nav-link active">
+        <a href="dashboard.php" class="nav-link active">
             <i class="fa fa-gauge"></i> Dashboard
         </a>
 
-        <a href="tools.php" class="nav-link">
+        <a href="my-tools.php" class="nav-link">
             <i class="fa fa-wrench"></i> My Tools
             <?php if ($total_tools > 0): ?>
                 <span class="nav-count"><?= $total_tools ?></span>
             <?php endif; ?>
         </a>
 
-        <a href="add_tool_page.php" class="nav-link">
+        <a href="ToolSpecification.php" class="nav-link">
             <i class="fa fa-plus"></i> Add Tool
         </a>
 
-        <a href="categories.php" class="nav-link">
+        <a href="../Tools/categories.php" class="nav-link">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0">
                 <rect x="2" y="3" width="20" height="14" rx="2"/>
                 <line x1="8" y1="21" x2="16" y2="21"/>
