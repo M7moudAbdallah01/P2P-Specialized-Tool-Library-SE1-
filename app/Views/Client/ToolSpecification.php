@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     VALUES ('$tool_name', '$description', '$target_file', '$video_link', '$warranty')";
 
             if ($conn->query($sql) === TRUE) {
-                header("Location: add_tool_page.php?success=1");
+                header("Location: my-tools.php?success=1");
                 exit();
             } else {
                 $error = "Database Error: " . $conn->error;
@@ -145,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <h2>Add Tool Specification</h2>
 
-                <form action="add_tool.php" method="POST" enctype="multipart/form-data">
+                <form action="my-tools.php" method="POST" enctype="multipart/form-data">
 
                     <div class="input-group">
                         <label>Tool Name</label>
