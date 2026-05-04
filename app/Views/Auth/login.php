@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } elseif ($user['role'] === 'technical') {
                 header("Location: ../Tech/dashboard.php");
             } else {
-                header("Location: ../Client/client_dashboard.php");
+                header("Location: ../Client/dashboard.php");
             }
             exit();
         } else {

@@ -55,27 +55,27 @@ $open_reports = $r->fetch_assoc()['cnt'];
 /* =========================================================
    4) MY TOOLS (latest 6)
 ========================================================= */
-// $my_tools = $conn->query("
-//     SELECT t.*, c.name AS category_name
-//     FROM tools t
-//     JOIN category c ON t.category_id = c.category_id
-//     WHERE t.owner_id = $uid
-//     ORDER BY t.created_at DESC
-//     LIMIT 6
-// ");
+$my_tools = $conn->query("
+    SELECT t.*, c.name AS category_name
+    FROM tools t
+    JOIN category c ON t.category_id = c.category_id
+    WHERE t.owner_id = $uid
+    ORDER BY t.created_at DESC
+    LIMIT 6
+");
 
-// /* =========================================================
-//    5) RECENT RESERVATIONS (latest 5)
-// ========================================================= */
-// $recent_res = $conn->query("
-//     SELECT r.*, t.name AS tool_name, u.name AS renter_name
-//     FROM reservations r
-//     JOIN tools t ON r.tool_id = t.tool_id
-//     JOIN users u ON r.user_id = u.user_id
-//     WHERE t.owner_id = $uid
-//     ORDER BY r.created_at DESC
-//     LIMIT 5
-// ");
+/* =========================================================
+   5) RECENT RESERVATIONS (latest 5)
+========================================================= */
+$recent_res = $conn->query("
+    SELECT r.*, t.name AS tool_name, u.name AS renter_name
+    FROM reservations r
+    JOIN tools t ON r.tool_id = t.tool_id
+    JOIN users u ON r.user_id = u.user_id
+    WHERE t.owner_id = $uid
+    ORDER BY r.created_at DESC
+    LIMIT 5
+");
 
 // /* =========================================================
 //    6) RECENT MESSAGES (latest 5)
