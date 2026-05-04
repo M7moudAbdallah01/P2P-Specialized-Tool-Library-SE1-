@@ -67,15 +67,15 @@ $my_tools = $conn->query("
 /* =========================================================
    5) RECENT RESERVATIONS (latest 5)
 ========================================================= */
-$recent_res = $conn->query("
-    SELECT r.*, t.name AS tool_name, u.name AS renter_name
-    FROM reservations r
-    JOIN tools t ON r.tool_id = t.tool_id
-    JOIN users u ON r.user_id = u.user_id
-    WHERE t.owner_id = $uid
-    ORDER BY r.created_at DESC
-    LIMIT 5
-");
+// $recent_res = $conn->query("
+//     SELECT r.*, t.name AS tool_name, u.name AS renter_name
+//     FROM reservations r
+//     JOIN tools t ON r.tool_id = t.tool_id
+//     JOIN users u ON r.user_id = u.user_id
+//     WHERE t.owner_id = $uid
+//     ORDER BY r.created_at DESC
+//     LIMIT 5
+// ");
 
 // /* =========================================================
 //    6) RECENT MESSAGES (latest 5)
@@ -291,154 +291,7 @@ $recent_res = $conn->query("
         <!-- ================================================
              RESERVATIONS + MESSAGES side by side
         ================================================ -->
-        <div class="two-col">
-
-            <!-- RESERVATIONS -->
-            <div class="section-block">
-                <div class="section-header">
-                    <div class="sh-left">
-                        <i class="fa fa-calendar" style="color:#3b82f6;"></i>
-                        Recent Reservations
-                    </div>
-                    <a href="reservations.php">View All &rarr;</a>
-                </div>
-                <table class="mini-table">
-                    <thead>
-                    <tr>
-                        <th>Tool</th>
-                        <th>Renter</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php if ($recent_res->num_rows === 0): ?>
-                        <tr class="empty-row"><td colspan="3">No reservations yet.</td></tr>
-                    <?php else: ?>
-                        <?php while ($res = $recent_res->fetch_assoc()):
-                            $badge = match($res['status']) {
-                                'active'    => 'badge-success',
-                                'pending'   => 'badge-warning',
-                                'cancelled' => 'badge-danger',
-                                'completed' => 'badge-info',
-                                default     => 'badge-info'
-                            };
-                        ?>
-                        <tr>
-                            <td><?= htmlspecialchars($res['tool_name']) ?></td>
-                            <td><?= htmlspecialchars($res['renter_name']) ?></td>
-                            <td>
-                                <span class="badge <?= $badge ?>"><?= ucfirst($res['status']) ?></span>
-                            </td>
-                        </tr>
-                        <?php endwhile; ?>
-                    <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- MESSAGES -->
-            <div class="section-block">
-                <div class="section-header">
-                    <div class="sh-left">
-                        <i class="fa fa-comments" style="color:#10b981;"></i>
-                        Recent Messages
-                        <?php if ($unread_msgs > 0): ?>
-                            <span class="badge badge-danger"><?= $unread_msgs ?> new</span>
-                        <?php endif; ?>
-                    </div>
-                    <a href="chat.php">Open Chat &rarr;</a>
-                </div>
-                <table class="mini-table">
-                    <thead>
-                    <tr>
-                        <th>From</th>
-                        <th>Preview</th>
-                        <th>Time</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php if ($recent_msgs->num_rows === 0): ?>
-                        <tr class="empty-row"><td colspan="3">No messages yet.</td></tr>
-                    <?php else: ?>
-                        <?php while ($msg = $recent_msgs->fetch_assoc()): ?>
-                        <tr>
-                            <td>
-                                <?php if (!$msg['is_read']): ?>
-                                    <span class="unread-dot"></span>
-                                <?php endif; ?>
-                                <strong><?= htmlspecialchars($msg['sender_name']) ?></strong>
-                            </td>
-                            <td style="color:#6b7280;">
-                                <?= htmlspecialchars(substr($msg['content'], 0, 35)) ?>...
-                            </td>
-                            <td style="white-space:nowrap;color:#9ca3af;font-size:0.76rem;">
-                                <?= date('M d, H:i', strtotime($msg['created_at'])) ?>
-                            </td>
-                        </tr>
-                        <?php endwhile; ?>
-                    <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-
-        <!-- ================================================
-             REPORTS — full width
-        ================================================ -->
-        <div class="section-block">
-            <div class="section-header">
-                <div class="sh-left">
-                    <i class="fa fa-scale-balanced" style="color:#7c3aed;"></i>
-                    Reports &amp; Disputes
-                    <?php if ($open_reports > 0): ?>
-                        <span class="badge badge-danger"><?= $open_reports ?> open</span>
-                    <?php endif; ?>
-                </div>
-                <a href="reports.php">View All &rarr;</a>
-            </div>
-            <table class="mini-table">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Tool</th>
-                    <th>Reported By</th>
-                    <th>Reason</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php if ($recent_reports->num_rows === 0): ?>
-                    <tr class="empty-row"><td colspan="6">No reports found.</td></tr>
-                <?php else: ?>
-                    <?php while ($rp = $recent_reports->fetch_assoc()):
-                        $rbadge = match($rp['status']) {
-                            'open'     => 'badge-danger',
-                            'resolved' => 'badge-success',
-                            'pending'  => 'badge-warning',
-                            default    => 'badge-info'
-                        };
-                    ?>
-                    <tr>
-                        <td><?= $rp['report_id'] ?></td>
-                        <td><?= htmlspecialchars($rp['tool_name'] ?? '—') ?></td>
-                        <td><?= htmlspecialchars($rp['reporter_name'] ?? '—') ?></td>
-                        <td style="color:#6b7280;">
-                            <?= htmlspecialchars(substr($rp['reason'] ?? '', 0, 45)) ?>...
-                        </td>
-                        <td>
-                            <span class="badge <?= $rbadge ?>"><?= ucfirst($rp['status']) ?></span>
-                        </td>
-                        <td style="color:#9ca3af;font-size:0.76rem;white-space:nowrap;">
-                            <?= date('M d, Y', strtotime($rp['created_at'])) ?>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+        
 
     </div><!-- /.main-content -->
 </div><!-- /.layout-right -->

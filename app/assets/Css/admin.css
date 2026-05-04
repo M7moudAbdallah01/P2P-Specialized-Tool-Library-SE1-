@@ -442,7 +442,7 @@ tr:hover td { background:var(--surface2); }
     margin-bottom: 28px;
 }
 .stat-card {
-    background: var(--card-bg, #fff);
+background: #1b1b1b;
     border: 1px solid var(--border, #e5e7eb);
     border-radius: 14px;
     padding: 20px 22px;
