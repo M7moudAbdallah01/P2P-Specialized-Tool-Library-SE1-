@@ -63,7 +63,7 @@ $action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Au
     <div class="role-badge" style="background:#6b7280;color:#fff;">GUEST</div>
 
     <div class="sidebar-nav">
-        <a href="../app/Client/home.php" class="nav-link active">
+        <a href="../../../public/index.php" class="nav-link active">
             <i class="fa fa-home"></i> Home
         </a>
         <a href="../app/Views/Auth/login.php" class="nav-link">

@@ -274,8 +274,10 @@
     border-radius: 16px;
     padding: 40px 36px;
     width: 100%;
-    max-width: 420px;
+    max-width: 600px;
     box-shadow: 0 8px 40px rgba(0,0,0,.6);
+    margin-top: 40px;
+    margin-left: 150px;
 }
 
 /* Logo inside auth card */
