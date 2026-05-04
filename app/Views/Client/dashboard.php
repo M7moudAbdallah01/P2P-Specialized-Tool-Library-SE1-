@@ -47,60 +47,60 @@ $r = $conn->query("
 ");
 $open_reports = $r->fetch_assoc()['cnt'];
 
-$r = $conn->query("SELECT COALESCE(SUM(total_price),0) AS total FROM reservations r
-                   JOIN tools t ON r.tool_id = t.tool_id
-                   WHERE t.owner_id = $uid AND r.status = 'completed'");
-$total_earned = $r->fetch_assoc()['total'];
+// $r = $conn->query("SELECT COALESCE(SUM(total_price),0) AS total FROM reservations r
+//                    JOIN tools t ON r.tool_id = t.tool_id
+//                    WHERE t.owner_id = $uid AND r.status = 'completed'");
+// $total_earned = $r->fetch_assoc()['total'];
 
 /* =========================================================
    4) MY TOOLS (latest 6)
 ========================================================= */
-$my_tools = $conn->query("
-    SELECT t.*, c.name AS category_name
-    FROM tools t
-    JOIN category c ON t.category_id = c.category_id
-    WHERE t.owner_id = $uid
-    ORDER BY t.created_at DESC
-    LIMIT 6
-");
+// $my_tools = $conn->query("
+//     SELECT t.*, c.name AS category_name
+//     FROM tools t
+//     JOIN category c ON t.category_id = c.category_id
+//     WHERE t.owner_id = $uid
+//     ORDER BY t.created_at DESC
+//     LIMIT 6
+// ");
 
-/* =========================================================
-   5) RECENT RESERVATIONS (latest 5)
-========================================================= */
-$recent_res = $conn->query("
-    SELECT r.*, t.name AS tool_name, u.name AS renter_name
-    FROM reservations r
-    JOIN tools t ON r.tool_id = t.tool_id
-    JOIN users u ON r.user_id = u.user_id
-    WHERE t.owner_id = $uid
-    ORDER BY r.created_at DESC
-    LIMIT 5
-");
+// /* =========================================================
+//    5) RECENT RESERVATIONS (latest 5)
+// ========================================================= */
+// $recent_res = $conn->query("
+//     SELECT r.*, t.name AS tool_name, u.name AS renter_name
+//     FROM reservations r
+//     JOIN tools t ON r.tool_id = t.tool_id
+//     JOIN users u ON r.user_id = u.user_id
+//     WHERE t.owner_id = $uid
+//     ORDER BY r.created_at DESC
+//     LIMIT 5
+// ");
 
-/* =========================================================
-   6) RECENT MESSAGES (latest 5)
-========================================================= */
-$recent_msgs = $conn->query("
-    SELECT m.*, u.name AS sender_name
-    FROM messages m
-    JOIN users u ON m.sender_id = u.user_id
-    WHERE m.receiver_id = $uid
-    ORDER BY m.created_at DESC
-    LIMIT 5
-");
+// /* =========================================================
+//    6) RECENT MESSAGES (latest 5)
+// ========================================================= */
+// $recent_msgs = $conn->query("
+//     SELECT m.*, u.name AS sender_name
+//     FROM messages m
+//     JOIN users u ON m.sender_id = u.user_id
+//     WHERE m.receiver_id = $uid
+//     ORDER BY m.created_at DESC
+//     LIMIT 5
+// ");
 
-/* =========================================================
-   7) RECENT REPORTS (latest 5)
-========================================================= */
-$recent_reports = $conn->query("
-    SELECT rp.*, t.name AS tool_name, u.name AS reporter_name
-    FROM reports rp
-    LEFT JOIN tools t  ON rp.tool_id     = t.tool_id
-    LEFT JOIN users u  ON rp.reporter_id = u.user_id
-    WHERE rp.reported_user_id = $uid OR rp.reporter_id = $uid
-    ORDER BY rp.created_at DESC
-    LIMIT 5
-");
+// /* =========================================================
+//    7) RECENT REPORTS (latest 5)
+// ========================================================= */
+// $recent_reports = $conn->query("
+//     SELECT rp.*, t.name AS tool_name, u.name AS reporter_name
+//     FROM reports rp
+//     LEFT JOIN tools t  ON rp.tool_id     = t.tool_id
+//     LEFT JOIN users u  ON rp.reporter_id = u.user_id
+//     WHERE rp.reported_user_id = $uid OR rp.reporter_id = $uid
+//     ORDER BY rp.created_at DESC
+//     LIMIT 5
+// ");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -242,14 +242,14 @@ $recent_reports = $conn->query("
                     <div class="stat-label">Open Reports</div>
                 </div>
             </div>
-
+<!-- 
             <div class="stat-card">
                 <div class="stat-icon si-orange"><i class="fa fa-dollar-sign"></i></div>
                 <div>
                     <div class="stat-value">$<?= number_format($total_earned, 0) ?></div>
                     <div class="stat-label">Total Earned</div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
 
