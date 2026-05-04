@@ -20,7 +20,7 @@ $total_users = $r->fetch_assoc()['c'];
 $r = $conn->query("SELECT COUNT(*) AS c FROM tools");
 $total_tools = $r->fetch_assoc()['c'];
  
-$r = $conn->query("SELECT COUNT(*) AS c FROM reservation WHERE status = 'pending'");
+$r = $conn->query("SELECT COUNT(*) AS c FROM reservations WHERE status = 'pending'");
 $pending = $r->fetch_assoc()['c'];
  
 $r = $conn->query("SELECT COUNT(*) AS c FROM dispute WHERE status = 'open'");
@@ -63,9 +63,15 @@ $disputes = $r->fetch_assoc()['c'];
             <i class="fa fa-gauge"></i> Dashboard
         </a>
 
-        <a href="tools.php" class="nav-link">
+        <a href="../Tools/tools.php" class="nav-link">
             <i class="fa fa-wrench"></i> Tools
         </a>
+
+        <a href="../Tools/categories.php" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>Categories</a>
 
         <a href="members.php" class="nav-link">
             <i class="fa fa-users"></i> Members
@@ -80,7 +86,7 @@ $disputes = $r->fetch_assoc()['c'];
         </a>
 
         <a class="nav-link" href="#">
-            <i class="fa fa-scale-balanced"></i> Disputes
+            <i class="fa fa-scale-balanced"></i> Disputes & Reports
         </a>
     </div>
 

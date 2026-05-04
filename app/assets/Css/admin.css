@@ -43,7 +43,6 @@
   background: var(--surface2);
   color: var(--text);
 }
-
 /* RIGHT */
 .navbar .right {
   margin-left: auto;
@@ -260,6 +259,318 @@ tr:hover td { background:var(--surface2); }
 .stat-mini-card .num { font-size:1.5rem; font-weight:700; }
 .stat-mini-card .lbl { font-size:.72rem; color:var(--text-muted); }
 
+
+
+/* =========================================================
+   ADD THESE TO admin.css
+========================================================= */
+
+/* --- Role Badges --- */
+.role-technical { background: #f59e0b; color: #fff; }
+.role-user       { background: #6366f1; color: #fff; }
+
+/* --- Topbar breadcrumb --- */
+.topbar-breadcrumb {
+    font-size: 0.85rem;
+    font-weight: 300;
+    opacity: 0.6;
+    margin-left: 6px;
+}
+
+/* --- Categories Grid --- */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+    margin-top: 10px;
+}
+
+.category-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px;
+    padding: 18px 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.category-card:hover {
+    box-shadow: 0 4px 18px rgba(0,0,0,.1);
+    transform: translateY(-2px);
+}
+
+.category-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #fee2e2;
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.category-info {
+    flex: 1;
+}
+
+.category-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: black;
+
+}
+
+.category-count {
+    font-size: 0.78rem;
+    color: #9ca3af;
+    margin-top: 2px;
+}
+
+.category-arrow {
+    color: #d1d5db;
+    font-size: 0.8rem;
+}
+
+/* --- Status Badges --- */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-success { background: #d1fae5; color: #065f46; }
+.badge-danger  { background: #fee2e2; color: #991b1b; }
+
+/* --- Action Buttons (icon style) --- */
+.actions-cell { white-space: nowrap; }
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    font-size: 0.82rem;
+    text-decoration: none;
+    margin-right: 4px;
+    transition: opacity 0.15s;
+}
+
+.btn-action:hover { opacity: 0.75; }
+
+.btn-view   { background: #e0f2fe; color: #0369a1; }
+.btn-toggle { background: #fef9c3; color: #854d0e; }
+.btn-delete { background: #fee2e2; color: #b91c1c; }
+.btn-report { background: #fce7f3; color: #9d174d; }
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    padding: 20px 0;
+}
+
+.category-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 18px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.category-card:hover {
+    border-color: #d1d5db;
+    background: #f9fafb;
+}
+
+.category-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: #fee2e2;
+    color: #b91c1c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.category-info   { flex: 1; min-width: 0; }
+
+.category-name {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.category-count {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 2px;
+}
+
+.category-arrow {
+    font-size: 11px;
+    color: #d1d5db;
+    flex-shrink: 0;
+}
+/* ============================================================
+   STATS
+============================================================ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+.stat-card {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 14px;
+    padding: 20px 22px;
+    display: flex; align-items: center; gap: 14px;
+}
+.stat-icon {
+    width: 46px; height: 46px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+}
+.si-red    { background:#fee2e2; color:#ef4444; }
+.si-blue   { background:#dbeafe; color:#3b82f6; }
+.si-yellow { background:#fef9c3; color:#ca8a04; }
+.si-green  { background:#d1fae5; color:#10b981; }
+.si-purple { background:#ede9fe; color:#7c3aed; }
+.si-orange { background:#ffedd5; color:#ea580c; }
+.stat-value { font-size: 1.75rem; font-weight: 600; line-height: 1; }
+.stat-label { font-size: 0.76rem; color: #9ca3af; margin-top: 3px; }
+
+/* ============================================================
+   SECTION BLOCK
+============================================================ */
+.section-block {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 22px;
+}
+.section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border, #e5e7eb);
+    font-weight: 600; font-size: 0.92rem;
+}
+.section-header .sh-left { display: flex; align-items: center; gap: 8px; }
+.section-header a {
+    font-size: 0.76rem; color: #ef4444;
+    text-decoration: none; font-weight: 400;
+}
+.section-header a:hover { text-decoration: underline; }
+
+/* ============================================================
+   TWO COL ROW
+============================================================ */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 22px;
+}
+@media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+.two-col .section-block { margin-bottom: 0; }
+
+/* ============================================================
+   TOOL CARDS INSIDE SECTION
+============================================================ */
+.tools-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+    gap: 14px;
+    padding: 18px;
+}
+.tool-mini-card {
+    border: 1px solid #f3f4f6;
+    border-radius: 10px; padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+    transition: box-shadow .18s;
+}
+.tool-mini-card:hover { box-shadow: 0 3px 14px rgba(0,0,0,.08); }
+.tmc-name  { font-weight: 600; font-size: 0.88rem; }
+.tmc-cat   { font-size: 0.74rem; color: #9ca3af; }
+.tmc-foot  { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+.tmc-price { font-size: 0.82rem; font-weight: 600; color: #ef4444; }
+.tools-empty {
+    padding: 30px; text-align: center;
+    color: #9ca3af; font-size: 0.85rem;
+}
+
+/* ============================================================
+   MINI TABLE
+============================================================ */
+.mini-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.mini-table th {
+    background: #f9fafb; padding: 9px 16px; text-align: left;
+    font-weight: 600; color: #6b7280;
+    font-size: 0.73rem; text-transform: uppercase; letter-spacing: .04em;
+}
+.mini-table td {
+    padding: 10px 16px;
+    border-top: 1px solid #f3f4f6; color: #374151;
+}
+.mini-table tr:hover td { background: #fafafa; }
+.empty-row td {
+    text-align: center; color: #9ca3af;
+    padding: 24px; font-size: 0.84rem;
+}
+
+/* ============================================================
+   BADGES
+============================================================ */
+.badge {
+    display: inline-block; padding: 3px 9px;
+    border-radius: 20px; font-size: 0.71rem; font-weight: 600;
+}
+.badge-success { background:#d1fae5; color:#065f46; }
+.badge-warning { background:#fef9c3; color:#854d0e; }
+.badge-danger  { background:#fee2e2; color:#991b1b; }
+.badge-info    { background:#dbeafe; color:#1d4ed8; }
+
+/* ============================================================
+   UNREAD DOT
+============================================================ */
+.unread-dot {
+    display: inline-block; width: 7px; height: 7px;
+    border-radius: 50%; background: #ef4444;
+    margin-right: 5px; vertical-align: middle;
+}
+
+/* ============================================================
+   SIDEBAR COUNTS
+============================================================ */
+.nav-count {
+    margin-left: auto;
+    background: #ef4444; color: #fff;
+    border-radius: 20px; font-size: 0.68rem;
+    padding: 1px 7px; font-weight: 600;
+}
 /* =========================================================
    RESPONSIVE
    ========================================================= */
@@ -279,4 +590,82 @@ tr:hover td { background:var(--surface2); }
   }
 }
 
+.tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 22px;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 0;
+}
+.tab-btn {
+    padding: 9px 20px;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #9ca3af;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color .15s, border-color .15s;
+    text-decoration: none;
+    display: inline-block;
+}
+.tab-btn.active {
+    color: #ef4444;
+    border-bottom-color: #ef4444;
+}
+.tab-btn:hover:not(.active) { color: #374151; }
+
+/* ---- Stat mini cards ---- */
+.stat-mini {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+.stat-mini-card {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px;
+    padding: 16px 24px;
+    min-width: 120px;
+    text-align: center;
+}
+.stat-mini-card .num {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #ef4444;
+}
+.stat-mini-card .lbl {
+    font-size: 0.74rem;
+    color: #9ca3af;
+    margin-top: 3px;
+}
+
+/* ---- Status badge ---- */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.73rem;
+    font-weight: 600;
+}
+.sp-active      { background:#d1fae5; color:#065f46; }
+.sp-suspended   { background:#fef9c3; color:#854d0e; }
+.sp-blacklisted { background:#fee2e2; color:#991b1b; }
+
+/* ---- Action buttons (small) ---- */
+.btn-sm { padding: 5px 12px; font-size: 0.78rem; }
+.btn-green {
+    background: #d1fae5; color: #065f46;
+    border: none; border-radius: 8px;
+    padding: 5px 12px; font-size: 0.78rem;
+    font-family: inherit; font-weight: 600;
+    cursor: pointer; transition: opacity .15s;
+}
+.btn-green:hover { opacity: .75; }
 

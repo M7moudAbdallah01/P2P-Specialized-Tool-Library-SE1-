@@ -21,6 +21,7 @@ $isClient = ($role === 'client');
         <title>Tool Hub – Client View</title>
     <?php endif; ?>
     <link rel="stylesheet" href="../../assets/Css/style.css" />
+    <link rel="stylesheet" href="../../assets/Css/admin.css" />
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 </head>
 
@@ -31,14 +32,18 @@ $isClient = ($role === 'client');
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <div class="brand-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" />
-                </svg>
+            <div class="logo">
+                <img src="../../assets/images/logo.png" alt="Tool Hub Logo">
             </div>
-            <span class="brand-text">TOOL LIBRARY</span>
+            <div class="brand-text">TOOL HUB</div>
         </div>
+        <?php if ($isAdmin): ?>
+            <div class="role-badge role-admin">ADMIN</div>
+        <?php elseif ($isTech): ?>
+            <div class="role-badge role-admin">TECHNICAL</div>
+        <?php else: ?>
+            <div class="role-badge role-admin">CLIENT</div>
+        <?php endif; ?>
         <nav class="sidebar-nav">
             <a href="#" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="7" height="7" />
@@ -58,24 +63,18 @@ $isClient = ($role === 'client');
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>Users</a>
+                </svg>members</a>
             <a href="#" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="4" width="18" height="18" rx="2" />
                     <line x1="16" y1="2" x2="16" y2="6" />
                     <line x1="8" y1="2" x2="8" y2="6" />
                     <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>Bookings</a>
+                </svg>Reservations</a>
             <a href="#" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                </svg>Reports</a>
+                </svg>Disputes & Reports</a>
         </nav>
-        <?php if ($isAdmin): ?>
-            <div class="role-badge role-admin">ADMIN</div>
-        <?php elseif ($isTech): ?>
-            <div class="role-badge role-admin">TECHNICAL</div>
-        <?php else: ?>
-            <div class="role-badge role-admin">CLIENT</div>
-        <?php endif; ?>
+        
     </aside>
 
     <div class="layout-right">
