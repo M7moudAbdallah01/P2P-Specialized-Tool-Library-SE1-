@@ -669,3 +669,154 @@ tr:hover td { background:var(--surface2); }
 }
 .btn-green:hover { opacity: .75; }
 
+.hero {
+    text-align: center;
+    padding: 48px 24px 36px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 16px;
+    margin-bottom: 28px;
+    color: #fff;
+}
+.hero h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.hero h1 span { color: #ef4444; }
+.hero p { color: #9ca3af; margin-bottom: 24px; font-size: 0.95rem; }
+.btn-main {
+    display: inline-block;
+    background: #ef4444;
+    color: #fff;
+    padding: 11px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background .15s;
+}
+.btn-main:hover { background: #b91c1c; }
+
+/* ---- Section title ---- */
+.section-block { margin-top: 32px; }
+.section-block h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #111;
+}
+
+/* ---- Stats grid ---- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+}
+
+.stat-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    transition: box-shadow .18s;
+}
+.stat-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,.08); }
+.stat-card i {
+    font-size: 1.4rem;
+    color: #ef4444;
+    margin-bottom: 10px;
+    display: block;
+}
+.stat-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+.stat-card p  { font-size: 0.78rem; color: #9ca3af; margin: 0; }
+
+/* ---- Category card ---- */
+.cat-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 18px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color .15s, box-shadow .15s;
+}
+.cat-card:hover { border-color: #ef4444; box-shadow: 0 3px 14px rgba(239,68,68,.1); }
+.cat-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: #fee2e2;
+    color: #ef4444;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+}
+.cat-name { font-size: 0.9rem; font-weight: 600; }
+.cat-count { font-size: 0.74rem; color: #9ca3af; }
+
+/* ---- How steps ---- */
+.how-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px 16px;
+    text-align: center;
+}
+.how-num {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: #fee2e2;
+    color: #ef4444;
+    font-size: 1.1rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+}
+.how-card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+.how-card p  { font-size: 0.78rem; color: #9ca3af; margin: 0; }
+
+/* ---- Tool card ---- */
+.tool-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px;
+    display: flex; flex-direction: column; gap: 6px;
+    transition: box-shadow .18s;
+}
+.tool-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,.08); }
+.tool-cat  { font-size: 0.72rem; color: #ef4444; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.tool-name { font-size: 0.94rem; font-weight: 700; }
+.tool-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.tool-price { font-size: 1rem; font-weight: 700; }
+.tool-price small { font-size: 0.74rem; color: #9ca3af; font-weight: 400; }
+.btn-rent {
+    background: #fee2e2; color: #b91c1c;
+    border: none; border-radius: 8px;
+    padding: 6px 13px; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; text-decoration: none; font-family: inherit;
+    transition: background .15s;
+}
+.btn-rent:hover { background: #ef4444; color: #fff; }
+
+/* ---- Platform stats ---- */
+.pstat-card {
+    background: #1a1a1a;
+    color: #fff;
+    border-radius: 12px;
+    padding: 22px;
+    text-align: center;
+}
+.pstat-num { font-size: 1.8rem; font-weight: 800; color: #ef4444; }
+.pstat-lbl { font-size: 0.78rem; color: #9ca3af; margin-top: 4px; }
+
+/* ---- Footer ---- */
+.home-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.82rem;
+}
