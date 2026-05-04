@@ -46,9 +46,8 @@ $action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Au
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="../app/assets/Css/style.css">
+<link rel="stylesheet" href="../app/assets/Css/home.css">
 <link rel="stylesheet" href="../app/assets/Css/admin.css">
-
 </head>
 <body>
 
@@ -102,27 +101,27 @@ $action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Au
         <!-- FEATURES -->
         <div class="section-block">
             <h2>Why Tool Hub?</h2>
-            <div class="stats-grid">
+            <div class="stats-grid2">
 
-                <div class="stat-card">
+                <div class="stat-card2">
                     <i class="fa fa-wrench"></i>
                     <h3>Share Tools</h3>
                     <p>List your tools and earn money</p>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card2">
                     <i class="fa fa-calendar-check"></i>
                     <h3>Fast Booking</h3>
                     <p>Reserve tools instantly</p>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card2">
                     <i class="fa fa-shield-halved"></i>
                     <h3>Trusted &amp; Secure</h3>
                     <p>Trust-score verified members</p>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card2">
                     <i class="fa fa-comments"></i>
                     <h3>Built-in Chat</h3>
                     <p>Message owners directly</p>

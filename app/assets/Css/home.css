@@ -1,0 +1,631 @@
+/* ============================================================
+   home.css — Shared styles for home / login / register
+   Inherits variables from style.css
+   ============================================================ */
+
+/* ============================================================
+   HOME PAGE — HERO
+============================================================ */
+.hero {
+    text-align: center;
+    padding: 48px 24px 36px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 16px;
+    margin-bottom: 28px;
+    color: #fff;
+}
+
+.hero h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.hero h1 span { color: var(--red, #e63946); }
+
+.hero p {
+    color: #9ca3af;
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+}
+
+.btn-main {
+    display: inline-block;
+    background: var(--red, #e63946);
+    color: #fff;
+    padding: 11px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background .15s;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+.btn-main:hover { background: var(--red-dim, #c0303c); }
+
+/* ============================================================
+   HOME PAGE — SECTION BLOCKS
+============================================================ */
+.section-block {
+    margin-top: 32px;
+}
+
+.section-block h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text, #eaeaea);
+    text-align: center;
+    padding: 20px;
+}
+
+/* ============================================================
+   HOME PAGE — STATS GRID (features / how it works / tools)
+============================================================ */
+.stats-grid2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+}
+
+.stat-card2 {
+    background: var(--surface, #161616);
+    border: 1px solid var(--border, #252525);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    transition: box-shadow .18s, border-color .18s, transform .18s;
+    color: var(--text, #eaeaea);
+}
+.stat-card2:hover {
+    box-shadow: 0 4px 18px rgba(0,0,0,.3);
+    border-color: var(--red, #e63946);
+    transform: translateY(-2px);
+}
+
+.stat-card2 i {
+    font-size: 1.4rem;
+    color: var(--red, #e63946);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.stat-card2 h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+.stat-card2 p  { font-size: 0.78rem; color: var(--text-muted, #7a7a7a); margin: 0; }
+
+/* ============================================================
+   HOME PAGE — CATEGORY CARDS
+============================================================ */
+.cat-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface, #161616);
+    border: 1px solid var(--border, #252525);
+    border-radius: 12px;
+    padding: 16px 18px;
+    text-decoration: none;
+    color: var(--text, #eaeaea);
+    transition: border-color .15s, box-shadow .15s;
+}
+.cat-card:hover {
+    border-color: var(--red, #e63946);
+    box-shadow: 0 3px 14px rgba(230,57,70,.15);
+}
+
+.cat-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(230,57,70,.15);
+    color: var(--red, #e63946);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+    transition: background .15s;
+}
+.cat-card:hover .cat-icon {
+    background: var(--red, #e63946);
+    color: #fff;
+}
+
+.cat-name  { font-size: 0.9rem; font-weight: 600; color: var(--text, #eaeaea); }
+.cat-count { font-size: 0.74rem; color: var(--text-muted, #7a7a7a); }
+
+/* ============================================================
+   HOME PAGE — HOW IT WORKS CARDS
+============================================================ */
+.how-card {
+    background: var(--surface, #161616);
+    border: 1px solid var(--border, #252525);
+    border-radius: 12px;
+    padding: 22px 16px;
+    text-align: center;
+    transition: border-color .18s;
+}
+.how-card:hover { border-color: var(--red, #e63946); }
+
+.how-num {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(230,57,70,.15);
+    color: var(--red, #e63946);
+    font-size: 1.1rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    border: 2px solid rgba(230,57,70,.3);
+}
+
+.how-card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; color: var(--text, #eaeaea); }
+.how-card p  { font-size: 0.78rem; color: var(--text-muted, #7a7a7a); margin: 0; }
+
+/* ============================================================
+   HOME PAGE — TOOL CARDS
+============================================================ */
+.tool-card {
+    background: var(--surface, #161616);
+    border: 1px solid var(--border, #252525);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex; flex-direction: column; gap: 6px;
+    transition: box-shadow .18s, border-color .18s;
+    color: var(--text, #eaeaea);
+}
+.tool-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    border-color: var(--red, #e63946);
+}
+
+.tool-cat {
+    font-size: 0.72rem;
+    color: var(--red, #e63946);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.tool-name  { font-size: 0.94rem; font-weight: 700; color: var(--text, #eaeaea); }
+.tool-foot  { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.tool-price { font-size: 1rem; font-weight: 700; color: var(--text, #eaeaea); }
+.tool-price small { font-size: 0.74rem; color: var(--text-muted, #7a7a7a); font-weight: 400; }
+
+.btn-rent {
+    background: rgba(230,57,70,.15);
+    color: var(--red, #e63946);
+    border: none; border-radius: 8px;
+    padding: 6px 13px; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; text-decoration: none; font-family: inherit;
+    transition: background .15s, color .15s;
+}
+.btn-rent:hover { background: var(--red, #e63946); color: #fff; }
+
+/* ============================================================
+   HOME PAGE — PLATFORM STATS (dark cards)
+============================================================ */
+.pstat-card {
+    background: var(--surface2, #1e1e1e);
+    border: 1px solid var(--border, #252525);
+    color: var(--text, #eaeaea);
+    border-radius: 12px;
+    padding: 22px;
+    text-align: center;
+    transition: border-color .18s;
+}
+.pstat-card:hover { border-color: var(--red, #e63946); }
+
+.pstat-num {
+    font-size: 1.8rem; font-weight: 800;
+    color: var(--red, #e63946);
+}
+.pstat-lbl {
+    font-size: 0.78rem;
+    color: var(--text-muted, #7a7a7a);
+    margin-top: 4px;
+}
+
+/* ============================================================
+   HOME PAGE — FOOTER
+============================================================ */
+.home-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border, #252525);
+    text-align: center;
+    color: var(--text-muted, #7a7a7a);
+    font-size: 0.82rem;
+}
+
+/* ============================================================
+   HOME PAGE — TOPBAR RIGHT BUTTONS
+============================================================ */
+.topbar .btn-sm {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    border-radius: 7px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+    transition: all .18s;
+    border: none;
+}
+
+/* ============================================================
+   LOGIN & REGISTER — AUTH WRAPPER
+   (Full screen centered card — no sidebar)
+============================================================ */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg, #0d0d0d);
+    padding: 24px;
+}
+
+.auth-card {
+    background: var(--surface, #161616);
+    border: 1px solid var(--border2, #303030);
+    border-radius: 16px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.6);
+}
+
+/* Logo inside auth card */
+.auth-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+.auth-logo img { width: 38px; }
+.auth-logo span {
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -.5px;
+    color: var(--text, #eaeaea);
+    font-family: var(--font-disp, 'Rajdhani', sans-serif);
+}
+.auth-logo span b { color: var(--red, #e63946); }
+
+.auth-card h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 24px;
+    color: var(--text, #eaeaea);
+}
+
+/* ============================================================
+   LOGIN & REGISTER — INPUT GROUPS
+============================================================ */
+.input-group {
+    position: relative;
+    margin-bottom: 14px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted, #7a7a7a);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 11px 14px 11px 38px;
+    border: 1px solid var(--border2, #303030);
+    border-radius: 10px;
+    font-family: var(--font-body, 'DM Sans', sans-serif);
+    font-size: 0.88rem;
+    color: var(--text, #eaeaea);
+    outline: none;
+    transition: border-color .15s, background .15s;
+    background: var(--surface2, #1e1e1e);
+}
+.input-group input::placeholder { color: var(--text-dim, #444); }
+.input-group input:focus {
+    border-color: var(--red, #e63946);
+    background: var(--surface, #161616);
+}
+
+/* ============================================================
+   LOGIN & REGISTER — ERROR / SUCCESS MESSAGES
+============================================================ */
+.auth-error {
+    background: rgba(230,57,70,.12);
+    color: var(--red, #e63946);
+    border: 1px solid rgba(230,57,70,.3);
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-size: 0.82rem;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.auth-success {
+    background: rgba(45,190,108,.12);
+    color: #2dbe6c;
+    border: 1px solid rgba(45,190,108,.3);
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-size: 0.82rem;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* ============================================================
+   LOGIN & REGISTER — SUBMIT BUTTON
+============================================================ */
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--red, #e63946);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font-body, 'DM Sans', sans-serif);
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.auth-btn:hover { background: var(--red-dim, #c0303c); }
+.auth-btn:active { transform: scale(.98); }
+
+/* ============================================================
+   LOGIN & REGISTER — FOOTER LINKS
+============================================================ */
+.auth-link {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 0.83rem;
+    color: var(--text-muted, #7a7a7a);
+}
+.auth-link a {
+    color: var(--red, #e63946);
+    font-weight: 600;
+    text-decoration: none;
+}
+.auth-link a:hover { text-decoration: underline; }
+
+.auth-back {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 0.8rem;
+}
+.auth-back a {
+    color: var(--text-dim, #444);
+    text-decoration: none;
+    transition: color .15s;
+}
+.auth-back a:hover { color: var(--text, #eaeaea); }
+
+/* ============================================================
+   LOGIN & REGISTER — PASSWORD HINT
+============================================================ */
+.pass-hint {
+    font-size: 0.74rem;
+    color: var(--text-dim, #444);
+    margin-top: -10px;
+    margin-bottom: 14px;
+    padding-left: 4px;
+}
+
+/* ============================================================
+   GUEST SIDEBAR ROLE BADGE
+============================================================ */
+.role-guest {
+    background: rgba(107,114,128,.15);
+    color: #9ca3af;
+    border: 1px solid rgba(107,114,128,.3);
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 640px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .auth-card {
+        padding: 28px 20px;
+    }
+    .hero {
+        padding: 32px 16px 24px;
+    }
+    .hero h1 { font-size: 1.5rem; }
+}
+
+@media (max-width: 400px) {
+    .stats-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   TOOL LIBRARY – ADMIN style.css
+   Dark Industrial · Red & Charcoal
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:        #e63946;
+  --red-dim:    #c0303c;
+  --red-glow:   rgba(230, 57, 70, .18);
+  --bg:         #0d0d0d;
+  --surface:    #161616;
+  --surface2:   #1e1e1e;
+  --border:     #252525;
+  --border2:    #303030;
+  --text:       #eaeaea;
+  --text-muted: #7a7a7a;
+  --text-dim:   #444;
+  --valid:      #2dbe6c;
+  --sidebar-w:  224px;
+  --radius:     9px;
+  --radius-lg:  13px;
+  --font-body:  'DM Sans', sans-serif;
+  --font-disp:  'Rajdhani', sans-serif;
+  --shadow:     0 4px 28px rgba(0, 0, 0, .55);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  display: flex;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ──────────────────────────────────────────
+   SIDEBAR
+────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: #101010;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  transition: transform .25s ease;
+  z-index: 200;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 14px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.brand-icon {
+  width: 32px; height: 32px;
+  border-radius: 7px;
+  background: var(--red);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+}
+.brand-text {
+  font-family: var(--font-disp);
+  font-size: 14px; font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.sidebar-nav {
+  display: flex; flex-direction: column;
+  padding: 12px 8px; gap: 2px; flex: 1;
+}
+.nav-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 7px;
+  color: var(--text-muted); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  transition: all .18s;
+}
+.nav-link svg { flex-shrink: 0; }
+.nav-link:hover { background: var(--surface2); color: var(--text); }
+.nav-link.active {
+  background: rgba(230, 57, 70, .12);
+  color: var(--red);
+  border-left: 2px solid var(--red);
+  padding-left: 8px;
+}
+
+.role-badge {
+  margin: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: var(--font-disp);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; text-align: center;
+}
+.role-admin { background: rgba(230,57,70,.15); color: var(--red); border: 1px solid rgba(230,57,70,.3); }
+
+/* ──────────────────────────────────────────
+   LAYOUT RIGHT
+────────────────────────────────────────── */
+.layout-right { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+/* TOPBAR */
+.topbar {
+  height: 56px;
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 24px;
+  background: #101010;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+}
+.hamburger {
+  display: none;
+  background: none; border: none;
+  color: var(--text-muted); cursor: pointer;
+  padding: 4px;
+}
+.topbar-title {
+  font-family: var(--font-disp);
+  font-size: 19px; font-weight: 700;
+  letter-spacing: .04em;
+}
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+.container {
+  width: 100%;
+  max-width: 1200px; /* بدل 960 */
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* =========================================================
+   WELCOME + STATS
+   ========================================================= */
+.welcome-row {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.welcome {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
+
+.welcome h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.welcome p {
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-size: .85rem;
+}
