@@ -1,3 +1,86 @@
+<?php
+session_start();
+require_once __DIR__ . "/../../../Core/database.php";
+
+$db = Database::getInstance();
+$conn = $db->getConnection();
+
+
+$rental_id = $_SESSION['rental_id'] ?? 1; // مؤقتًا 1 لحد ما تربطه بالنظام
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $tool_name = $_POST['tool_name'];
+    $tier = $_POST['tier'];
+    $quantity = (int) $_POST['quantity'];
+    $membership = $_POST['membership'];
+
+    // أسعار الأدوات
+    $rates = [
+        "Power Drill" => ["hourly" => 15, "daily" => 80, "weekly" => 400],
+        "Circular Saw" => ["hourly" => 20, "daily" => 110, "weekly" => 550],
+        "Air Compressor" => ["hourly" => 25, "daily" => 130, "weekly" => 650],
+        "Arc Welder" => ["hourly" => 35, "daily" => 180, "weekly" => 900],
+        "Mini Excavator" => ["hourly" => 120, "daily" => 600, "weekly" => 2800],
+        "Generator 5kW" => ["hourly" => 30, "daily" => 160, "weekly" => 750],
+        "Scaffolding Set" => ["hourly" => 18, "daily" => 95, "weekly" => 460],
+    ];
+
+    // الخصومات
+    $discounts = [
+        "standard" => 0,
+        "silver" => 10,
+        "gold" => 20,
+        "platinum" => 35
+    ];
+
+    // Validation
+    if (!isset($rates[$tool_name])) {
+        echo json_encode(["error" => "Invalid tool"]);
+        exit();
+    }
+
+    if (!isset($discounts[$membership])) {
+        echo json_encode(["error" => "Invalid membership"]);
+        exit();
+    }
+
+    if ($quantity < 1) {
+        $quantity = 1;
+    }
+
+    // الحساب
+    $unit_rate = $rates[$tool_name][$tier];
+    $base_total = $unit_rate * $quantity;
+
+    $discount_percent = $discounts[$membership];
+    $discount_amount = $base_total * ($discount_percent / 100);
+    $final_total = $base_total - $discount_amount;
+
+    // تحديث final_price داخل rentals
+    $stmt = $conn->prepare("UPDATE rentals SET final_price = ? WHERE rental_id = ?");
+    $stmt->bind_param("di", $final_total, $rental_id);
+
+    if ($stmt->execute()) {
+        echo json_encode([
+            "success" => true,
+            "tool" => $tool_name,
+            "tier" => $tier,
+            "quantity" => $quantity,
+            "unit_rate" => $unit_rate,
+            "base_total" => $base_total,
+            "discount" => $discount_amount,
+            "final_total" => $final_total
+        ]);
+    } else {
+        echo json_encode([
+            "error" => $conn->error
+        ]);
+    }
+
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -344,100 +427,58 @@
 
         /* ---- Calculate ---- */
         function calculate() {
-            const sel = document.getElementById('toolSelect');
-            const opt = sel.options[sel.selectedIndex];
+    const sel = document.getElementById('toolSelect');
+    const opt = sel.options[sel.selectedIndex];
 
-            if (!sel.value) {
-                showError('Please select a tool first.');
-                return;
-            }
+    if (!sel.value) {
+        showError('Please select a tool first.');
+        return;
+    }
 
-            const toolName = opt.text;
-            const hourlyRate = parseFloat(opt.dataset.hourly);
-            const dailyRate = parseFloat(opt.dataset.daily);
-            const weeklyRate = parseFloat(opt.dataset.weekly);
+    let qty = 1;
 
-            let baseTotal = 0;
-            let durationDesc = '';
-            let unitRate = 0;
-            let qty = 0;
+    if (currentTier === 'hourly') {
+        qty = document.getElementById('inp-hours').value;
+    } else if (currentTier === 'daily') {
+        qty = document.getElementById('inp-days').value;
+    } else {
+        qty = document.getElementById('inp-weeks').value;
+    }
 
-            if (currentTier === 'hourly') {
-                qty = parseInt(document.getElementById('inp-hours').value) || 1;
-                qty = Math.max(1, qty);
-                baseTotal = hourlyRate * qty;
-                unitRate = hourlyRate;
-                durationDesc = qty + ' Hour' + (qty > 1 ? 's' : '');
-            } else if (currentTier === 'daily') {
-                qty = parseInt(document.getElementById('inp-days').value) || 1;
-                qty = Math.max(1, qty);
-                baseTotal = dailyRate * qty;
-                unitRate = dailyRate;
-                durationDesc = qty + ' Day' + (qty > 1 ? 's' : '');
-            } else {
-                qty = parseInt(document.getElementById('inp-weeks').value) || 1;
-                qty = Math.max(1, qty);
-                baseTotal = weeklyRate * qty;
-                unitRate = weeklyRate;
-                durationDesc = qty + ' Week' + (qty > 1 ? 's' : '');
-            }
+    fetch(window.location.href, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body:
+            `tool_name=${encodeURIComponent(opt.text)}` +
+            `&tier=${currentTier}` +
+            `&quantity=${qty}` +
+            `&membership=${currentMembership}`
+    })
+    .then(res => res.json())
+    .then(data => {
 
-            const discountAmt = baseTotal * (currentDiscount / 100);
-            const finalTotal = baseTotal - discountAmt;
-
-            // Membership label
-            const tierLabels = {
-                standard: 'Standard',
-                silver: 'Silver Member',
-                gold: 'Gold Member',
-                platinum: 'Platinum Member'
-            };
-
-            const html = `
-        <table class="breakdown-table">
-            <tr>
-                <td>Tool</td>
-                <td><strong style="color:#eee;">${toolName}</strong></td>
-            </tr>
-            <tr class="highlight-row">
-                <td>Duration</td>
-                <td>${durationDesc} (${currentTier.charAt(0).toUpperCase() + currentTier.slice(1)} rate)</td>
-            </tr>
-            <tr>
-                <td>Rate</td>
-                <td>$${unitRate.toFixed(2)} / ${currentTier === 'hourly' ? 'hr' : currentTier === 'daily' ? 'day' : 'wk'}</td>
-            </tr>
-            <tr>
-                <td>Base Cost</td>
-                <td>$${baseTotal.toFixed(2)}</td>
-            </tr>
-            <tr>
-                <td>Membership</td>
-                <td>${tierLabels[currentMembership]}</td>
-            </tr>
-            ${currentDiscount > 0 ? `
-            <tr class="row-savings">
-                <td>Membership Discount (${currentDiscount}%)</td>
-                <td style="color:#4ade80;">− $${discountAmt.toFixed(2)}</td>
-            </tr>` : ''}
-            <tr class="row-total">
-                <td><i class="fa fa-dollar-sign" style="margin-right:6px;"></i>Total Due</td>
-                <td>$${finalTotal.toFixed(2)}</td>
-            </tr>
-            ${currentDiscount > 0 ? `
-            <tr>
-                <td colspan="2" style="text-align:center;padding-top:10px;">
-                    <span style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);
-                        color:#4ade80;border-radius:6px;padding:5px 16px;font-size:12px;">
-                        🎉 You save $${discountAmt.toFixed(2)} with ${tierLabels[currentMembership]}!
-                    </span>
-                </td>
-            </tr>` : ''}
-        </table>
-    `;
-
-            document.getElementById('breakdownContent').innerHTML = html;
+        if (data.error) {
+            showError(data.error);
+            return;
         }
+
+        document.getElementById('breakdownContent').innerHTML = `
+            <table class="breakdown-table">
+                <tr><td>Tool</td><td>${data.tool}</td></tr>
+                <tr><td>Duration</td><td>${data.quantity} ${data.tier}</td></tr>
+                <tr><td>Rate</td><td>$${data.unit_rate}</td></tr>
+                <tr><td>Base Cost</td><td>$${data.base_total}</td></tr>
+                <tr><td>Discount</td><td style="color:#4ade80;">-$${data.discount}</td></tr>
+                <tr class="row-total">
+                    <td>Total Due</td>
+                    <td>$${data.final_total}</td>
+                </tr>
+            </table>
+        `;
+    });
+}
 
         /* ---- Error Helper ---- */
         function showError(msg) {
