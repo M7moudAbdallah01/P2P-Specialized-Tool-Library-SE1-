@@ -1,42 +1,42 @@
 <?php
-session_start();
-require_once __DIR__ . "/../../../../Core/database.php";
+// session_start();
+// require_once __DIR__ . "../../../../Core/database.php";
 
-$db   = Database::getInstance();
-$conn = $db->getConnection();
+// $db   = Database::getInstance();
+// $conn = $db->getConnection();
 
-/* ── Stats ── */
-$r           = $conn->query("SELECT COUNT(*) AS c FROM tools WHERE availability = 1");
-$total_tools = $r->fetch_assoc()['c'];
+// /* ── Stats ── */
+// $r           = $conn->query("SELECT COUNT(*) AS c FROM tools WHERE availability = 1");
+// $total_tools = $r->fetch_assoc()['c'];
 
-$r           = $conn->query("SELECT COUNT(*) AS c FROM users WHERE role IN ('client','technical')");
-$total_users = $r->fetch_assoc()['c'];
+// $r           = $conn->query("SELECT COUNT(*) AS c FROM users WHERE role IN ('client','technical')");
+// $total_users = $r->fetch_assoc()['c'];
 
-$r            = $conn->query("SELECT COUNT(*) AS c FROM reservation");
-$total_rents  = $r->fetch_assoc()['c'];
+// $r            = $conn->query("SELECT COUNT(*) AS c FROM reservation");
+// $total_rents  = $r->fetch_assoc()['c'];
 
-/* ── Categories ── */
-$categories = $conn->query("
-    SELECT c.*, COUNT(t.tool_id) AS tool_count
-    FROM category c
-    LEFT JOIN tools t ON t.category_id = c.category_id AND t.availability = 1
-    GROUP BY c.category_id
-    ORDER BY tool_count DESC
-    LIMIT 4
-");
+// /* ── Categories ── */
+// $categories = $conn->query("
+//     SELECT c.*, COUNT(t.tool_id) AS tool_count
+//     FROM category c
+//     LEFT JOIN tools t ON t.category_id = c.category_id AND t.availability = 1
+//     GROUP BY c.category_id
+//     ORDER BY tool_count DESC
+//     LIMIT 4
+// ");
 
-/* ── Top Tools ── */
-$top_tools = $conn->query("
-    SELECT t.*, c.name AS cat_name
-    FROM tools t
-    JOIN category c ON t.category_id = c.category_id
-    WHERE t.availability = 1
-    ORDER BY t.created_at DESC
-    LIMIT 3
-");
+// /* ── Top Tools ── */
+// $top_tools = $conn->query("
+//     SELECT t.*, c.name AS cat_name
+//     FROM tools t
+//     JOIN category c ON t.category_id = c.category_id
+//     WHERE t.availability = 1
+//     ORDER BY t.created_at DESC
+//     LIMIT 3
+// ");
 
-$logged_in  = isset($_SESSION['user_id']);
-$action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Auth/login.php';
+// $logged_in  = isset($_SESSION['user_id']);
+// $action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Auth/login.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,8 +47,8 @@ $action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Au
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="../../assets/Css/style.css">
-<link rel="stylesheet" href="../../assets/Css/admin.css">
+<link rel="stylesheet" href="../app/assets/Css/style.css">
+<link rel="stylesheet" href="../app/assets/Css/admin.css">
 
 <style>
 /* ---- Hero ---- */
@@ -211,7 +211,7 @@ $action_url = $logged_in ? '../' . $_SESSION['role'] . '/dashboard.php' : '../Au
 <div class="sidebar">
     <div class="sidebar-brand">
         <div class="logo">
-            <img src="../../assets/images/logo.png" alt="Tool Hub Logo">
+            <img src="../app/assets/images/logo.png" alt="Tool Hub Logo">
         </div>
         <div class="brand-text">TOOL HUB</div>
     </div>
