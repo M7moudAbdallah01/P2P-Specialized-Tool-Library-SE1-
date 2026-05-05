@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../Auth/login.php");
     exit();
 }
+
  
 $db = Database::getInstance();
 $conn = $db->getConnection();
@@ -237,6 +238,52 @@ $disputes = $r->fetch_assoc()['c'];
             </tbody>
         </table>
     </div>
+
+    <div class="card">
+        <h2>Rental Escalation Tracking </h2>
+        <p>Monitoring late returns and applying penalty tiers automatically.</p>
+    </div>
+
+    <table class="card">
+        <thead>
+            <tr>
+                <th>Rental ID</th>
+                <th>User Name</th>
+                <th>Tool Name</th>
+                <th>Due Date</th>
+                <th>Penalty Fee</th>
+                <th>Escalation Level</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($rentals)): ?>
+                <?php foreach($rentals as $rental): ?>
+                <tr>
+                    <td>#<?php echo $rental['rental_id']; ?></td>
+                    <td><?php echo htmlspecialchars($rental['user_name'] ?? 'Unknown'); ?></td>
+                    <td><?php echo htmlspecialchars($rental['tool_name'] ?? 'Unknown'); ?></td>
+                    <td><?php echo $rental['return_date']; ?></td>
+                    <td class="level-<?php echo $rental['escalation_level']; ?>">
+                        $<?php echo number_format($rental['penalty_fee'], 2); ?>
+                    </td>
+                    <td>
+                        <span class="level-<?php echo $rental['escalation_level']; ?>">
+                            Level <?php echo $rental['escalation_level']; ?>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge"><?php echo strtoupper($rental['status']); ?></span>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="7" style="text-align:center; padding: 50px;">No rental records found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
 
 
 
