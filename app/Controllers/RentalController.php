@@ -17,9 +17,9 @@ $db = Database::getInstance()->getConnection();
 // جلب البيانات (تعديل أسماء الأعمدة بناءً على قاعدة بياناتك)
 $query = "SELECT r.*, 
           u.name as user_name, 
-          t.name as tool_name 
+          t.tool_name as tool_name 
           FROM rentals r
-          LEFT JOIN users u ON r.renter_id = u.user_id
+          LEFT JOIN users u ON r.user_id = u.user_id
           LEFT JOIN tools t ON r.tool_id = t.tool_id";
 
 $result = mysqli_query($db, $query);
