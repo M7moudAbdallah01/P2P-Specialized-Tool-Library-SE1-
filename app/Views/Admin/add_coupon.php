@@ -7,7 +7,7 @@
     
     <label>Apply to Category:</label>
     <select name="category_id">
-        <option value="1">Gardening</option> 
+        <option value="1">Electricity</option> 
         <option value="2">Power Tools</option>
     </select>
     

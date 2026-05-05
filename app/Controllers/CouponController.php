@@ -1,6 +1,20 @@
 <?php
-require_once   "../../Core/database.php";
-$db = Database::getInstance()->getConnection();
+/* =========================================================
+   1) SESSION + AUTH
+========================================================= */
+session_start();
+require_once __DIR__ . "/../../Core/database.php";
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../Auth/login.php");
+    exit();
+}
+ 
+/* =========================================================
+   2) DATABASE CONNECTION
+========================================================= */
+$db   = Database::getInstance();
+$conn = $db->getConnection();
 
 if (isset($_POST['add_campaign'])) {
     

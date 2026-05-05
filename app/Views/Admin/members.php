@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../Auth/login.php");
     exit();
 }
-
+ 
 /* =========================================================
    2) DATABASE CONNECTION
 ========================================================= */
