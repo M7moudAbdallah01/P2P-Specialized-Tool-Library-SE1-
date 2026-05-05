@@ -121,13 +121,6 @@ $disputes = $r->fetch_assoc()['c'];
 
         <div class="topbar-right">
 
-            <div class="notif-wrap">
-                <button class="icon-btn">
-                    <i class="fa fa-bell"></i>
-                </button>
-                <div class="notif-dot">3</div>
-            </div>
-
             <button class="avatar-btn admin-avatar">
                 <?= htmlspecialchars($_SESSION['name']) ?>
                 <span>Admin</span>
