@@ -184,7 +184,7 @@ $disputes = $r->fetch_assoc()['c'];
 
 
 
-            <div class="welcome">
+            <div class="welcome "  style="text-align: center;">
         <h1>Financial Dashboard</h1>
         <p>Real-time revenue tracking and zone performance.</p>
     </div>
@@ -239,7 +239,7 @@ $disputes = $r->fetch_assoc()['c'];
         </table>
     </div>
 
-    <div class="card">
+    <div class="card" style="text-align: center;">
         <h2>Rental Escalation Tracking </h2>
         <p>Monitoring late returns and applying penalty tiers automatically.</p>
     </div>
