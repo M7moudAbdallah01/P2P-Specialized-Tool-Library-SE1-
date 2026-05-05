@@ -1,19 +1,69 @@
-<html>
+<?php
+session_start();
+require_once __DIR__ . "/../../../Core/database.php";
+
+$db   = Database::getInstance();
+$conn = $db->getConnection();
+
+$conn->query("
+    CREATE TABLE IF NOT EXISTS tool_compatibility_checks (
+        id              INT AUTO_INCREMENT PRIMARY KEY,
+        tool_name       VARCHAR(255)  NOT NULL,
+        tool_model      VARCHAR(255)  DEFAULT NULL,
+        tool_accessory  VARCHAR(255)  DEFAULT NULL,
+        project_type    VARCHAR(100)  NOT NULL,
+        material        VARCHAR(255)  NOT NULL,
+        material_size   VARCHAR(100)  DEFAULT NULL,
+        notes           TEXT          DEFAULT NULL,
+        result_status   ENUM('compatible','warning','incomplete') NOT NULL,
+        result_summary  TEXT          DEFAULT NULL,
+        checked_at      DATETIME      DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+");
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'save_check') {
+
+    $tool_name      = mysqli_real_escape_string($conn, $_POST['tool_name']      ?? '');
+    $tool_model     = mysqli_real_escape_string($conn, $_POST['tool_model']     ?? '');
+    $tool_accessory = mysqli_real_escape_string($conn, $_POST['tool_accessory'] ?? '');
+    $project_type   = mysqli_real_escape_string($conn, $_POST['project_type']   ?? '');
+    $material       = mysqli_real_escape_string($conn, $_POST['material']       ?? '');
+    $material_size  = mysqli_real_escape_string($conn, $_POST['material_size']  ?? '');
+    $notes          = mysqli_real_escape_string($conn, $_POST['notes']          ?? '');
+    $result_status  = mysqli_real_escape_string($conn, $_POST['result_status']  ?? 'incomplete');
+    $result_summary = mysqli_real_escape_string($conn, $_POST['result_summary'] ?? '');
+
+    $sql = "INSERT INTO tool_compatibility_checks
+                (tool_name, tool_model, tool_accessory, project_type, material, material_size, notes, result_status, result_summary)
+            VALUES
+                ('$tool_name','$tool_model','$tool_accessory','$project_type','$material','$material_size','$notes','$result_status','$result_summary')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo json_encode(['success' => true, 'id' => $conn->insert_id]);
+    } else {
+        echo json_encode(['success' => false, 'error' => $conn->error]);
+    }
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
 <meta charset="UTF-8">
 <title>Tool Hub - Tool Compatibility Checker</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="../../assets/Css/style.css">
-<link rel="stylesheet" href="../../assets/Css/admin.css">
-<link rel="stylesheet" href="../../assets/Css/ToolCompatibility.css">
+<link rel="stylesheet" href="../../../assets/Css/style.css">
+<link rel="stylesheet" href="../../../assets/Css/admin.css">
+<link rel="stylesheet" href="../../../assets/Css/ToolCompatibility.css">
 </head>
 
 <body>
 <div class="sidebar">
     <div class="sidebar-brand">
         <div class="logo">
-            <img src="../../assets/images/logo.png" alt="Tool Hub Logo">
+            <img src="../../../assets/images/logo.png" alt="Tool Hub Logo">
         </div>
         <div class="brand-text">TOOL HUB</div>
     </div>
@@ -21,19 +71,15 @@
     <div class="role-badge" style="background:#6366f1;color:#fff;">CLIENT</div>
 
     <div class="sidebar-nav">
-
         <a href="dashboard.php" class="nav-link">
             <i class="fa fa-gauge"></i> Dashboard
         </a>
-
         <a href="my-tools.php" class="nav-link">
             <i class="fa fa-wrench"></i> My Tools
         </a>
-
         <a href="ToolSpecification.php" class="nav-link">
             <i class="fa fa-plus"></i> Add Tool
         </a>
-
         <a href="../Tools/categories.php" class="nav-link">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0">
                 <rect x="2" y="3" width="20" height="14" rx="2"/>
@@ -41,29 +87,22 @@
                 <line x1="12" y1="17" x2="12" y2="21"/>
             </svg> Categories
         </a>
-
         <a href="reservations.php" class="nav-link">
             <i class="fa fa-calendar"></i> Reservations
         </a>
-
         <a href="chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Messages
         </a>
-
         <a href="reports.php" class="nav-link">
             <i class="fa fa-scale-balanced"></i> Reports
         </a>
-
         <a href="ToolCompatibility.php" class="nav-link active">
             <i class="fa fa-circle-check"></i> Compatibility Checker
         </a>
-
     </div>
 </div>
 
-<!-- =========================================================
-   LAYOUT RIGHT
-========================================================= -->
+
 <div class="layout-right">
 
     <!-- TOPBAR -->
@@ -71,7 +110,7 @@
         <div class="topbar-title">Tool Compatibility Checker</div>
         <div class="topbar-right">
             <button class="avatar-btn" style="background:#6366f1;color:#fff;border:none;cursor:default;">
-                 <span>Client</span>
+                <span>Client</span>
             </button>
             <a href="../Auth/login.php" class="icon-btn">
                 <i class="fa fa-right-from-bracket"></i>
@@ -80,9 +119,7 @@
     </div>
 
     <div class="main-content">
-
         <div class="compat-page">
-
             <div class="compat-container">
 
                 <div class="compat-header">
@@ -168,12 +205,10 @@
                     </button>
                 </div>
 
-                <!-- RESULT SECTION -->
                 <div class="result-section" id="resultSection">
                     <div class="result-header">
                         <i class="fa fa-clipboard-list"></i> Compatibility Result
                     </div>
-
                     <div class="result-body" id="resultBody">
                         <!-- Filled by JS -->
                     </div>
@@ -181,7 +216,6 @@
 
             </div>
         </div>
-
     </div>
 </div>
 
@@ -195,7 +229,6 @@ function checkCompatibility() {
     const materialSize  = document.getElementById('materialSize').value.trim();
     const notes         = document.getElementById('notes').value.trim();
 
-    // Basic validation
     if (!toolName || !projectType || !material) {
         showResult('warning', [
             { icon: 'fa-triangle-exclamation', label: 'Missing Information', value: 'Please fill in Tool Name, Project Type, and Material to get accurate results.' }
@@ -203,10 +236,39 @@ function checkCompatibility() {
         return;
     }
 
-    // Simulate compatibility logic
     const result = evaluateCompatibility(toolName, toolAccessory, projectType, material, materialSize);
 
     showResult(result.status, result.details, result.status);
+
+    const summary = result.details[0]?.value ?? '';
+    saveToDatabase({
+        tool_name:      toolName,
+        tool_model:     toolModel,
+        tool_accessory: toolAccessory,
+        project_type:   projectType,
+        material:       material,
+        material_size:  materialSize,
+        notes:          notes,
+        result_status:  result.status,
+        result_summary: summary
+    });
+}
+
+function saveToDatabase(data) {
+    const formData = new FormData();
+    formData.append('action', 'save_check');
+    for (const [key, value] of Object.entries(data)) {
+        formData.append(key, value);
+    }
+
+    fetch(window.location.href, { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(json => {
+            if (!json.success) {
+                console.warn('DB save failed:', json.error);
+            }
+        })
+        .catch(err => console.warn('Fetch error:', err));
 }
 
 function evaluateCompatibility(tool, accessory, project, material, size) {
@@ -215,27 +277,20 @@ function evaluateCompatibility(tool, accessory, project, material, size) {
     const p = project;
     const a = accessory.toLowerCase();
 
-    let status = 'compatible';
+    let status  = 'compatible';
     let details = [];
 
-    // --- Rule engine (simple demo logic) ---
-
-    // Circular saw + wood
     if ((t.includes('saw') || t.includes('circular')) && (m.includes('wood') || m.includes('pine') || m.includes('plywood'))) {
         details.push({ icon: 'fa-check', label: 'Tool–Material Match', value: 'Circular saw is excellent for cutting wood materials.' });
         if (a.includes('blade')) {
             details.push({ icon: 'fa-check', label: 'Accessory Fit', value: 'The specified blade is suitable for wood cutting operations.' });
         }
     }
-
-    // Saw on metal — warning
     else if (t.includes('saw') && (m.includes('metal') || m.includes('steel') || m.includes('iron'))) {
         status = 'warning';
         details.push({ icon: 'fa-triangle-exclamation', label: 'Material Mismatch Risk', value: 'Standard saw blades are not rated for metal. You need a metal-cutting blade or an angle grinder.' });
         details.push({ icon: 'fa-lightbulb', label: 'Recommendation', value: 'Switch to a metal-rated carbide blade or use an angle grinder with a cutting disc.' });
     }
-
-    // Drill + masonry
     else if (t.includes('drill') && (m.includes('concrete') || m.includes('masonry') || m.includes('brick'))) {
         if (a.includes('masonry') || a.includes('hammer')) {
             details.push({ icon: 'fa-check', label: 'Accessory Fit', value: 'Masonry/hammer drill bit confirmed — suitable for concrete and brick.' });
@@ -245,28 +300,21 @@ function evaluateCompatibility(tool, accessory, project, material, size) {
             details.push({ icon: 'fa-lightbulb', label: 'Recommendation', value: 'Attach a carbide-tipped masonry bit or switch to a rotary hammer drill.' });
         }
     }
-
-    // Sander + painting project
     else if (t.includes('sander') && p === 'painting') {
         details.push({ icon: 'fa-check', label: 'Project Fit', value: 'Sanders are ideal for surface preparation before painting.' });
         details.push({ icon: 'fa-info', label: 'Tip', value: 'Use fine-grit sandpaper (120–220) for finishing; medium-grit (80–100) for material removal.' });
     }
-
-    // Default: generic positive check
     else {
         details.push({ icon: 'fa-check', label: 'Tool–Project Alignment', value: `${tool} appears suitable for ${p} work on ${material}.` });
     }
 
-    // Size check
     if (size) {
         details.push({ icon: 'fa-ruler', label: 'Size / Thickness Note', value: `Noted material size: ${size}. Ensure your tool's capacity or accessory rating covers this dimension.` });
     }
 
-    // Summary line
     const summaries = {
         compatible: { icon: 'fa-circle-check', label: 'Overall Verdict', value: 'This tool and accessory combination is compatible with your project requirements.' },
-        warning:    { icon: 'fa-triangle-exclamation', label: 'Overall Verdict', value: 'Compatibility issues detected. Review the recommendations above before proceeding.' },
-        incomplete: { icon: 'fa-circle-info', label: 'Status', value: 'Incomplete form — please provide all required fields.' }
+        warning:    { icon: 'fa-triangle-exclamation', label: 'Overall Verdict', value: 'Compatibility issues detected. Review the recommendations above before proceeding.' }
     };
     details.unshift(summaries[status]);
 

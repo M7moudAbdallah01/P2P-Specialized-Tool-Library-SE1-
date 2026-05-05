@@ -3,10 +3,10 @@ session_start();
 require_once __DIR__ . "/../../../Core/database.php";
 
 $db = Database::getInstance();
-$conn = $db->getConnection();
+$conn = $db->getConnection(); 
 
 
-$rental_id = $_SESSION['rental_id'] ?? 1; // مؤقتًا 1 لحد ما تربطه بالنظام
+$rental_id = $_SESSION['rental_id'] ?? 1; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -15,7 +15,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $quantity = (int) $_POST['quantity'];
     $membership = $_POST['membership'];
 
-    // أسعار الأدوات
     $rates = [
         "Power Drill" => ["hourly" => 15, "daily" => 80, "weekly" => 400],
         "Circular Saw" => ["hourly" => 20, "daily" => 110, "weekly" => 550],
@@ -26,7 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         "Scaffolding Set" => ["hourly" => 18, "daily" => 95, "weekly" => 460],
     ];
 
-    // الخصومات
     $discounts = [
         "standard" => 0,
         "silver" => 10,
@@ -34,7 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         "platinum" => 35
     ];
 
-    // Validation
     if (!isset($rates[$tool_name])) {
         echo json_encode(["error" => "Invalid tool"]);
         exit();
@@ -49,7 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $quantity = 1;
     }
 
-    // الحساب
     $unit_rate = $rates[$tool_name][$tier];
     $base_total = $unit_rate * $quantity;
 
@@ -57,7 +53,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $discount_amount = $base_total * ($discount_percent / 100);
     $final_total = $base_total - $discount_amount;
 
-    // تحديث final_price داخل rentals
     $stmt = $conn->prepare("UPDATE rentals SET final_price = ? WHERE rental_id = ?");
     $stmt->bind_param("di", $final_total, $rental_id);
 
@@ -81,11 +76,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit();
 }
 
-// Function to calculate final price after discount
 function calculateFinalPrice($originalPrice, $couponCode, $categoryId, $conn) {
     $finalPrice = $originalPrice;
     
-    // Check if coupon exists, is active, hasn't expired, and matches the category
     $query = "SELECT discount_percent FROM coupons 
               WHERE coupon_code = '$couponCode' 
               AND category_id = '$categoryId' 
