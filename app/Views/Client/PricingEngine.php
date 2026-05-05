@@ -80,6 +80,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     exit();
 }
+
+// Function to calculate final price after discount
+function calculateFinalPrice($originalPrice, $couponCode, $categoryId, $conn) {
+    $finalPrice = $originalPrice;
+    
+    // Check if coupon exists, is active, hasn't expired, and matches the category
+    $query = "SELECT discount_percent FROM coupons 
+              WHERE coupon_code = '$couponCode' 
+              AND category_id = '$categoryId' 
+              AND is_active = 1 
+              AND expiry_date >= CURDATE() 
+              LIMIT 1";
+              
+    $result = mysqli_query($conn, $query);
+    
+    if ($row = mysqli_fetch_assoc($result)) {
+        $discount = $row['discount_percent'];
+        $finalPrice = $originalPrice - ($originalPrice * ($discount / 100));
+    }
+    
+    return $finalPrice;
+}
+
 ?>
 <!DOCTYPE html>
 <html>
