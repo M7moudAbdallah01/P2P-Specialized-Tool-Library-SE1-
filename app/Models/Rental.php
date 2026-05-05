@@ -6,7 +6,7 @@ class Rental {
         $db = Database::getInstance()->getConnection();
         
         // جلب الإيجارات المتأخرة
-        $query = "SELECT * FROM rentals WHERE return_date < CURDATE() AND status = 'active'";
+        $query = "SELECT * FROM rentals WHERE actual_return_date < CURDATE()" ;
         $result = mysqli_query($db, $query);
         
         while ($row = mysqli_fetch_assoc($result)) {
