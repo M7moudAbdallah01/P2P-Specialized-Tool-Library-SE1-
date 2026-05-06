@@ -1,12 +1,101 @@
-.function-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 30px; box-shadow: var(--shadow); }
-.card-head { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.field-box label { display: block; color: var(--text-muted); font-size: 11px; letter-spacing: 1px; margin-bottom: 8px; }
-.custom-input { width: 100%; background: var(--bg); border: 1px solid var(--border2); color: var(--text); padding: 12px; border-radius: var(--radius); outline: none; }
-.custom-input:focus { border-color: var(--red); box-shadow: 0 0 8px var(--red-glow); }
-.summary-box { margin-top: 25px; background: rgba(0,0,0,0.4); padding: 20px; border-radius: var(--radius); border-left: 3px solid var(--red); }
-.sum-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--text-muted); font-size: 13px; }
-.total { border-top: 1px solid var(--border2); padding-top: 10px; margin-top: 10px; color: var(--text); font-family: var(--font-disp); font-size: 1.1rem; }
-.total .val { color: var(--valid); font-weight: 700; }
-.btn-action { width: 100%; background: var(--red); color: white; border: none; padding: 15px; border-radius: var(--radius); font-family: var(--font-disp); font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 20px; }
-.btn-action:hover { background: var(--red-dim); transform: translateY(-2px); }
+
+.function-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow);
+}
+
+
+.card-head {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.field-box label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.custom-input {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.custom-input:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 8px var(--red-glow);
+}
+
+
+.summary-box {
+    margin-top: 25px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border-left: 3px solid var(--red);
+    border-radius: var(--radius);
+}
+
+.sum-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.sum-row.total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border2);
+    color: var(--text);
+    font-family: var(--font-disp);
+    font-size: 1.1rem;
+}
+
+.total .val {
+    color: var(--valid);
+    font-weight: 700;
+}
+
+.btn-action {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-disp);
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.btn-action:hover {
+    background: var(--red-dim);
+    transform: translateY(-2px);
+}
+ 
