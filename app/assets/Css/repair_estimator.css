@@ -84,7 +84,7 @@
     margin-top: 20px;
     padding: 15px;
     background: var(--red);
-    color: white;
+    color: rgb(230, 33, 33);
     border: none;
     border-radius: var(--radius);
     font-family: var(--font-disp);
