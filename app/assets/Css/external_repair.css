@@ -1,0 +1,67 @@
+
+.integration-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+/* --- Tracking Card --- */
+.repair-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--red); 
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.repair-card:hover {
+    border-color: var(--red-dim);
+    box-shadow: var(--shadow);
+}
+
+
+.tool-name {
+    font-family: var(--font-disp);
+    color: var(--text);
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.integration-details {
+    border-top: 1px solid var(--border2);
+    padding-top: 15px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.label-text {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.value-text {
+    color: var(--text);
+    font-weight: 600;
+}
+
+
+.status-badge {
+    background: var(--surface2);
+    color: var(--red);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 800;
+    border: 1px solid var(--red-dim);
+}
