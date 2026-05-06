@@ -101,9 +101,165 @@ $cnt['total'] = $cnt['open'] + $cnt['resolved'] + $cnt['closed'];
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="../../assets/Css/style.css">
 <link rel="stylesheet" href="../../assets/Css/admin.css">
-<link rel="stylesheet" href="../../assets/Css/reports.css">
 <style>
+/* ── Stat mini row ── */
+.stat-mini       { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:22px; }
+.stat-mini-card  { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 22px; min-width:110px; text-align:center; }
+.stat-mini-card .num { font-size:1.5rem; font-weight:700; color:var(--red); }
+.stat-mini-card .lbl { font-size:.72rem; color:var(--text-muted); margin-top:2px; }
 
+/* ── Dispute card ── */
+.dispute-list    { display:flex; flex-direction:column; gap:16px; }
+
+.dispute-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    overflow: hidden;
+    transition: border-color .18s;
+}
+.dispute-card:hover { border-color: var(--border2); }
+.dispute-card.is-open     { border-left: 3px solid var(--red); }
+.dispute-card.is-resolved { border-left: 3px solid #2dbe6c; }
+.dispute-card.is-closed   { border-left: 3px solid #444; }
+
+/* card header */
+.dc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.dc-id   { font-size:.75rem; color:var(--text-muted); }
+.dc-tool { font-weight:700; font-size:.95rem; }
+.dc-date { font-size:.75rem; color:var(--text-muted); margin-left:auto; white-space:nowrap; }
+
+/* status pill */
+.dpill {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:3px 10px; border-radius:20px;
+    font-size:.7rem; font-weight:700; letter-spacing:.04em;
+}
+.dpill-open     { background:rgba(230,57,70,.13); color:var(--red);  border:1px solid rgba(230,57,70,.3); }
+.dpill-resolved { background:rgba(45,190,108,.13); color:#2dbe6c;    border:1px solid rgba(45,190,108,.3); }
+.dpill-closed   { background:rgba(100,100,100,.15); color:#888;       border:1px solid #333; }
+
+/* card body */
+.dc-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.4fr;
+    gap: 0;
+    padding: 0;
+}
+@media(max-width:760px){ .dc-body{ grid-template-columns:1fr; } }
+
+.dc-col {
+    padding: 16px 18px;
+    border-right: 1px solid var(--border);
+    font-size:.84rem;
+}
+.dc-col:last-child { border-right:none; }
+
+.dc-col-label {
+    font-size:.68rem; color:var(--text-dim);
+    text-transform:uppercase; letter-spacing:.06em;
+    margin-bottom:6px;
+}
+.dc-col-val { color:var(--text); font-weight:500; }
+.dc-col-sub { font-size:.75rem; color:var(--text-muted); margin-top:2px; }
+
+.reason-text {
+    font-size:.83rem; color:var(--text-muted);
+    line-height:1.6; margin-top:4px;
+}
+
+/* evidence / photos */
+.evidence-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.evidence-thumb {
+    width:54px; height:54px; border-radius:7px;
+    background:var(--surface2); border:1px solid var(--border2);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-dim); font-size:.7rem; text-align:center;
+    cursor:pointer; overflow:hidden;
+}
+.evidence-thumb img { width:100%; height:100%; object-fit:cover; }
+.evidence-thumb.no-img { flex-direction:column; gap:3px; }
+
+/* decision form */
+.dc-foot {
+    padding: 14px 18px;
+    border-top: 1px solid var(--border);
+    background: var(--surface2);
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.dc-foot label {
+    font-size:.7rem; color:var(--text-dim);
+    text-transform:uppercase; letter-spacing:.05em;
+    display:block; margin-bottom:4px;
+}
+.dc-foot select,
+.dc-foot textarea,
+.dc-foot input {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius:7px;
+    color: var(--text);
+    font-family: inherit;
+    font-size:.82rem;
+    padding: 7px 10px;
+    outline:none;
+    transition: border-color .15s;
+    resize: vertical;
+}
+.dc-foot select:focus,
+.dc-foot textarea:focus { border-color:var(--red); }
+.dc-foot select { min-width:150px; }
+.dc-foot textarea { min-width:220px; min-height:52px; }
+
+.dc-foot-actions { display:flex; gap:8px; align-items:flex-end; margin-left:auto; }
+
+.btn-resolve {
+    background:var(--red); color:#fff; border:none;
+    border-radius:8px; padding:8px 18px;
+    font-family:inherit; font-size:.82rem; font-weight:700;
+    cursor:pointer; transition:background .15s;
+    display:inline-flex; align-items:center; gap:6px;
+}
+.btn-resolve:hover { background:var(--red-dim); }
+
+.btn-close-dispute {
+    background:transparent; color:var(--text-muted);
+    border:1px solid var(--border2);
+    border-radius:8px; padding:8px 14px;
+    font-family:inherit; font-size:.82rem;
+    cursor:pointer; transition:all .15s;
+    display:inline-flex; align-items:center; gap:6px;
+    text-decoration:none;
+}
+.btn-close-dispute:hover { border-color:var(--red); color:var(--red); }
+
+/* resolved decision badge */
+.decision-badge {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:4px 12px; border-radius:20px;
+    font-size:.75rem; font-weight:700;
+}
+.db-refund  { background:rgba(45,190,108,.13); color:#2dbe6c; border:1px solid rgba(45,190,108,.3); }
+.db-forfeit { background:rgba(230,57,70,.13);  color:var(--red); border:1px solid rgba(230,57,70,.3); }
+.db-split   { background:rgba(251,191,36,.13); color:#fbbf24; border:1px solid rgba(251,191,36,.3); }
+
+/* empty state */
+.empty-state {
+    text-align:center; padding:52px 20px;
+    color:var(--text-muted);
+}
+.empty-state i { font-size:2.5rem; margin-bottom:14px; color:var(--text-dim); display:block; }
 </style>
 </head>
 <body>
@@ -160,7 +316,12 @@ $cnt['total'] = $cnt['open'] + $cnt['resolved'] + $cnt['closed'];
         <button class="hamburger"><i class="fa fa-bars"></i></button>
         <div class="topbar-title">Disputes &amp; Reports</div>
         <div class="topbar-right">
-
+            <div class="notif-wrap">
+                <button class="icon-btn"><i class="fa fa-bell"></i></button>
+                <?php if ($cnt['open'] > 0): ?>
+                    <div class="notif-dot"><?= $cnt['open'] ?></div>
+                <?php endif; ?>
+            </div>
             <button class="avatar-btn admin-avatar">
                 <?= htmlspecialchars($_SESSION['name']) ?> <span>Admin</span>
             </button>
