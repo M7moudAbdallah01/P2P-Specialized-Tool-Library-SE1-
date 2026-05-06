@@ -196,6 +196,13 @@ $my_tools = $conn->query("
             <i class="fa fa-wrench"></i> Tools
         </a>
 
+
+        <?php if ($role === 'client'): ?>
+            <a href="../Client/ToolSpecification.php" class="nav-link">
+                <i class="fa fa-plus"></i> Add Tool
+            </a>
+        <?php endif; ?>
+
         <a href="categories.php" class="nav-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="2" y="3" width="20" height="14" rx="2" />
@@ -225,37 +232,36 @@ $my_tools = $conn->query("
                 <i class="fa fa-scale-balanced"></i> Reports
             </a>
         <?php else: ?>
-        <a href="my-tools.php" class="nav-link">
-            <i class="fa fa-wrench"></i> My Tools
-            <?php if ($total_tools > 0): ?>
-                <span class="nav-count"><?= $total_tools ?></span>
-            <?php endif; ?>
-        </a>
 
-        <a href="../Client/ToolSpecification.php" class="nav-link">
-            <i class="fa fa-plus"></i> Add Tool
-        </a>
-
-        <a href="reservations.php" class="nav-link">
+        <a href="../Client/reservations.php" class="nav-link">
             <i class="fa fa-calendar"></i> Reservations
             <?php if ($pending_res > 0): ?>
                 <span class="nav-count"><?= $pending_res ?></span>
             <?php endif; ?>
         </a>
 
-        <a href="chat.php" class="nav-link">
-            <i class="fa fa-comments"></i> Messages
+        <a href="../Client/chat.php" class="nav-link">
+            <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>
                 <span class="nav-count"><?= $unread_msgs ?></span>
             <?php endif; ?>
         </a>
 
-        <a href="reports.php" class="nav-link">
+        <!-- <a href="../Client/reports.php" class="nav-link">
             <i class="fa fa-scale-balanced"></i> Reports
             <?php if ($open_reports > 0): ?>
                 <span class="nav-count"><?= $open_reports ?></span>
             <?php endif; ?>
+        </a> -->
+
+
+        <a href="../Client/ToolCompatibility.php" class="nav-link">
+            <i class="fa fa-circle-check"></i> Compatibility Checker
         </a>
+
+        <a href="../Client/DamageDeclaration.php" class="nav-link">
+            <i class="fa fa-triangle-exclamation"></i> Damage Report
+         </a>
 
         <?php endif; ?>
 

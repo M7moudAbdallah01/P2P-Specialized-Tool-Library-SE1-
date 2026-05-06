@@ -138,13 +138,6 @@ $my_tools = $conn->query("
             <i class="fa fa-wrench"></i> Tools
         </a>
 
-        <a href="my-tools.php" class="nav-link">
-            <i class="fa fa-wrench"></i> My Tools
-            <?php if ($total_tools > 0): ?>
-                <span class="nav-count"><?= $total_tools ?></span>
-            <?php endif; ?>
-        </a>
-
         <a href="ToolSpecification.php" class="nav-link">
             <i class="fa fa-plus"></i> Add Tool
         </a>
@@ -165,21 +158,25 @@ $my_tools = $conn->query("
         </a>
 
         <a href="chat.php" class="nav-link">
-            <i class="fa fa-comments"></i> Messages
+            <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>
                 <span class="nav-count"><?= $unread_msgs ?></span>
             <?php endif; ?>
         </a>
 
-        <a href="reports.php" class="nav-link">
+        <!-- <a href="reports.php" class="nav-link">
             <i class="fa fa-scale-balanced"></i> Reports
             <?php if ($open_reports > 0): ?>
                 <span class="nav-count"><?= $open_reports ?></span>
             <?php endif; ?>
-        </a>
+        </a> -->
         <a href="ToolCompatibility.php" class="nav-link">
             <i class="fa fa-circle-check"></i> Compatibility Checker
         </a>
+
+        <a href="DamageDeclaration.php" class="nav-link">
+            <i class="fa fa-triangle-exclamation"></i> Damage Report
+         </a>
 
     </div>
 </div>

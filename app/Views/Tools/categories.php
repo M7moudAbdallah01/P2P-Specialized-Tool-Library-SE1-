@@ -112,7 +112,7 @@ $my_tools = $conn->query("
     <?php elseif ($role === 'technical'): ?>
         <div class="role-badge role-technical">TECHNICAL</div>
     <?php else: ?>
-        <div class="role-badge role-user">USER</div>
+        <div class="role-badge role-user">CLIENT</div>
     <?php endif; ?>
 
     <div class="sidebar-nav">
@@ -132,6 +132,12 @@ $my_tools = $conn->query("
         <a href="tools.php" class="nav-link">
             <i class="fa fa-wrench"></i> Tools
         </a>
+
+        <?php if ($role === 'client'): ?>
+        <a href="../Client/ToolSpecification.php" class="nav-link">
+            <i class="fa fa-plus"></i> Add Tool
+        </a>
+        <?php endif; ?>
 
         <a href="categories.php" class="nav-link active">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -162,16 +168,7 @@ $my_tools = $conn->query("
                 <i class="fa fa-scale-balanced"></i> Reports
             </a>
         <?php else: ?>
-        <a href="my-tools.php" class="nav-link">
-            <i class="fa fa-wrench"></i> My Tools
-            <?php if ($total_tools > 0): ?>
-                <span class="nav-count"><?= $total_tools ?></span>
-            <?php endif; ?>
-        </a>
 
-        <a href="../ClientToolSpecification.php" class="nav-link">
-            <i class="fa fa-plus"></i> Add Tool
-        </a>
 
         <a href="../Clientreservations.php" class="nav-link">
             <i class="fa fa-calendar"></i> Reservations
@@ -180,19 +177,24 @@ $my_tools = $conn->query("
             <?php endif; ?>
         </a>
 
-        <a href="chat.php" class="nav-link">
-            <i class="fa fa-comments"></i> Messages
+        <a href="../Client/chat.php" class="nav-link">
+            <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>
                 <span class="nav-count"><?= $unread_msgs ?></span>
             <?php endif; ?>
         </a>
 
-        <a href="reports.php" class="nav-link">
+        <!-- <a href="reports.php" class="nav-link">
             <i class="fa fa-scale-balanced"></i> Reports
             <?php if ($open_reports > 0): ?>
                 <span class="nav-count"><?= $open_reports ?></span>
             <?php endif; ?>
-        </a>
+        </a> -->
+
+        <a href="../Client/ToolCompatibility.php" class="nav-link"><i class="fa fa-circle-check"></i> Compatibility Checker</a>
+        <a href="../Client/DamageDeclaration.php" class="nav-link">
+            <i class="fa fa-triangle-exclamation"></i> Damage Report
+         </a>
 
         <?php endif; ?>
 
@@ -210,7 +212,7 @@ $my_tools = $conn->query("
 
         <div class="topbar-right">
             <button class="avatar-btn admin-avatar">
-                <?= htmlspecialchars($_SESSION['name']) ?> <span>Admin</span>
+                <?= htmlspecialchars($_SESSION['name']) ?> <span><?= ucfirst($role) ?></span>
             </button>
 
             <a href="../Auth/login.php" class="icon-btn">

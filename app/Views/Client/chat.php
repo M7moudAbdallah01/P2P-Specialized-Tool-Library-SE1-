@@ -201,12 +201,39 @@ while ($row = $resUnread->fetch_assoc()) {
             <a href="dashboard.php" class="nav-link">
                 <i class="fa fa-gauge"></i> Dashboard
             </a>
-            <a href="my-tools.php" class="nav-link">
-                <i class="fa fa-wrench"></i> My Tools
+
+            <a href="../Tools/tools.php" class="nav-link">
+                <i class="fa fa-wrench"></i> Tools
+            </a>
+
+            <a href="ToolSpecification.php" class="nav-link">
+                <i class="fa fa-plus"></i> Add Tool
+            </a>
+
+            <a href="../Tools/categories.php" class="nav-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg> Categories
             </a>
             <a href="reservations.php" class="nav-link">
                 <i class="fa fa-calendar"></i> Reservations
             </a>
+
+            <a href="chat.php" class="nav-link active">
+                <i class="fa fa-comments"></i> Chat
+            </a>
+
+            <a href="ToolCompatibility.php" class="nav-link">
+                <i class="fa fa-circle-check"></i> Compatibility Checker
+            </a>
+
+            <a href="DamageDeclaration.php" class="nav-link">
+                <i class="fa fa-triangle-exclamation"></i> Damage Report
+            </a>
+
+
         <?php endif; ?>
 
         <?php if ($isTech): ?>
@@ -216,11 +243,13 @@ while ($row = $resUnread->fetch_assoc()) {
             <a href="../Tools/tools.php" class="nav-link">
                 <i class="fa fa-wrench"></i> Tools
             </a>
-        <?php endif; ?>
 
         <a href="chat.php" class="nav-link active">
             <i class="fa fa-comments"></i> Chat
         </a>
+        <?php endif; ?>
+
+
     </div>
 </div>
 
@@ -231,9 +260,8 @@ while ($row = $resUnread->fetch_assoc()) {
     <div class="topbar">
         <div class="topbar-title">Chat with Admin</div>
         <div class="topbar-right">
-            <button class="avatar-btn" style="background:#2563eb;color:#fff;">
-                <?= htmlspecialchars($user_name) ?>
-                <span><?= ucfirst($user_role) ?></span>
+            <button class="avatar-btn" style="background:#6366f1;color:#fff;border:none;cursor:default;">
+                <?= htmlspecialchars($_SESSION['name']) ?> <span>Client</span>
             </button>
             <a href="../Auth/login.php" class="icon-btn">
                 <i class="fa fa-right-from-bracket"></i>
