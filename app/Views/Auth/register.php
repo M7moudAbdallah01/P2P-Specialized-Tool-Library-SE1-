@@ -148,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <div class="auth-back">
-                    <a href="../Public/home.php">
+                    <a href="../../../Public/index.php">
                         <i class="fa fa-arrow-left"></i> Back to Home
                     </a>
                 </div>

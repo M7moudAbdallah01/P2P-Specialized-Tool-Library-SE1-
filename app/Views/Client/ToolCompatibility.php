@@ -54,16 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="../../../assets/Css/style.css">
-<link rel="stylesheet" href="../../../assets/Css/admin.css">
-<link rel="stylesheet" href="../../../assets/Css/ToolCompatibility.css">
+<link rel="stylesheet" href="../../assets/Css/style.css">
+<link rel="stylesheet" href="../../assets/Css/admin.css">
+<link rel="stylesheet" href="../../assets/Css/ToolCompatibility.css">
 </head>
 
 <body>
 <div class="sidebar">
     <div class="sidebar-brand">
         <div class="logo">
-            <img src="../../../assets/images/logo.png" alt="Tool Hub Logo">
+            <img src="../../assets/images/logo.png" alt="Tool Hub Logo">
         </div>
         <div class="brand-text">TOOL HUB</div>
     </div>
@@ -74,8 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <a href="dashboard.php" class="nav-link">
             <i class="fa fa-gauge"></i> Dashboard
         </a>
-        <a href="my-tools.php" class="nav-link">
-            <i class="fa fa-wrench"></i> My Tools
+
+        <a href="../Tools/tools.php" class="nav-link">
+            <i class="fa fa-wrench"></i> Tools
         </a>
         <a href="ToolSpecification.php" class="nav-link">
             <i class="fa fa-plus"></i> Add Tool
@@ -91,14 +92,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <i class="fa fa-calendar"></i> Reservations
         </a>
         <a href="chat.php" class="nav-link">
-            <i class="fa fa-comments"></i> Messages
+            <i class="fa fa-comments"></i> Chat
         </a>
-        <a href="reports.php" class="nav-link">
+        <!-- <a href="reports.php" class="nav-link">
             <i class="fa fa-scale-balanced"></i> Reports
-        </a>
+        </a> -->
         <a href="ToolCompatibility.php" class="nav-link active">
             <i class="fa fa-circle-check"></i> Compatibility Checker
         </a>
+
+        <a href="DamageDeclaration.php" class="nav-link">
+            <i class="fa fa-triangle-exclamation"></i> Damage Report
+         </a>
     </div>
 </div>
 
@@ -110,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="topbar-title">Tool Compatibility Checker</div>
         <div class="topbar-right">
             <button class="avatar-btn" style="background:#6366f1;color:#fff;border:none;cursor:default;">
-                <span>Client</span>
+                <?= htmlspecialchars($_SESSION['name']) ?> <span>Client</span>
             </button>
             <a href="../Auth/login.php" class="icon-btn">
                 <i class="fa fa-right-from-bracket"></i>

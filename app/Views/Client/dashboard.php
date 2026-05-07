@@ -138,13 +138,6 @@ $my_tools = $conn->query("
             <i class="fa fa-wrench"></i> Tools
         </a>
 
-        <a href="my-tools.php" class="nav-link">
-            <i class="fa fa-wrench"></i> My Tools
-            <?php if ($total_tools > 0): ?>
-                <span class="nav-count"><?= $total_tools ?></span>
-            <?php endif; ?>
-        </a>
-
         <a href="ToolSpecification.php" class="nav-link">
             <i class="fa fa-plus"></i> Add Tool
         </a>
@@ -165,21 +158,25 @@ $my_tools = $conn->query("
         </a>
 
         <a href="chat.php" class="nav-link">
-            <i class="fa fa-comments"></i> Messages
+            <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>
                 <span class="nav-count"><?= $unread_msgs ?></span>
             <?php endif; ?>
         </a>
 
-        <a href="reports.php" class="nav-link">
+        <!-- <a href="reports.php" class="nav-link">
             <i class="fa fa-scale-balanced"></i> Reports
             <?php if ($open_reports > 0): ?>
                 <span class="nav-count"><?= $open_reports ?></span>
             <?php endif; ?>
-        </a>
+        </a> -->
         <a href="ToolCompatibility.php" class="nav-link">
             <i class="fa fa-circle-check"></i> Compatibility Checker
         </a>
+
+        <a href="DamageDeclaration.php" class="nav-link">
+            <i class="fa fa-triangle-exclamation"></i> Damage Report
+         </a>
 
     </div>
 </div>
@@ -249,14 +246,6 @@ $my_tools = $conn->query("
                     <div class="stat-label">Open Reports</div>
                 </div>
             </div>
-<!-- 
-            <div class="stat-card">
-                <div class="stat-icon si-orange"><i class="fa fa-dollar-sign"></i></div>
-                <div>
-                    <div class="stat-value">$<?= number_format($total_earned, 0) ?></div>
-                    <div class="stat-label">Total Earned</div>
-                </div>
-            </div> -->
 
         </div>
 
@@ -269,13 +258,13 @@ $my_tools = $conn->query("
                     <i class="fa fa-wrench" style="color:#ef4444;"></i>
                     My Tools
                 </div>
-                <a href="tools.php">View All &rarr;</a>
+                <a href="../Tools/tools.php">View All &rarr;</a>
             </div>
 
             <?php if ($my_tools->num_rows === 0): ?>
                 <div class="tools-empty">
                     You have no tools yet.
-                    <a href="add_tool_page.php" style="color:#ef4444;">Add your first tool</a>.
+                    <a href="ToolSpecification.php" style="color:#ef4444;">Add your first tool</a>.
                 </div>
             <?php else: ?>
                 <div class="tools-cards">

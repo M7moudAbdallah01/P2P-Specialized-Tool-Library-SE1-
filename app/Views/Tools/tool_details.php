@@ -1,473 +1,907 @@
 <?php
-session_start();
 
-$role = $_SESSION['role'] ?? '';
+require_once __DIR__ . "/../../../Core/database.php";
+require_once "../../Controllers/toolDetailsController.php";
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../Auth/login.php");
+    exit();
+}
 
-$isAdmin = ($role === 'admin');
-$isTech  = ($role === 'technical');
+$role     = $_SESSION['role']; // 'admin' | 'technical' | 'client'
+$isAdmin  = ($role === 'admin');
+$isTech   = ($role === 'technical');
 $isClient = ($role === 'client');
+$certifications = $certifications ? $certifications->fetch_all(MYSQLI_ASSOC) : [];
+$maintenance    = $maintenance ? $maintenance->fetch_all(MYSQLI_ASSOC) : [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // EDIT TOOL
+    if (isset($_POST['edit_tool'])) {
+        $id    = intval($_POST['tool_id']);
+        $name  = $_POST['name'];
+        $state = $_POST['state'];
+        $price = floatval($_POST['base_price']);
+        $avail = intval($_POST['availability']);
+        $desc  = $_POST['description'];
+
+        $stmt = $conn->prepare("
+            UPDATE tools 
+            SET name=?, state=?, base_price=?, availability=?, description=? 
+            WHERE tool_id=?
+        ");
+        $stmt->bind_param("ssdisi", $name, $state, $price, $avail, $desc, $id);
+        $stmt->execute();
+    }
+
+    // ADD CERTIFICATION
+    if (isset($_POST['add_cert'])) {
+        $stmt = $conn->prepare("
+            INSERT INTO certifications (tool_id, type, issue_date, expiry_date)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->bind_param(
+            "isss",
+            $_POST['tool_id'],
+            $_POST['type'],
+            $_POST['issue_date'],
+            $_POST['expiry_date']
+        );
+        $stmt->execute();
+    }
+
+    // DELETE CERT
+    if (isset($_POST['delete_cert'])) {
+        $stmt = $conn->prepare("DELETE FROM certifications WHERE id=?");
+        $stmt->bind_param("i", $_POST['delete_cert']);
+        $stmt->execute();
+    }
+
+    // ADD MAINTENANCE
+    if (isset($_POST['add_maintenance'])) {
+        $stmt = $conn->prepare("
+            INSERT INTO maintenance_logs (tool_id, action, notes, date)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->bind_param(
+            "isss",
+            $_POST['tool_id'],
+            $_POST['action'],
+            $_POST['notes'],
+            $_POST['date']
+        );
+        $stmt->execute();
+    }
+
+    // UPDATE BATTERY
+    if (isset($_POST['update_battery'])) {
+        $stmt = $conn->prepare("
+            INSERT INTO battery_logs (tool_id, charge_cycles, health_status, last_checked)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->bind_param(
+            "iiss",
+            $_POST['tool_id'],
+            $_POST['charge_cycles'],
+            $_POST['health_status'],
+            $_POST['last_checked']
+        );
+        $stmt->execute();
+    }
+
+    // refresh الصفحة عشان يظهر التحديث
+    header("Location: tool_details.php?id=" . $_POST['tool_id']);
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <?php if ($isAdmin): ?>
-        <title>Tool Hub – Admin View</title>
-    <?php elseif ($isTech): ?>
-        <title>Tool Hub – Technical View</title>
-    <?php else: ?>
-        <title>Tool Hub – Client View</title>
-    <?php endif; ?>
-    <link rel="stylesheet" href="../../assets/Css/style.css" />
-    <link rel="stylesheet" href="../../assets/Css/admin.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tool Hub – Tool Details</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="../../assets/Css/style.css">
+<link rel="stylesheet" href="../../assets/Css/admin.css">
+<link rel="stylesheet" href="../../assets/Css/tool_details.css">
 </head>
+<body data-role="<?= $role ?>">
 
-<body data-role="<?php echo $role; ?>">
-
-    <!-- Add Certification -->
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
-            <div class="logo">
-                <img src="../../assets/images/logo.png" alt="Tool Hub Logo">
-            </div>
-            <div class="brand-text">TOOL HUB</div>
+<!-- ═══════════════════════════════
+     SIDEBAR
+═══════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="logo">
+            <img src="../../assets/images/logo.png" alt="Tool Hub Logo">
         </div>
-        <?php if ($isAdmin): ?>
-            <div class="role-badge role-admin">ADMIN</div>
-        <?php elseif ($isTech): ?>
-            <div class="role-badge role-admin">TECHNICAL</div>
-        <?php else: ?>
-            <div class="role-badge role-admin">CLIENT</div>
-        <?php endif; ?>
-        <nav class="sidebar-nav">
-            <a href="#" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7" />
-                    <rect x="14" y="3" width="7" height="7" />
-                    <rect x="3" y="14" width="7" height="7" />
-                    <rect x="14" y="14" width="7" height="7" />
-                </svg>Dashboard</a>
-            <a href="#" class="nav-link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                </svg>Tools</a>
-            <a href="#" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="3" width="20" height="14" rx="2" />
-                    <line x1="8" y1="21" x2="16" y2="21" />
-                    <line x1="12" y1="17" x2="12" y2="21" />
-                </svg>Categories</a>
-            <a href="#" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>members</a>
-            <a href="#" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>Reservations</a>
-            <a href="#" class="nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                </svg>Disputes & Reports</a>
-        </nav>
-        
-    </aside>
-
-    <div class="layout-right">
-
-        <!-- TOPBAR -->
-        <header class="topbar">
-            <button class="hamburger" onclick="toggleSidebar()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-            </button>
-            <h1 class="topbar-title">Tool Details</h1>
-            <div class="topbar-right">
-                <div class="search-wrap">
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search tools..." />
-                    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                </div>
-                <button class="icon-btn notif-wrap">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                    </svg>
-                    <span class="notif-dot">3</span>
-                </button>
-                <?php if ($isAdmin): ?>
-                    <button class="avatar-btn admin-avatar">A <span>Admin</span>
-
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                    </button>
-                <?php elseif ($isTech): ?>
-                    <button class="avatar-btn admin-avatar">T <span>Technical</span>
-
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <polyline points="6 9 12 15 18 9" />
-                        </svg>
-            </div>
-        <?php else: ?>
-            <button class="avatar-btn user-avatar">C <span>Client</span>
-
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="6 9 12 15 18 9" />
-                </svg>
-            </button>
-        <?php endif; ?>
-        </header>
-
-        <!-- SUBBAR -->
-        <div class="subbar">
-            <div class="breadcrumb">
-                <a href="#">Dashboard</a><span>›</span><a href="#">Tools</a><span>›</span><span class="bc-active">Tool Details</span>
-            </div>
-
-            <div class="action-btns">
-                <?php if ($isAdmin): ?>
-                    <button class="btn btn-outline" onclick="openModal('editToolModal')">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                        </svg>
-                        Edit Tool
-                    </button>
-                <?php endif; ?>
-                <?php if ($isAdmin || $isTech): ?>
-                    <button class="btn btn-solid" onclick="openModal('maintModal')">Add Maintenance</button>
-                    <button class="btn btn-solid" onclick="openModal('battModal')">Update Battery</button>
-                <?php endif; ?>
-                <?php if ($isAdmin): ?>
-                    <button class="btn btn-solid" onclick="openModal('certModal')">Add Certification</button>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <!-- MAIN CONTENT -->
-        <main class="main-content">
-
-            <!-- HERO CARD -->
-            <section class="hero-card card">
-                <div class="hero-image-wrap">
-                    <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Milwaukee_M18_Fuel_Drill_Driver.jpg/640px-Milwaukee_M18_Fuel_Drill_Driver.jpg"
-                        alt="Milwaukee M18 Fuel Drill" class="hero-image"
-                        onerror="this.src='https://placehold.co/200x200/1a1a1a/e63946?text=M18+Drill'" />
-                </div>
-                <div class="hero-info">
-                    <div class="hero-title-row">
-                        <h2 class="tool-name">Milwaukee M18 Fuel Drill</h2>
-                        <span class="badge badge--available" id="statusBadge">Available</span>
-                    </div>
-                    <p class="tool-id">Tool ID: TL-2024-00125</p>
-                    <div class="info-grid">
-                        <div class="info-row"><span class="info-label">Tool ID:</span><span>TL-2024-00125</span></div>
-                        <div class="info-row"><span class="info-label">Base Price:</span><span id="heroPrice">$65.00 / Day</span></div>
-                        <div class="info-row"><span class="info-label">Category:</span><span id="heroCat">Power Tools</span></div>
-                        <div class="info-row"><span class="info-label">Warranty Expiry:</span><span class="accent">12 Nov 2025</span></div>
-                        <div class="info-row"><span class="info-label">Owner:</span><span id="heroOwner">Ahmed Darwish</span></div>
-                        <div class="info-row"><span class="info-label">Added On:</span><span>10 May 2024</span></div>
-                        <div class="info-row"><span class="info-label">Condition:</span><span id="heroCondition">Good</span></div>
-                    </div>
-                    <div class="desc-block">
-                        <span class="desc-label">Description:</span>
-                        <p id="heroDesc">High-performance cordless drill with brushless motor, ideal for heavy-duty applications.</p>
-                    </div>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat-row"><span class="stat-label">Tool State</span><span class="stat-val" id="heroState">Good</span></div>
-                    <div class="stat-row"><span class="stat-label">Total Bookings</span><span class="stat-val">12</span></div>
-                    <div class="stat-row rating-row"><span class="stat-label">Rating</span>
-                        <div class="stars" id="starsDisplay"></div>
-                    </div>
-                    <div class="stat-row"><span class="stat-label">Charge Cycles</span><span class="stat-val" id="heroChargeCycles">45</span></div>
-                    <div class="stat-row"><span class="stat-label">Health Status</span><span class="stat-val" id="heroHealthStatus">Good (87%)</span></div>
-                    <div class="stat-row"><span class="stat-label">Last Checked</span><span class="stat-val" id="heroLastChecked">01 May 2024</span></div>
-                </div>
-            </section>
-
-            <!-- THREE PANELS -->
-            <div class="panels-grid">
-
-                <!-- Certifications -->
-                <div class="card panel">
-                    <div class="panel-header">
-                        <div class="panel-title-wrap">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                <polyline points="14 2 14 8 20 8" />
-                            </svg>
-                            <h3 class="panel-title">Certifications</h3>
-                        </div>
-                        <?php if ($isAdmin): ?>
-                            <button class="add-btn" onclick="openModal('certModal')">+ Add Certification</button>
-                        <?php endif; ?>
-                    </div>
-
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Issue Date</th>
-                                <th>Expiry Date</th>
-                                <th>Status</th>
-                                <?php if ($isAdmin): ?>
-                                    <th>Actions</th>
-                                <?php endif; ?>
-                            </tr>
-                        </thead>
-                        <tbody id="certTableBody">
-                            <tr>
-                                <td>CE Certification</td>
-                                <td>10 Jan 2024</td>
-                                <td>10 Jan 2026</td>
-                                <td><span class="tag tag--valid">Valid</span></td>
-                                <?php if ($isAdmin): ?>
-                                    <td class="row-actions"><button class="row-btn" onclick="editCertRow(this)" title="Edit">✎</button><button class="row-btn del" onclick="deleteRow(this)" title="Delete">🗑</button></td>
-                                <?php endif; ?>
-                            </tr>
-                            <tr>
-                                <td>ISO 9001</td>
-                                <td>15 Mar 2023</td>
-                                <td>15 Mar 2025</td>
-                                <td><span class="tag tag--valid">Valid</span></td>
-                                <?php if ($isAdmin): ?>
-                                    <td class="row-actions"><button class="row-btn" onclick="editCertRow(this)" title="Edit">✎</button><button class="row-btn del" onclick="deleteRow(this)" title="Delete">🗑</button></td>
-                                <?php endif; ?>
-                            </tr>
-                            <tr>
-                                <td>Safety Approved</td>
-                                <td>05 Feb 2024</td>
-                                <td>05 Feb 2026</td>
-                                <td><span class="tag tag--valid">Valid</span></td>
-                                <?php if ($isAdmin): ?>
-                                    <td class="row-actions"><button class="row-btn" onclick="editCertRow(this)" title="Edit">✎</button><button class="row-btn del" onclick="deleteRow(this)" title="Delete">🗑</button></td>
-                                <?php endif; ?>
-                            </tr>
-                        </tbody>
-                    </table>
-                
-                            <polyline points="9 18 15 12 9 6" />
-                        </svg></button>
-                </div>
-
-                <!-- Maintenance History -->
-                <div class="card panel">
-                    <div class="panel-header">
-                        <div class="panel-title-wrap">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                            </svg>
-                            <h3 class="panel-title">Maintenance History</h3>
-                        </div>
-                        <?php if ($isAdmin || $isTech): ?>
-                            <button class="add-btn" onclick="openModal('maintModal')">+ Add Maintenance</button>
-                        <?php endif; ?>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Action</th>
-                                <th>Technician</th>
-                                <th>Notes</th>
-                            </tr>
-                        </thead>
-                        <tbody id="maintTableBody">
-                            <tr>
-                                <td>01 May 2024</td>
-                                <td>General Checkup</td>
-                                <td>Mohamed Ali</td>
-                                <td>All good</td>
-                            </tr>
-                            <tr>
-                                <td>15 Mar 2024</td>
-                                <td>Battery Replace</td>
-                                <td>Omar Hassan</td>
-                                <td>New battery</td>
-                            </tr>
-                            <tr>
-                                <td>20 Feb 2024</td>
-                                <td>Cleaning</td>
-                                <td>Mohamed Ali</td>
-                                <td>Dust cleaned</td>
-                            </tr>
-                            <tr>
-                                <td>10 Jan 2024</td>
-                                <td>Inspection</td>
-                                <td>Sara Ahmed</td>
-                                <td>Everything OK</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                            <polyline points="9 18 15 12 9 6" />
-                        </svg></button>
-                </div>
-
-                <!-- Battery Logs -->
-                <div class="card panel">
-                    <div class="panel-header">
-                        <div class="panel-title-wrap">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="2" y="7" width="18" height="10" rx="2" />
-                                <line x1="22" y1="11" x2="22" y2="13" />
-                            </svg>
-                            <h3 class="panel-title">Battery Logs</h3>
-                        </div>
-                        <?php if ($isAdmin || $isTech): ?>
-                            <button class="add-btn" onclick="openModal('battModal')">+ Update</button>
-                        <?php endif; ?>
-                    </div>
-                    <div class="battery-body">
-                        <div class="gauge-wrap">
-                            <canvas id="batteryGauge" width="160" height="100"></canvas>
-                            <div class="gauge-label">
-                                <span class="gauge-pct" id="gaugePct">87%</span>
-                                <span class="gauge-sub">Health</span>
-                            </div>
-                        </div>
-                        <div class="battery-stats">
-                            <div class="bstat-row"><span class="bstat-label">Charge Cycles</span><span class="bstat-val" id="bCycles">45</span></div>
-                            <div class="bstat-row"><span class="bstat-label">Health Status</span><span class="bstat-val" id="bStatus">Good</span></div>
-                            <div class="bstat-row"><span class="bstat-label">Last Checked</span><span class="bstat-val" id="bChecked">01 May 2024</span></div>
-                        </div>
-                    </div>
-                    
-                            <polyline points="9 18 15 12 9 6" />
-                        </svg></button>
-                </div>
-            </div>
-
-           
-
-        </main>
-    </div><!-- /.layout-right -->
-
-    <!-- ═══════════════════════════════════
-       MODALS
-  ════════════════════════════════════ -->
-
-    <!-- Edit Tool (admin only) -->
-
-    <div class="modal-overlay" id="editToolModal">
-        <div class="modal">
-            <div class="modal-header">
-
-                <h3>Edit Tool</h3><button class="modal-close" onclick="closeModal('editToolModal')">✕</button>
-
-            </div>
-            <div class="modal-body">
-                <label>Tool Name<input type="text" id="editName" value="Milwaukee M18 Fuel Drill" /></label>
-                <label>Category<input type="text" id="editCat" value="Power Tools" /></label>
-                <label>Owner<input type="text" id="editOwner" value="Ahmed Darwish" /></label>
-                <label>Condition
-                    <select id="editCondition">
-                        <option>Good</option>
-                        <option>Fair</option>
-                        <option>Poor</option>
-                    </select>
-                </label>
-                <label>Base Price / Day ($)<input type="number" id="editPrice" value="65" /></label>
-                <label>Status
-                    <select id="editStatus">
-                        <option>Available</option>
-                        <option>Unavailable</option>
-                        <option>Under Maintenance</option>
-                    </select>
-                </label>
-                <label>Description<textarea id="editDesc" rows="3">High-performance cordless drill with brushless motor, ideal for heavy-duty applications.</textarea></label>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal('editToolModal')">Cancel</button>
-                <button class="btn-save" onclick="saveToolEdit()">Save Changes</button>
-            </div>
-        </div>
+        <div class="brand-text">TOOL HUB</div>
     </div>
 
-    <!-- Add Certification -->
     <?php if ($isAdmin): ?>
-        <div class="modal-overlay" id="certModal">
-            <div class="modal">
-                <div class="modal-header">
-
-                    <h3>Add Certification</h3><button class="modal-close" onclick="closeModal('certModal')">✕</button>
-
-                </div>
-                <div class="modal-body">
-                    <label>Type<input type="text" id="certType" placeholder="e.g. ISO 9001" /></label>
-                    <label>Issue Date<input type="date" id="certIssue" /></label>
-                    <label>Expiry Date<input type="date" id="certExpiry" /></label>
-                    <label>Status<select id="certStatus">
-                            <option>Valid</option>
-                            <option>Expired</option>
-                            <option>Pending</option>
-                        </select></label>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-cancel" onclick="closeModal('certModal')">Cancel</button>
-                    <button class="btn-save" onclick="addCert()">Save</button>
-                </div>
-            </div>
-        </div>
+        <div class="role-badge role-admin">ADMIN</div>
+    <?php elseif ($isTech): ?>
+        <div class="role-badge" style="background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3);">TECHNICAL</div>
+    <?php else: ?>
+        <div class="role-badge" style="background:rgba(99,102,241,.15);color:#818cf8;border:1px solid rgba(99,102,241,.3);">CLIENT</div>
     <?php endif; ?>
 
-    <!-- Add Maintenance -->
+    <nav class="sidebar-nav">
+        <?php if ($isAdmin): ?>
+            <a href="../Admin/dashboard.php" class="nav-link"><i class="fa fa-gauge"></i> Dashboard</a>
+        <?php elseif ($isTech): ?>
+            <a href="../Tech/dashboard.php" class="nav-link"><i class="fa fa-gauge"></i> Dashboard</a>
+        <?php else: ?>
+            <a href="../Client/client_dashboard.php" class="nav-link"><i class="fa fa-gauge"></i> Dashboard</a>
+        <?php endif; ?>
 
-    <div class="modal-overlay" id="maintModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Add Maintenance Record</h3><button class="modal-close" onclick="closeModal('maintModal')">✕</button>
+        <a href="tools.php" class="nav-link active"><i class="fa fa-wrench"></i> Tools</a>
+        <a href="categories.php" class="nav-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg> Categories
+        </a>
+
+        <?php if ($isAdmin): ?>
+            <a href="../Admin/members.php"      class="nav-link"><i class="fa fa-users"></i> Members</a>
+            <a href="../Admin/reservations.php" class="nav-link"><i class="fa fa-calendar"></i> Reservations</a>
+            <a href="../Admin/chat.php"         class="nav-link"><i class="fa fa-comments"></i> Chat</a>
+            <a href="../Admin/reports.php"      class="nav-link"><i class="fa fa-scale-balanced"></i> Disputes &amp; Reports</a>
+        <?php elseif ($isTech): ?>
+            <a href="../Tech/reservations.php"  class="nav-link"><i class="fa fa-calendar"></i> Reservations</a>
+            <a href="../Admin/reports.php"      class="nav-link"><i class="fa fa-scale-balanced"></i> Reports</a>
+        <?php else: ?>
+            <a href="../Client/reservations.php" class="nav-link"><i class="fa fa-calendar"></i> My Reservations</a>
+            <a href="../Client/chat.php"          class="nav-link"><i class="fa fa-comments"></i> Chat</a>
+        <?php endif; ?>
+    </nav>
+</aside>
+
+<!-- ═══════════════════════════════
+     RIGHT SIDE
+═══════════════════════════════ -->
+<div class="layout-right">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="topbar-title">Tool Details</div>
+        <div class="topbar-right">
+            <div class="search-wrap">
+                <input type="text" class="search-input" placeholder="Search tools…">
+                <i class="fa fa-search search-icon" style="font-size:12px;"></i>
             </div>
-            <div class="modal-body">
-                <label>Date<input type="date" id="maintDate" /></label>
-                <label>Action<input type="text" id="maintAction" placeholder="e.g. Inspection" /></label>
-                <label>Technician<input type="text" id="maintTech" placeholder="Technician name" /></label>
-                <label>Notes<input type="text" id="maintNotes" placeholder="Short notes" /></label>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal('maintModal')">Cancel</button>
-                <button class="btn-save" onclick="addMaint()">Save</button>
-            </div>
+            <button class="avatar-btn admin-avatar">
+                <?= htmlspecialchars($_SESSION['name']) ?>
+                <span><?= ucfirst($role) ?></span>
+            </button>
+            <a href="../Auth/login.php" class="icon-btn"><i class="fa fa-right-from-bracket"></i></a>
+        </div>
+    </header>
+
+    <!-- SUBBAR -->
+    <div class="subbar">
+        <div class="breadcrumb">
+            <a href="<?= $isAdmin ? '../Admin/dashboard.php' : ($isTech ? '../Tech/dashboard.php' : '../Client/client_dashboard.php') ?>">Dashboard</a>
+            <span>›</span>
+            <a href="tools.php">Tools</a>
+            <span>›</span>
+            <span class="bc-active"><?= htmlspecialchars($tool['name'] ?? 'Tool Details') ?></span>
+        </div>
+
+        <div class="action-btns">
+
+            <?php if ($isAdmin): ?>
+                <button class="btn btn-outline"
+                        onclick="openModal('editToolModal', <?= $tool['tool_id'] ?>)">
+                    <i class="fa fa-pen"></i> Edit Tool
+                </button>
+
+                <button class="btn btn-solid"
+                        onclick="openModal('certModal', <?= $tool['tool_id'] ?>)">
+                    <i class="fa fa-certificate"></i> Add Certification
+                </button>
+            <?php endif; ?>
+
+            <?php if ($isAdmin || $isTech): ?>
+                <button class="btn btn-solid"
+                        onclick="openModal('maintModal', <?= $tool['tool_id'] ?>)">
+                    <i class="fa fa-screwdriver-wrench"></i> Add Maintenance
+                </button>
+
+                <button class="btn btn-solid"
+                        onclick="openModal('battModal', <?= $tool['tool_id'] ?>)">
+                    <i class="fa fa-battery-half"></i> Update Battery
+                </button>
+            <?php endif; ?>
+
+            <?php if ($isClient): ?>
+                <button class="btn btn-solid"
+                        onclick="openModal('reserveModal', <?= $tool['tool_id'] ?>)">
+                    <i class="fa fa-calendar-plus"></i> Reserve This Tool
+                </button>
+            <?php endif; ?>
+
         </div>
     </div>
 
-    <!-- Update Battery -->
-    <?php if ($isAdmin || $isTech): ?>
-        <div class="modal-overlay" id="battModal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3>Update Battery Log</h3><button class="modal-close" onclick="closeModal('battModal')">✕</button>
+    <!-- MAIN -->
+    <main class="main-content">
+
+    <!-- ── HERO CARD ── -->
+    <section class="hero-card card">
+
+        <!-- Info -->
+        <div class="hero-info">
+            <div class="hero-title-row">
+                <h2 class="tool-name-lg"><?= htmlspecialchars($tool['name'] ?? '—') ?></h2>
+
+                <?php
+                $avail     = $tool['availability'] ?? 0;
+                $state     = strtolower($tool['state'] ?? '');
+                $badge_cls = $avail ? 'badge--available' : 'badge--unavailable';
+                $badge_txt = $avail ? 'Available' : 'Unavailable';
+
+                if (str_contains($state,'maintenance')){
+                    $badge_cls='badge--maintenance';
+                    $badge_txt='Maintenance';
+                }
+                ?>
+
+                <span class="badge <?= $badge_cls ?>"><?= $badge_txt ?></span>
+            </div>
+
+            <p class="tool-id-sub">Tool ID: #<?= $tool['tool_id'] ?? '—' ?></p>
+
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">Category:</span>
+                    <span><?= htmlspecialchars($tool['category_name'] ?? '—') ?></span>
                 </div>
-                <div class="modal-body">
-                    <label>Health % (0–100)<input type="number" id="battHealth" min="0" max="100" value="87" /></label>
-                    <label>Charge Cycles<input type="number" id="battCycles" value="45" /></label>
-                    <label>Health Status<input type="text" id="battStatus" value="Good" /></label>
-                    <label>Last Checked<input type="date" id="battChecked" /></label>
+
+                <div class="info-row">
+                    <span class="info-label">Base Price:</span>
+                    <span class="accent">$<?= $tool['base_price'] ?? '—' ?> / day</span>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn-cancel" onclick="closeModal('battModal')">Cancel</button>
-                    <button class="btn-save" onclick="updateBattery()">Save</button>
+
+                <div class="info-row">
+                    <span class="info-label">Owner:</span>
+                    <span><?= htmlspecialchars($tool['owner_name'] ?? '—') ?></span>
                 </div>
+
+                <div class="info-row">
+                    <span class="info-label">Condition:</span>
+                    <span><?= htmlspecialchars($tool['state'] ?? '—') ?></span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Added On:</span>
+                    <span><?= isset($tool['created_at']) ? date('d M Y', strtotime($tool['created_at'])) : '—' ?></span>
+                </div>
+
+                <?php if (!empty($tool['warranty'])): ?>
+                <div class="info-row">
+                    <span class="info-label">Warranty:</span>
+                    <span class="accent"><?= htmlspecialchars($tool['warranty']) ?></span>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="desc-block">
+                <span class="desc-label">Description</span>
+                <p class="desc-text"><?= nl2br(htmlspecialchars($tool['description'] ?? 'No description provided.')) ?></p>
             </div>
         </div>
-    <?php endif; ?>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast"></div>
+        <!-- Stats -->
+        <div class="hero-stats">
 
-    <script src="../../assets/Js/app.js"></script>
+            <?php if (!empty($battery)): ?>
+                <div class="stat-row">
+                    <span class="stat-label-s">Battery Health</span>
+                    <span class="stat-val-s"
+                          style="color:<?= ($battery['health_status'] === 'Good' ? '#2dbe6c' : 'var(--red)') ?>">
+                        <?= htmlspecialchars($battery['health_status'] ?? '—') ?>
+                    </span>
+                </div>
+
+                <div class="stat-row">
+                    <span class="stat-label-s">Charge Cycles</span>
+                    <span class="stat-val-s"><?= htmlspecialchars($battery['charge_cycles'] ?? '0') ?></span>
+                </div>
+
+                <div class="stat-row">
+                    <span class="stat-label-s">Last Checked</span>
+                    <span class="stat-val-s">
+                        <?= isset($battery['last_checked']) ? date('d M Y', strtotime($battery['last_checked'])) : '—' ?>
+                    </span>
+                </div>
+            <?php endif; ?>
+
+            <?php if (!empty($certifications)): ?>
+                <div class="stat-row">
+                    <span class="stat-label-s">Certifications</span>
+                    <span class="stat-val-s"><?= count($certifications) ?> Active</span>
+                </div>
+            <?php endif; ?>
+
+            <div class="stat-row">
+                <span class="stat-label-s">Last Maintenance</span>
+                <span class="stat-val-s">
+                    <?= !empty($maintenance) ? date('d M Y', strtotime($maintenance[0]['date'])) : '—' ?>
+                </span>
+            </div>
+
+            <?php if ($isClient): ?>
+                <div style="margin-top:auto; padding-top:12px; border-top:1px solid var(--border);">
+                    <button class="btn btn-solid"
+                            style="width:100%;"
+                            onclick="openModal('reserveModal', <?= $tool['tool_id'] ?>)">
+                        <i class="fa fa-calendar-plus"></i> Reserve
+                    </button>
+                </div>
+            <?php endif; ?>
+
+        </div>
+    </section>
+
+    <!-- ── PANELS ── -->
+    <div class="panels-grid">
+
+        <!-- CERTIFICATIONS -->
+        <div class="card panel">
+            <div class="panel-header">
+                <div class="panel-title-wrap">
+                    <i class="fa fa-certificate" style="color:var(--red);"></i>
+                    <h3 class="panel-title">Certifications</h3>
+                </div>
+
+                <?php if ($isAdmin): ?>
+                    <button class="add-btn"
+                            onclick="openModal('certModal', <?= $tool['tool_id'] ?>)">+ Add</button>
+                <?php endif; ?>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Issue</th>
+                    <th>Expiry</th>
+                    <th>Status</th>
+                    <?php if ($isAdmin): ?><th></th><?php endif; ?>
+                </tr>
+                </thead>
+
+                <tbody>
+                <?php if (empty($certifications)): ?>
+                    <tr><td colspan="<?= $isAdmin ? 5 : 4 ?>" class="empty-td">No certifications yet.</td></tr>
+                <?php else: ?>
+                    <?php foreach ($certifications as $cert):
+                        $exp_ts = strtotime($cert['expiry_date']);
+                        $is_exp = $exp_ts < time();
+                        $tag_cls = $is_exp ? 'tag--expired' : 'tag--valid';
+                        $tag_txt = $is_exp ? 'Expired' : 'Valid';
+                    ?>
+                    <tr>
+                        <td><?= htmlspecialchars($cert['type']) ?></td>
+                        <td><?= date('d M Y', strtotime($cert['issue_date'])) ?></td>
+                        <td><?= date('d M Y', $exp_ts) ?></td>
+                        <td><span class="tag <?= $tag_cls ?>"><?= $tag_txt ?></span></td>
+
+                        <?php if ($isAdmin): ?>
+                        <td>
+                            <form method="POST" style="display:inline;">
+                                <input type="hidden" name="delete_cert" value="<?= $cert['id'] ?>">
+                                <input type="hidden" name="tool_id" value="<?= $tool['tool_id'] ?>">
+                                <button type="submit" class="row-btn del"
+                                        onclick="return confirm('Delete?')">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                        <?php endif; ?>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- MAINTENANCE -->
+        <div class="card panel">
+            <div class="panel-header">
+                <div class="panel-title-wrap">
+                    <i class="fa fa-screwdriver-wrench" style="color:var(--red);"></i>
+                    <h3 class="panel-title">Maintenance History</h3>
+                </div>
+
+                <?php if ($isAdmin || $isTech): ?>
+                    <button class="add-btn"
+                            onclick="openModal('maintModal', <?= $tool['tool_id'] ?>)">+ Add</button>
+                <?php endif; ?>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Action</th>
+                    <th>Notes</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <?php if (empty($maintenance)): ?>
+                    <tr><td colspan="3" class="empty-td">No maintenance records yet.</td></tr>
+                <?php else: ?>
+                    <?php foreach ($maintenance as $m): ?>
+                    <tr>
+                        <td><?= date('d M Y', strtotime($m['date'])) ?></td>
+                        <td><?= htmlspecialchars($m['action']) ?></td>
+                        <td style="color:var(--text-dim);"><?= htmlspecialchars($m['notes']) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- BATTERY -->
+        <div class="card panel">
+            <div class="panel-header">
+                <div class="panel-title-wrap">
+                    <i class="fa fa-battery-half" style="color:var(--red);"></i>
+                    <h3 class="panel-title">Battery Status</h3>
+                </div>
+
+                <?php if ($isAdmin || $isTech): ?>
+                    <button class="add-btn"
+                            onclick="openModal('battModal', <?= $tool['tool_id'] ?>)">+ Update</button>
+                <?php endif; ?>
+            </div>
+
+            <?php if (empty($battery)): ?>
+                <p class="empty-td">No battery data yet.</p>
+            <?php else: ?>
+                <div class="battery-body">
+                    <div class="battery-stats">
+                        <div class="bstat-row">
+                            <span class="bstat-label">Charge Cycles</span>
+                            <span class="bstat-val"><?= htmlspecialchars($battery['charge_cycles'] ?? '0') ?></span>
+                        </div>
+
+                        <div class="bstat-row">
+                            <span class="bstat-label">Health Status</span>
+                            <span class="bstat-val"
+                                  style="color:<?= $battery['health_status'] === 'Good' ? '#2dbe6c' : 'var(--red)' ?>">
+                                <?= htmlspecialchars($battery['health_status'] ?? '—') ?>
+                            </span>
+                        </div>
+
+                        <div class="bstat-row">
+                            <span class="bstat-label">Last Checked</span>
+                            <span class="bstat-val">
+                                <?= isset($battery['last_checked']) ? date('d M Y', strtotime($battery['last_checked'])) : '—' ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+    </div>
+
+</main>
+</div><!-- /.layout-right -->
+
+<!-- ═══════════════════════════════
+     MODALS
+═══════════════════════════════ -->
+
+<!-- Edit Tool — admin only -->
+<?php if ($isAdmin && !empty($tool)): ?>
+<div class="modal-overlay" id="editToolModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Edit Tool</h3>
+            <button type="button" class="modal-close" onclick="closeModal('editToolModal')">✕</button>
+        </div>
+
+        <form method="POST">
+            <input type="hidden" name="edit_tool" value="1">
+            <input type="hidden" name="tool_id" value="<?= intval($tool['tool_id']) ?>">
+
+            <div class="modal-body">
+
+                <!-- Tool Name -->
+                <label>Tool Name
+                    <input type="text"
+                           name="name"
+                           value="<?= htmlspecialchars($tool['name'] ?? '') ?>"
+                           required>
+                </label>
+
+                <!-- Condition (IMPORTANT: match DB ENUM) -->
+                <label>Condition
+                    <select name="state" required>
+                        <?php
+                        $states = ['good','needs_maintenance','broken','unavailable'];
+                        foreach ($states as $s):
+                        ?>
+                            <option value="<?= $s ?>"
+                                <?= ($tool['state'] ?? '') === $s ? 'selected' : '' ?>>
+                                <?= ucfirst(str_replace('_',' ', $s)) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+
+                <!-- Price -->
+                <label>Base Price / Day ($)
+                    <input type="number"
+                           name="base_price"
+                           value="<?= floatval($tool['base_price'] ?? 0) ?>"
+                           step="0.01"
+                           min="0"
+                           required>
+                </label>
+
+                <!-- Availability -->
+                <label>Availability
+                    <select name="availability" required>
+                        <option value="1" <?= !empty($tool['availability']) ? 'selected' : '' ?>>
+                            Available
+                        </option>
+                        <option value="0" <?= empty($tool['availability']) ? 'selected' : '' ?>>
+                            Unavailable
+                        </option>
+                    </select>
+                </label>
+
+                <!-- Description -->
+                <label>Description
+                    <textarea name="description" rows="3"><?= htmlspecialchars($tool['description'] ?? '') ?></textarea>
+                </label>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('editToolModal')">Cancel</button>
+                <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
+
+<!-- Add Certification — admin only -->
+<?php if ($isAdmin && !empty($tool)): ?>
+<div class="modal-overlay" id="certModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Add Certification</h3>
+            <button type="button" class="modal-close" onclick="closeModal('certModal')">✕</button>
+        </div>
+
+        <form method="POST">
+            <input type="hidden" name="add_cert" value="1">
+            <input type="hidden" name="tool_id" value="<?= intval($tool['tool_id']) ?>">
+
+            <div class="modal-body">
+
+                <!-- Type -->
+                <label>Type
+                    <input type="text"
+                           name="type"
+                           placeholder="e.g. ISO 9001"
+                           required>
+                </label>
+
+                <!-- Issue Date -->
+                <label>Issue Date
+                    <input type="date"
+                           name="issue_date"
+                           max="<?= date('Y-m-d') ?>"
+                           required>
+                </label>
+
+                <!-- Expiry Date -->
+                <label>Expiry Date
+                    <input type="date"
+                           name="expiry_date"
+                           required>
+                </label>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('certModal')">Cancel</button>
+                <button type="submit" class="btn-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
+
+<!-- Add Maintenance — admin + technical -->
+<?php if (($isAdmin || $isTech) && !empty($tool)): ?>
+<div class="modal-overlay" id="maintModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Add Maintenance Record</h3>
+            <button type="button" class="modal-close" onclick="closeModal('maintModal')">✕</button>
+        </div>
+
+        <form method="POST">
+            <input type="hidden" name="add_maintenance" value="1">
+            <input type="hidden" name="tool_id" value="<?= intval($tool['tool_id']) ?>">
+
+            <div class="modal-body">
+
+                <!-- Date -->
+                <label>Date
+                    <input type="date"
+                           name="date"
+                           max="<?= date('Y-m-d') ?>"
+                           required>
+                </label>
+
+                <!-- Action -->
+                <label>Action
+                    <input type="text"
+                           name="action"
+                           placeholder="e.g. Inspection"
+                           required>
+                </label>
+
+                <!-- Notes -->
+                <label>Notes
+                    <input type="text"
+                           name="notes"
+                           placeholder="Short notes">
+                </label>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('maintModal')">Cancel</button>
+                <button type="submit" class="btn-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- Update Battery — admin + technical -->
+<?php if ($isAdmin || $isTech): ?>
+<div class="modal-overlay" id="battModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Update Battery Log</h3>
+            <button type="button" class="modal-close" onclick="closeModal('battModal')">✕</button>
+        </div>
+
+        <form method="POST">
+            <input type="hidden" name="update_battery" value="1">
+            <input type="hidden" name="tool_id" value="<?= intval($tool['tool_id'] ?? 0) ?>">
+
+            <div class="modal-body">
+
+                <!-- Charge Cycles -->
+                <label>
+                    Charge Cycles
+                    <input type="number"
+                           name="charge_cycles"
+                           value="<?= htmlspecialchars($battery['charge_cycles'] ?? 0) ?>"
+                           min="0"
+                           required>
+                </label>
+
+                <!-- Health Status -->
+                <label>
+                    Health Status
+                    <select name="health_status" required>
+                        <?php 
+                        $currentStatus = $battery['health_status'] ?? '';
+                        foreach(['Good','Fair','Poor','Critical'] as $hs): 
+                        ?>
+                            <option value="<?= $hs ?>" <?= $currentStatus === $hs ? 'selected' : '' ?>>
+                                <?= $hs ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+
+                <!-- Last Checked -->
+                <label>
+                    Last Checked
+                    <input type="date"
+                           name="last_checked"
+                           value="<?= !empty($battery['last_checked']) ? date('Y-m-d', strtotime($battery['last_checked'])) : date('Y-m-d') ?>"
+                           required>
+                </label>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('battModal')">
+                    Cancel
+                </button>
+                <button type="submit" class="btn-save">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- Reserve Tool — client only -->
+<?php if ($isClient && !empty($tool)): ?>
+<div class="modal-overlay" id="reserveModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Reserve Tool</h3>
+            <button type="button" class="modal-close" onclick="closeModal('reserveModal')">✕</button>
+        </div>
+
+        <form method="POST" action="../Client/reserve.php">
+            <input type="hidden" name="tool_id" value="<?= intval($tool['tool_id']) ?>">
+
+            <div class="modal-body">
+
+                <!-- Start Date -->
+                <label>Start Date
+                    <input type="date"
+                           name="start_date"
+                           min="<?= date('Y-m-d') ?>"
+                           required>
+                </label>
+
+                <!-- End Date -->
+                <label>End Date
+                    <input type="date"
+                           name="end_date"
+                           min="<?= date('Y-m-d') ?>"
+                           required>
+                </label>
+
+                <!-- PRICE BOX -->
+                <div style="
+                    background:var(--surface2);
+                    border:1px solid var(--border2);
+                    border-radius:8px;
+                    padding:12px;
+                    font-size:12px;
+                    color:var(--text-muted);
+                ">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                        <span>Price per day</span>
+                        <span style="color:var(--text);">
+                            $<?= number_format(floatval($tool['base_price'] ?? 0), 2) ?>
+                        </span>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;">
+                        <span>Total</span>
+                        <span style="color:var(--red);font-weight:700;" id="totalPrice">—</span>
+                    </div>
+                </div>
+
+                <!-- TOOL NOT AVAILABLE WARNING -->
+                <?php if (empty($tool['availability'])): ?>
+                    <p style="color:var(--red);font-size:12px;margin-top:8px;">
+                        This tool is currently unavailable for reservation.
+                    </p>
+                <?php endif; ?>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('reserveModal')">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="btn-save"
+                        <?= empty($tool['availability']) ? 'disabled' : '' ?>>
+                    Confirm Reservation
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Modal helpers ── */
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(el =>
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); })
+);
+
+/* ── Battery gauge ── */
+(function(){
+    const canvas = document.getElementById('batteryGauge');
+    if (!canvas) return;
+
+    <?php
+    $health_pct = 0;
+    if (!empty($battery)) {
+        $health_pct = match($battery['health_status']) {
+            'Good'     => 87,
+            'Fair'     => 55,
+            'Poor'     => 30,
+            'Critical' => 10,
+            default    => 50
+        };
+    }
+    ?>
+    const pct = <?= $health_pct ?>;
+    document.getElementById('gaugePct').textContent = pct + '%';
+
+    const ctx = canvas.getContext('2d');
+    const cx = 80, cy = 90, r = 70;
+    const startAngle = Math.PI;
+    const endAngle   = Math.PI * 2;
+    const fillAngle  = startAngle + (pct / 100) * Math.PI;
+    const color      = pct > 60 ? '#2dbe6c' : pct > 30 ? '#fbbf24' : '#e63946';
+
+    ctx.clearRect(0, 0, 160, 100);
+
+    // track
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, startAngle, endAngle);
+    ctx.strokeStyle = '#252525';
+    ctx.lineWidth   = 10;
+    ctx.stroke();
+
+    // fill
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, startAngle, fillAngle);
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = 10;
+    ctx.lineCap     = 'round';
+    ctx.stroke();
+})();
+
+/* ── Reserve price calc ── */
+<?php if ($isClient): ?>
+(function(){
+    const price    = <?= floatval($tool['base_price'] ?? 0) ?>;
+    const startEl  = document.querySelector('#reserveModal [name=start_date]');
+    const endEl    = document.querySelector('#reserveModal [name=end_date]');
+    const totalEl  = document.getElementById('totalPrice');
+    if (!startEl || !endEl) return;
+
+    function calc(){
+        const s = new Date(startEl.value), e = new Date(endEl.value);
+        if (s && e && e > s) {
+            const days = Math.ceil((e - s) / 86400000);
+            totalEl.textContent = '$' + (days * price).toFixed(2) + ' (' + days + ' days)';
+        } else {
+            totalEl.textContent = '—';
+        }
+    }
+    startEl.addEventListener('change', calc);
+    endEl.addEventListener('change', calc);
+})();
+<?php endif; ?>
+</script>
+
 </body>
-
 </html>
