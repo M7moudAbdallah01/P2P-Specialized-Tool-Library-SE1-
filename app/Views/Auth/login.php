@@ -82,6 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
  
+<!-- ── RIGHT SIDE ── -->
 <div class="layout-right">
  
     <div class="topbar">
@@ -136,9 +137,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
  
             </div>
         </div>
-    </div>
+    </div><!-- /.main-content -->
  
-</div>
+</div><!-- /.layout-right -->
  
 
 </body>
