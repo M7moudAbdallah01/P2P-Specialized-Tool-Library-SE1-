@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 require_once __DIR__ . '/../Models/Tool.php';
 require_once __DIR__ . '/../Models/Certification.php';
 require_once __DIR__ . '/../Models/MaintenanceLog.php';
