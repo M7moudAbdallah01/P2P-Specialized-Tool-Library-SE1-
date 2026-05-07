@@ -138,6 +138,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <a href="tools.php" class="nav-link active"><i class="fa fa-wrench"></i> Tools</a>
+
+        <?php if ($isClient): ?>
+            <a href="../Client/ToolSpecification.php" class="nav-link">
+                <i class="fa fa-plus"></i> Add Tool
+            </a>
+        <?php endif; ?>
+
+
         <a href="categories.php" class="nav-link">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="2" y="3" width="20" height="14" rx="2"/>
@@ -145,6 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <line x1="12" y1="17" x2="12" y2="21"/>
             </svg> Categories
         </a>
+
 
         <?php if ($isAdmin): ?>
             <a href="../Admin/members.php"      class="nav-link"><i class="fa fa-users"></i> Members</a>
@@ -157,6 +166,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php else: ?>
             <a href="../Client/reservations.php" class="nav-link"><i class="fa fa-calendar"></i> My Reservations</a>
             <a href="../Client/chat.php"          class="nav-link"><i class="fa fa-comments"></i> Chat</a>
+
+
+        <a href="../Client/ToolCompatibility.php" class="nav-link">
+            <i class="fa fa-circle-check"></i> Compatibility Checker
+        </a>
+
+        <a href="../Client/DamageDeclaration.php" class="nav-link">
+            <i class="fa fa-triangle-exclamation"></i> Damage Report
+         </a>
         <?php endif; ?>
     </nav>
 </aside>

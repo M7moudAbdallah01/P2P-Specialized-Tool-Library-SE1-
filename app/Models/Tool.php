@@ -1,7 +1,7 @@
 <?php
 
-require_once "../../Core/Database.php";
-require_once "../Controllers/ToolController.php";
+require_once "../../../Core/database.php";
+require_once "../../Controllers/ToolController.php";
 class Tool
 {
     private $conn;

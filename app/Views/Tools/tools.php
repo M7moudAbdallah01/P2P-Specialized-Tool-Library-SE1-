@@ -175,7 +175,7 @@ $my_tools = $conn->query("
     <?php elseif ($role === 'technical'): ?>
         <div class="role-badge role-technical">TECHNICAL</div>
     <?php else: ?>
-        <div class="role-badge role-user">USER</div>
+        <div class="role-badge role-user">CLIENT</div>
     <?php endif; ?>
 
     <div class="sidebar-nav">

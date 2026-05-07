@@ -1,9 +1,7 @@
 <?php
-// إظهار الأخطاء
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// اتصال قاعدة البيانات
 $host = 'localhost'; $user = 'root'; $pass = ''; $db = 'tool_library';
 
 try {
@@ -11,7 +9,6 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) { die("Database Error: " . $e->getMessage()); }
 
-// الفانكشن بتاعة الزرار
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'restock') {
     $id = $_POST['item_id'];
     $stmt = $conn->prepare("UPDATE consumables SET stock = stock + 10 WHERE id = :id");
@@ -21,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     }
 }
 
-// جلب البيانات
 $items = $conn->query("SELECT * FROM consumables")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
