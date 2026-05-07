@@ -1,4 +1,6 @@
 <?php
+session_start();
+require_once __DIR__ . '/../../Core/Controller.php';
 class InventoryController extends Controller {
     public function index() {
         $inventoryModel = $this->model('Inventory');
