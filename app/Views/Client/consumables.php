@@ -1,100 +1,83 @@
 <?php
+// إظهار الأخطاء
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-$consumables = $data['consumables'] ?? [
-    [
-        'id' => 1,
-        'name' => 'Router Bit Set (12pc)',
-        'tool' => 'Plunge Router',
-        'stock' => 15,
-        'unit' => 'Sets',
-        'min_limit' => 5
-    ],
-    [
-        'id' => 2,
-        'name' => 'Sanding Discs (P80)',
-        'tool' => 'Orbital Sander',
-        'stock' => 4,
-        'unit' => 'Pcs',
-        'min_limit' => 10
-    ],
-    [
-        'id' => 3,
-        'name' => '3D Printing Filament (Black)',
-        'tool' => 'Creality Ender 3',
-        'stock' => 0,
-        'unit' => 'Spools',
-        'min_limit' => 2
-    ]
-];
+// اتصال قاعدة البيانات
+$host = 'localhost'; $user = 'root'; $pass = ''; $db = 'tool_library';
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) { die("Database Error: " . $e->getMessage()); }
+
+// الفانكشن بتاعة الزرار
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'restock') {
+    $id = $_POST['item_id'];
+    $stmt = $conn->prepare("UPDATE consumables SET stock = stock + 10 WHERE id = :id");
+    if($stmt->execute(['id' => $id])) {
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+}
+
+// جلب البيانات
+$items = $conn->query("SELECT * FROM consumables")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-
-<link rel="stylesheet" href="../../assets/css/consumables.css">
-
-<div class="container">
-    <div class="header-flex">
-        <h2 class="brand-text">CONSUMABLES INVENTORY</h2>
-       
-        <div class="role-badge role-admin">LENDER ACCESS</div>
-    </div>
-
-    <div class="table-wrapper">
-        <table class="dark-table">
-            <thead>
-                <tr>
-                    <th>CONSUMABLE ITEM</th>
-                    <th>LINKED TOOL</th>
-                    <th>STOCK</th>
-                    <th>STATUS</th>
-                    <th>ACTION</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($consumables)): ?>
-                    <?php foreach ($consumables as $item): 
-                        
-                        $is_low = ($item['stock'] <= $item['min_limit']);
-                        $is_empty = ($item['stock'] <= 0);
-                        
-                        $pill_class = 'pill-green';
-                        $status_text = 'Stable';
-
-                        if ($is_empty) {
-                            $pill_class = 'pill-red';
-                            $status_text = 'Out of Stock';
-                        } elseif ($is_low) {
-                            $pill_class = 'pill-red';
-                            $status_text = 'Low Stock';
-                        }
-                    ?>
-                        <tr>
-                            <td class="primary"><?= htmlspecialchars($item['name']); ?></td>
-                            <td><?= htmlspecialchars($item['tool']); ?></td>
-                            <td><?= $item['stock'] . ' ' . $item['unit']; ?></td>
-                            <td>
-                                <span class="pill <?= $pill_class; ?>">
-                                    <?= $status_text; ?>
-                                </span>
-                            </td>
-                            <td>
-                              
-                                <form action="../../Controllers/InventoryController.php?action=restock" method="POST" style="display:inline;">
-                                    <input type="hidden" name="item_id" value="<?= $item['id']; ?>">
-                                    <button type="submit" class="btn-sm">
-                                        <i class="fas fa-plus-circle"></i> Restock
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-dim);">
-                            No consumable items found in the database.
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consumables</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #fff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: left; }
+        .status-pill { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .low { background: #ffebee; color: #c62828; }
+        .stable { background: #e8f5e9; color: #2e7d32; }
+        .restock-btn { color: #1a73e8; background: none; border: none; cursor: pointer; text-decoration: underline; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>CONSUMABLES INVENTORY</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>CONSUMABLE ITEM</th>
+                <th>LINKED TOOL</th>
+                <th>STOCK</th>
+                <th>STATUS</th>
+                <th>ACTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($items): foreach ($items as $item): ?>
+            <tr>
+                <td><strong><?= htmlspecialchars($item['name']) ?></strong></td>
+                <td><?= htmlspecialchars($item['linked_tool']) ?></td>
+                <td><?= $item['stock'] ?> <?= $item['unit'] ?></td>
+                <td>
+                    <?php if ($item['stock'] <= 0): ?>
+                        <span class="status-pill low">OUT OF STOCK</span>
+                    <?php elseif ($item['stock'] <= $item['min_limit']): ?>
+                        <span class="status-pill low">LOW STOCK</span>
+                    <?php else: ?>
+                        <span class="status-pill stable">STABLE</span>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <form method="POST">
+                        <input type="hidden" name="item_id" value="<?= $item['id'] ?>">
+                        <input type="hidden" name="action" value="restock">
+                        <button type="submit" class="restock-btn">Restock</button>
+                    </form>
+                </td>
+            </tr>
+            <?php endforeach; else: ?>
+                <tr><td colspan="5">No items found. Run the SQL code first!</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</body>
+</html>

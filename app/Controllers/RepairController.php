@@ -1,4 +1,6 @@
 <?php
+session_start();
+require_once __DIR__ . '/../../Core/Controller.php';
 class RepairController extends Controller {
     
     public function index() {
