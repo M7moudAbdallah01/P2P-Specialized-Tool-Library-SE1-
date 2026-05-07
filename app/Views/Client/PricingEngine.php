@@ -145,9 +145,7 @@ function calculateFinalPrice($originalPrice, $couponCode, $categoryId, $conn) {
             <a href="pricing.php" class="nav-link active">
                 <i class="fa fa-tags"></i> Pricing
             </a>
-            <a href="reservations.php" class="nav-link">
-                <i class="fa fa-calendar"></i> Reservations
-            </a>
+
             <a href="chat.php" class="nav-link">
                 <i class="fa fa-comments"></i> Messages
             </a>

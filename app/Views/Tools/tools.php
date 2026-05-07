@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$role = $_SESSION['role']; // 'admin' | 'technical' | 'user'
+$role = $_SESSION['role']; // 'admin' | 'technical' | 'client'
 
 /* =========================================================
    2) DATABASE CONNECTION
@@ -20,7 +20,7 @@ $db = Database::getInstance();
 $conn = $db->getConnection();
 
 /* =========================================================
-   3) ACTIONS — admin only
+   3) ACTIONS — admin / technical
 ========================================================= */
 
 // Delete tool (admin only)
@@ -39,7 +39,7 @@ if ($role === 'admin' && isset($_GET['toggle'])) {
     exit();
 }
 
-// Toggle availability (technical)
+// Toggle availability (technical only)
 if ($role === 'technical' && isset($_GET['toggle'])) {
     $id = intval($_GET['toggle']);
     $conn->query("UPDATE tools SET availability = NOT availability WHERE tool_id = $id");
@@ -65,12 +65,16 @@ if ($cat_filter > 0) {
 }
 
 /* =========================================================
-   5) FETCH DATA
+   5) FETCH TOOLS
 ========================================================= */
 
-// tools
+// IMPORTANT:
+// owner_id included automatically because of t.*
 $tools = $conn->query("
-    SELECT t.*, u.name AS owner_name, c.name AS category_name
+    SELECT 
+        t.*, 
+        u.name AS owner_name, 
+        c.name AS category_name
     FROM tools t
     JOIN users u ON t.owner_id = u.user_id
     JOIN category c ON t.category_id = c.category_id
@@ -79,59 +83,107 @@ $tools = $conn->query("
 ");
 
 // categories (for filter dropdown)
-$categories = $conn->query("SELECT * FROM category ORDER BY name");
+$categories = $conn->query("
+    SELECT * 
+    FROM category 
+    ORDER BY name
+");
 
-// current category name (for breadcrumb when coming from categories page)
+// current category name
 $current_cat_name = '';
 if ($cat_filter > 0) {
-    $res = $conn->query("SELECT name FROM category WHERE category_id = $cat_filter");
+    $res = $conn->query("
+        SELECT name 
+        FROM category 
+        WHERE category_id = $cat_filter
+    ");
     if ($res && $row = $res->fetch_assoc()) {
         $current_cat_name = $row['name'];
     }
 }
-$uid  = intval($_SESSION['user_id']);
-$r = $conn->query("SELECT COUNT(*) AS cnt FROM tools WHERE owner_id = $uid");
+
+/* =========================================================
+   6) USER DASHBOARD COUNTS
+========================================================= */
+$uid = intval($_SESSION['user_id']);
+
+// Total owned tools
+$r = $conn->query("
+    SELECT COUNT(*) AS cnt 
+    FROM tools 
+    WHERE owner_id = $uid
+");
 $total_tools = $r->fetch_assoc()['cnt'];
 
-$r = $conn->query("SELECT COUNT(*) AS cnt FROM reservations r
-                   JOIN tools t ON r.tool_id = t.tool_id
-                   WHERE t.owner_id = $uid AND r.status = 'active'");
+// Active reservations
+$r = $conn->query("
+    SELECT COUNT(*) AS cnt 
+    FROM reservations r
+    JOIN tools t ON r.tool_id = t.tool_id
+    WHERE t.owner_id = $uid 
+    AND r.status = 'confirmed'
+");
 $active_res = $r->fetch_assoc()['cnt'];
 
-$r = $conn->query("SELECT COUNT(*) AS cnt FROM reservations r
-                   JOIN tools t ON r.tool_id = t.tool_id
-                   WHERE t.owner_id = $uid AND r.status = 'pending'");
+// Pending reservations
+$r = $conn->query("
+    SELECT COUNT(*) AS cnt 
+    FROM reservations r
+    JOIN tools t ON r.tool_id = t.tool_id
+    WHERE t.owner_id = $uid 
+    AND r.status = 'pending'
+");
 $pending_res = $r->fetch_assoc()['cnt'];
 
-$r = $conn->query("SELECT COUNT(*) AS cnt FROM messages
-                   WHERE receiver_id = $uid AND is_read = 0");
+// Unread messages
+$r = $conn->query("
+    SELECT COUNT(*) AS cnt 
+    FROM messages
+    WHERE receiver_id = $uid 
+    AND is_read = 0
+");
 $unread_msgs = $r->fetch_assoc()['cnt'];
 
+// Open reports
 $r = $conn->query("
     SELECT COUNT(*) AS cnt
     FROM dispute d
     JOIN reservations r ON d.rental_id = r.reservation_id
     JOIN tools t ON r.tool_id = t.tool_id
-    WHERE t.owner_id = $uid AND d.status = 'open'
+    WHERE t.owner_id = $uid 
+    AND d.status = 'open'
 ");
 $open_reports = $r->fetch_assoc()['cnt'];
 
-// $r = $conn->query("SELECT COALESCE(SUM(total_price),0) AS total FROM reservations r
-//                    JOIN tools t ON r.tool_id = t.tool_id
-//                    WHERE t.owner_id = $uid AND r.status = 'completed'");
-// $total_earned = $r->fetch_assoc()['total'];
-
 /* =========================================================
-   4) MY TOOLS (latest 6)
+   7) MY TOOLS (latest 6)
 ========================================================= */
 $my_tools = $conn->query("
-    SELECT t.*, c.name AS category_name
+    SELECT 
+        t.*, 
+        c.name AS category_name
     FROM tools t
     JOIN category c ON t.category_id = c.category_id
     WHERE t.owner_id = $uid
     ORDER BY t.created_at DESC
     LIMIT 6
 ");
+
+/* =========================================================
+   8) RESERVE BUTTON RULES
+========================================================= */
+/*
+ داخل الجدول لاحقًا استخدم الشرط ده:
+
+ if (
+     $role === 'client' &&
+     $t['owner_id'] != $_SESSION['user_id'] &&
+     $t['availability'] == 1
+ ) {
+     // Show Reserve Button
+ }
+
+*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -233,12 +285,6 @@ $my_tools = $conn->query("
             </a>
         <?php else: ?>
 
-        <a href="../Client/reservations.php" class="nav-link">
-            <i class="fa fa-calendar"></i> Reservations
-            <?php if ($pending_res > 0): ?>
-                <span class="nav-count"><?= $pending_res ?></span>
-            <?php endif; ?>
-        </a>
 
         <a href="../Client/chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat

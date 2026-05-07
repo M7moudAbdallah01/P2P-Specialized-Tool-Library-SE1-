@@ -217,9 +217,7 @@ while ($row = $resUnread->fetch_assoc()) {
                     <line x1="12" y1="17" x2="12" y2="21"/>
                 </svg> Categories
             </a>
-            <a href="reservations.php" class="nav-link">
-                <i class="fa fa-calendar"></i> Reservations
-            </a>
+
 
             <a href="chat.php" class="nav-link active">
                 <i class="fa fa-comments"></i> Chat

@@ -150,12 +150,6 @@ $my_tools = $conn->query("
             </svg> Categories
         </a>
 
-        <a href="reservations.php" class="nav-link">
-            <i class="fa fa-calendar"></i> Reservations
-            <?php if ($pending_res > 0): ?>
-                <span class="nav-count"><?= $pending_res ?></span>
-            <?php endif; ?>
-        </a>
 
         <a href="chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat
@@ -164,12 +158,6 @@ $my_tools = $conn->query("
             <?php endif; ?>
         </a>
 
-        <!-- <a href="reports.php" class="nav-link">
-            <i class="fa fa-scale-balanced"></i> Reports
-            <?php if ($open_reports > 0): ?>
-                <span class="nav-count"><?= $open_reports ?></span>
-            <?php endif; ?>
-        </a> -->
         <a href="ToolCompatibility.php" class="nav-link">
             <i class="fa fa-circle-check"></i> Compatibility Checker
         </a>

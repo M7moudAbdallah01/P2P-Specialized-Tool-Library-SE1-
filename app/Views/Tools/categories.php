@@ -170,13 +170,6 @@ $my_tools = $conn->query("
         <?php else: ?>
 
 
-        <a href="../Clientreservations.php" class="nav-link">
-            <i class="fa fa-calendar"></i> Reservations
-            <?php if ($pending_res > 0): ?>
-                <span class="nav-count"><?= $pending_res ?></span>
-            <?php endif; ?>
-        </a>
-
         <a href="../Client/chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>

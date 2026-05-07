@@ -164,7 +164,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="../Tech/reservations.php"  class="nav-link"><i class="fa fa-calendar"></i> Reservations</a>
             <a href="../Admin/reports.php"      class="nav-link"><i class="fa fa-scale-balanced"></i> Reports</a>
         <?php else: ?>
-            <a href="../Client/reservations.php" class="nav-link"><i class="fa fa-calendar"></i> My Reservations</a>
             <a href="../Client/chat.php"          class="nav-link"><i class="fa fa-comments"></i> Chat</a>
 
 
@@ -239,13 +238,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             <?php endif; ?>
 
-            <?php if ($isClient): ?>
-                <button class="btn btn-solid"
-                        onclick="openModal('reserveModal', <?= $tool['tool_id'] ?>)">
-                    <i class="fa fa-calendar-plus"></i> Reserve This Tool
-                </button>
-            <?php endif; ?>
-
         </div>
     </div>
 
@@ -254,6 +246,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- ── HERO CARD ── -->
     <section class="hero-card card">
+
+        <div class="hero-image">
+            <img src="<?= !empty($tool['image_path']) 
+                ? '../uploads/tools/' . htmlspecialchars($tool['image_path']) 
+                : '../assets/img/default-tool.png' ?>" 
+                alt="Tool Image">
+        </div>
 
         <!-- Info -->
         <div class="hero-info">
@@ -320,51 +319,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Stats -->
         <div class="hero-stats">
 
-            <?php if (!empty($battery)): ?>
-                <div class="stat-row">
-                    <span class="stat-label-s">Battery Health</span>
-                    <span class="stat-val-s"
-                          style="color:<?= ($battery['health_status'] === 'Good' ? '#2dbe6c' : 'var(--red)') ?>">
-                        <?= htmlspecialchars($battery['health_status'] ?? '—') ?>
-                    </span>
-                </div>
-
-                <div class="stat-row">
-                    <span class="stat-label-s">Charge Cycles</span>
-                    <span class="stat-val-s"><?= htmlspecialchars($battery['charge_cycles'] ?? '0') ?></span>
-                </div>
-
-                <div class="stat-row">
-                    <span class="stat-label-s">Last Checked</span>
-                    <span class="stat-val-s">
-                        <?= isset($battery['last_checked']) ? date('d M Y', strtotime($battery['last_checked'])) : '—' ?>
-                    </span>
-                </div>
-            <?php endif; ?>
-
-            <?php if (!empty($certifications)): ?>
-                <div class="stat-row">
-                    <span class="stat-label-s">Certifications</span>
-                    <span class="stat-val-s"><?= count($certifications) ?> Active</span>
-                </div>
-            <?php endif; ?>
-
-            <div class="stat-row">
-                <span class="stat-label-s">Last Maintenance</span>
-                <span class="stat-val-s">
-                    <?= !empty($maintenance) ? date('d M Y', strtotime($maintenance[0]['date'])) : '—' ?>
-                </span>
+        <?php if ($isClient && $tool['owner_id'] != $_SESSION['user_id']): ?>
+            <div style="margin-top:auto; padding-top:12px; border-top:1px solid var(--border);">
+                <button class="btn btn-solid"
+                        style="width:100%;"
+                        onclick="openModal('reserveModal', <?= $tool['tool_id'] ?>)">
+                    <i class="fa fa-calendar-plus"></i> Reserve
+                </button>
             </div>
-
-            <?php if ($isClient): ?>
-                <div style="margin-top:auto; padding-top:12px; border-top:1px solid var(--border);">
-                    <button class="btn btn-solid"
-                            style="width:100%;"
-                            onclick="openModal('reserveModal', <?= $tool['tool_id'] ?>)">
-                        <i class="fa fa-calendar-plus"></i> Reserve
-                    </button>
-                </div>
-            <?php endif; ?>
+        <?php endif; ?>
 
         </div>
     </section>
@@ -762,13 +725,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 <?php endif; ?>
-
+<?php $display = ($tool['owner_id'] == $_SESSION['user_id']) ? 'none' : 'block'; ?>
 <!-- Reserve Tool — client only -->
-<?php if ($isClient && !empty($tool)): ?>
+<?php if ($isClient && !empty($tool) && $tool['owner_id'] != $_SESSION['user_id']): ?>
 <div class="modal-overlay" id="reserveModal">
     <div class="modal">
         <div class="modal-header">
-            <h3>Reserve Tool</h3>
+            <h3 style="display: <?= $display ?>;">Reserve Tool</h3>
             <button type="button" class="modal-close" onclick="closeModal('reserveModal')">✕</button>
         </div>
 
