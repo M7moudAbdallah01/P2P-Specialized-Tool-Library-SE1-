@@ -47,6 +47,12 @@ $r = $conn->query("
 ");
 $open_reports = $r->fetch_assoc()['cnt'];
 
+
+
+$r = $conn->query("SELECT trust_score FROM users WHERE user_id = $uid");
+$trust = $r ? $r->fetch_assoc()['trust_score'] : 0;
+$trust_score = $trust ?? 0;
+
 // $r = $conn->query("SELECT COALESCE(SUM(total_price),0) AS total FROM reservations r
 //                    JOIN tools t ON r.tool_id = t.tool_id
 //                    WHERE t.owner_id = $uid AND r.status = 'completed'");
@@ -200,6 +206,14 @@ $my_tools = $conn->query("
                 <div>
                     <div class="stat-value"><?= $total_tools ?></div>
                     <div class="stat-label">My Tools</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon si-blue"><i class="fa fa-star"></i></div>
+                <div>
+                    <div class="stat-value"><?= $trust_score ?></div>
+                    <div class="stat-label">Trust Score</div>
                 </div>
             </div>
 
