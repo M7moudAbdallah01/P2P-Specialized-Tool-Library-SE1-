@@ -47,20 +47,10 @@ $r = $conn->query("
 ");
 $open_reports = $r->fetch_assoc()['cnt'];
 
-
-
 $r = $conn->query("SELECT trust_score FROM users WHERE user_id = $uid");
 $trust = $r ? $r->fetch_assoc()['trust_score'] : 0;
 $trust_score = $trust ?? 0;
 
-// $r = $conn->query("SELECT COALESCE(SUM(total_price),0) AS total FROM reservations r
-//                    JOIN tools t ON r.tool_id = t.tool_id
-//                    WHERE t.owner_id = $uid AND r.status = 'completed'");
-// $total_earned = $r->fetch_assoc()['total'];
-
-/* =========================================================
-   4) MY TOOLS (latest 6)
-========================================================= */
 $my_tools = $conn->query("
     SELECT t.*, c.name AS category_name
     FROM tools t
@@ -70,43 +60,6 @@ $my_tools = $conn->query("
     LIMIT 6
 ");
 
-/* =========================================================
-   5) RECENT RESERVATIONS (latest 5)
-========================================================= */
-// $recent_res = $conn->query("
-//     SELECT r.*, t.name AS tool_name, u.name AS renter_name
-//     FROM reservations r
-//     JOIN tools t ON r.tool_id = t.tool_id
-//     JOIN users u ON r.user_id = u.user_id
-//     WHERE t.owner_id = $uid
-//     ORDER BY r.created_at DESC
-//     LIMIT 5
-// ");
-
-// /* =========================================================
-//    6) RECENT MESSAGES (latest 5)
-// ========================================================= */
-// $recent_msgs = $conn->query("
-//     SELECT m.*, u.name AS sender_name
-//     FROM messages m
-//     JOIN users u ON m.sender_id = u.user_id
-//     WHERE m.receiver_id = $uid
-//     ORDER BY m.created_at DESC
-//     LIMIT 5
-// ");
-
-// /* =========================================================
-//    7) RECENT REPORTS (latest 5)
-// ========================================================= */
-// $recent_reports = $conn->query("
-//     SELECT rp.*, t.name AS tool_name, u.name AS reporter_name
-//     FROM reports rp
-//     LEFT JOIN tools t  ON rp.tool_id     = t.tool_id
-//     LEFT JOIN users u  ON rp.reporter_id = u.user_id
-//     WHERE rp.reported_user_id = $uid OR rp.reporter_id = $uid
-//     ORDER BY rp.created_at DESC
-//     LIMIT 5
-// ");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -158,6 +111,10 @@ $my_tools = $conn->query("
 
         <a href="my-reservations.php" class="nav-link">
             <i class="fa fa-calendar-check"></i> My Reservations
+        </a>
+
+        <a href="my-reports.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reports
         </a>
 
         <a href="chat.php" class="nav-link">

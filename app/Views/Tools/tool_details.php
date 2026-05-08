@@ -167,6 +167,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="../Client/my-reservations.php" class="nav-link">
             <i class="fa fa-calendar-check"></i> My Reservations
         </a>
+
+        <a href="../Client/my-reports.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reports
+        </a>
             <a href="../Client/chat.php"          class="nav-link"><i class="fa fa-comments"></i> Chat</a>
 
 

@@ -271,13 +271,17 @@ if ($catQuery) {
         <a href="my-reservations.php" class="nav-link">
             <i class="fa fa-calendar-check"></i> My Reservations
         </a>
-                <a href="chat.php" class="nav-link">
+
+        <a href="my-reports.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reports
+        </a>
+
+        <a href="chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>
                 <span class="nav-count"><?= $unread_msgs ?></span>
             <?php endif; ?>
         </a>
-        <!-- <a href="reports.php" class="nav-link"><i class="fa fa-scale-balanced"></i> Reports</a> -->
         <a href="ToolCompatibility.php" class="nav-link"><i class="fa fa-circle-check"></i> Compatibility Checker</a>
         <a href="DamageDeclaration.php" class="nav-link">
             <i class="fa fa-triangle-exclamation"></i> Damage Report

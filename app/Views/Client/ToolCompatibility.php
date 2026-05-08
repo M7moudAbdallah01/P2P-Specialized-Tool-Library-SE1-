@@ -93,6 +93,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <a href="my-reservations.php" class="nav-link">
             <i class="fa fa-calendar-check"></i> My Reservations
         </a>
+
+
+        <a href="my-reports.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reports
+        </a>
         <a href="chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>

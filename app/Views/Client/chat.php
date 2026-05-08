@@ -197,7 +197,6 @@ while ($row = $resUnread->fetch_assoc()) {
 
     <div class="sidebar-nav">
 
-        <?php if ($isClient): ?>
             <a href="dashboard.php" class="nav-link">
                 <i class="fa fa-gauge"></i> Dashboard
             </a>
@@ -222,6 +221,10 @@ while ($row = $resUnread->fetch_assoc()) {
             <i class="fa fa-calendar-check"></i> My Reservations
         </a>
 
+        <a href="my-reports.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reports
+        </a>
+
             <a href="chat.php" class="nav-link active">
                 <i class="fa fa-comments"></i> Chat
             </a>
@@ -233,23 +236,6 @@ while ($row = $resUnread->fetch_assoc()) {
             <a href="DamageDeclaration.php" class="nav-link">
                 <i class="fa fa-triangle-exclamation"></i> Damage Report
             </a>
-
-
-        <?php endif; ?>
-
-        <?php if ($isTech): ?>
-            <a href="dashboard.php" class="nav-link">
-                <i class="fa fa-gauge"></i> Dashboard
-            </a>
-            <a href="../Tools/tools.php" class="nav-link">
-                <i class="fa fa-wrench"></i> Tools
-            </a>
-
-        <a href="chat.php" class="nav-link active">
-            <i class="fa fa-comments"></i> Chat
-        </a>
-        <?php endif; ?>
-
 
     </div>
 </div>

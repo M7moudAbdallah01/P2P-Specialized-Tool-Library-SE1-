@@ -1,0 +1,134 @@
+
+.stat-mini {
+    display:flex;
+    gap:14px;
+    margin-bottom:24px;
+    flex-wrap:wrap;
+}
+
+.stat-mini-card {
+    background:var(--surface2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:16px 22px;
+    min-width:110px;
+}
+
+.stat-mini-card .num {
+    font-size:1.6rem;
+    font-weight:700;
+}
+
+.stat-mini-card .lbl {
+    font-size:.72rem;
+    color:var(--text-muted);
+    text-transform:uppercase;
+}
+
+.filters {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.filters input,
+.filters select {
+    background:var(--surface2);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:9px 14px;
+    border-radius:var(--radius);
+    font-size:.85rem;
+    outline:none;
+}
+
+.filters input:focus,
+.filters select:focus {
+    border-color:var(--red);
+}
+
+.card {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+}
+
+.res-table {
+    width:100%;
+    border-collapse:collapse;
+}
+
+.res-table th {
+    background:var(--surface2);
+    color:var(--text-muted);
+    font-size:.72rem;
+    text-transform:uppercase;
+    padding:12px 16px;
+    text-align:left;
+    border-bottom:1px solid var(--border);
+}
+
+.res-table td {
+    padding:14px 16px;
+    border-bottom:1px solid var(--border);
+    font-size:.84rem;
+}
+
+.res-table tr:hover td {
+    background:var(--surface2);
+}
+
+.status-pill {
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:.72rem;
+    font-weight:600;
+    text-transform:uppercase;
+}
+
+.pill-pending {
+    background:rgba(234,179,8,.12);
+    color:#eab308;
+}
+
+.pill-reviewing {
+    background:rgba(99,102,241,.12);
+    color:#6366f1;
+}
+
+.pill-resolved {
+    background:rgba(45,190,108,.12);
+    color:#2dbe6c;
+}
+
+.empty-state {
+    text-align:center;
+    padding:60px;
+    color:var(--text-muted);
+}
+
+.empty-state i {
+    font-size:2.5rem;
+    margin-bottom:12px;
+    display:block;
+}
+
+.btn-sm {
+    padding:6px 12px;
+    border:none;
+    border-radius:6px;
+    font-size:.78rem;
+    cursor:pointer;
+    background:var(--red);
+    color:#fff;
+    text-decoration:none;
+}
+
+.btn-sm:hover {
+    opacity:.9;
+}

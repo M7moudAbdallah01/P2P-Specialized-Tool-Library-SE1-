@@ -172,6 +172,10 @@ $my_tools = $conn->query("
         <a href="../Client/my-reservations.php" class="nav-link">
             <i class="fa fa-calendar-check"></i> My Reservations
         </a>
+
+        <a href="../Client/my-reports.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reports
+        </a>
         <a href="../Client/chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>
@@ -179,12 +183,6 @@ $my_tools = $conn->query("
             <?php endif; ?>
         </a>
 
-        <!-- <a href="reports.php" class="nav-link">
-            <i class="fa fa-scale-balanced"></i> Reports
-            <?php if ($open_reports > 0): ?>
-                <span class="nav-count"><?= $open_reports ?></span>
-            <?php endif; ?>
-        </a> -->
 
         <a href="../Client/ToolCompatibility.php" class="nav-link"><i class="fa fa-circle-check"></i> Compatibility Checker</a>
         <a href="../Client/DamageDeclaration.php" class="nav-link">

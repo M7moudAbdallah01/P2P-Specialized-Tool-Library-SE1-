@@ -14,8 +14,9 @@ $uid  = intval($_SESSION['user_id']);
 $r = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id=$uid AND is_read=0");
 $unread_msgs = $r ? $r->fetch_assoc()['cnt'] : 0;
 
-$r = $conn->query("SELECT COUNT(*) AS c FROM repair_requests WHERE status = 'pending'");
-$pending_count = $r->fetch_assoc()['c'];
+/* العداد بتاع الـ sidebar — pending بتاع التيكنيشن ده بس */
+$r = $conn->query("SELECT COUNT(*) AS c FROM repair_requests WHERE technician_id=$uid AND status='pending'");
+$pending_count = $r ? $r->fetch_assoc()['c'] : 0;
 
 /* =========================================================
    UPDATE REPAIR
@@ -25,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_repair'])) {
     $new_status = $conn->real_escape_string($_POST['new_status']);
     $tech_note  = $conn->real_escape_string($_POST['tech_note'] ?? '');
 
-    $conn->query("
+    $result = $conn->query("
         UPDATE repair_requests
         SET status='$new_status', tech_note='$tech_note', updated_at=NOW()
         WHERE id=$rid AND technician_id=$uid
@@ -42,7 +43,7 @@ $status_filter = $_GET['status'] ?? '';
 $search        = trim($_GET['search'] ?? '');
 
 $where = "WHERE rr.technician_id=$uid";
-if ($status_filter && in_array($status_filter, ['pending','in_progress','completed'])) {
+if ($status_filter && in_array($status_filter, ['pending','reviewing','in_progress','completed'])) {
     $where .= " AND rr.status='$status_filter'";
 }
 if ($search) {
@@ -63,7 +64,7 @@ $repairs_q = $conn->query("
     ORDER BY rr.submitted_at DESC
 ");
 
-/* ── counts ── */
+/* ── counts بتاع التيكنيشن ده بس ── */
 $cnt = [];
 foreach (['pending','in_progress','completed'] as $s) {
     $rq = $conn->query("SELECT COUNT(*) AS c FROM repair_requests WHERE technician_id=$uid AND status='$s'");
@@ -166,7 +167,7 @@ $cnt['total'] = array_sum($cnt);
                 <option value="completed"   <?= $status_filter === 'completed'   ? 'selected' : '' ?>>Completed</option>
             </select>
             <button class="btn btn-red"><i class="fa fa-search"></i> Filter</button>
-            <a href="repair-requests.php" class="btn btn-ghost">Reset</a>
+            <a href="reports.php" class="btn btn-ghost">Reset</a>
         </form>
 
         <!-- REPAIR LIST -->
@@ -185,6 +186,7 @@ $cnt['total'] = array_sum($cnt);
 
             $steps   = ['pending', 'in_progress', 'completed'];
             $cur_idx = array_search($rr['status'], $steps);
+            if ($cur_idx === false) $cur_idx = 0; /* reviewing يتعامل معاه كـ pending */
         ?>
         <div class="repair-card <?= $stat_cls ?>">
 
@@ -243,7 +245,9 @@ $cnt['total'] = array_sum($cnt);
                     <div class="rc-val"><?= htmlspecialchars($rr['reservation_id'] ?? '—') ?></div>
 
                     <div class="rc-label" style="margin-top:12px;">Damage Date</div>
-                    <div class="rc-val"><?= $rr['damage_date'] ? date('d M Y', strtotime($rr['damage_date'])) : '—' ?></div>
+                    <div class="rc-val">
+                        <?= $rr['damage_date'] ? date('d M Y', strtotime($rr['damage_date'])) : '—' ?>
+                    </div>
 
                     <div class="rc-label" style="margin-top:12px;">Location</div>
                     <div class="rc-val"><?= htmlspecialchars($rr['location'] ?? '—') ?></div>
@@ -313,7 +317,6 @@ $cnt['total'] = array_sum($cnt);
                     <div>
                         <label>Update Status</label>
                         <select name="new_status">
-                            <option value="pending"     <?= $rr['status'] === 'pending'     ? 'selected' : '' ?>>Pending</option>
                             <option value="in_progress" <?= $rr['status'] === 'in_progress' ? 'selected' : '' ?>>In Progress</option>
                             <option value="completed"   <?= $rr['status'] === 'completed'   ? 'selected' : '' ?>>Completed</option>
                         </select>

@@ -113,41 +113,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 ($uid,'$reservation_id','$tool_name','$damage_date','$location','$damage_type',
                  '$severity','$description','$witness','$document_esc','$photos_json','$reference_esc')";
 
-    if ($conn->query($sql) === TRUE) {
-        $damage_id = $conn->insert_id;
+   // غير السطر ده في PHP بعد الـ insert
+if ($conn->query($sql) === TRUE) {
 
-        /* ── 2) Lookup tool_id + rental_id from reservations if possible ── */
-        $tool_id_val  = 'NULL';
-        $rental_id_val = 'NULL';
+    $damage_id = $conn->insert_id;
 
-        // Try to find matching reservation
-        $res_esc = mysqli_real_escape_string($conn, $_POST['reservation_id'] ?? '');
-        $rq = $conn->query("SELECT id, tool_id FROM reservations WHERE id = '$res_esc' OR reference_no = '$res_esc' LIMIT 1");
-        if ($rq && $rq->num_rows > 0) {
-            $rv = $rq->fetch_assoc();
-            $rental_id_val = intval($rv['id']);
-            $tool_id_val   = intval($rv['tool_id']);
-        }
+    $res_id = intval($_POST['reservation_id'] ?? 0);
 
-        /* ── 3) Insert into dispute ── */
-        $reason_esc = mysqli_real_escape_string($conn,
-            "Damage Report ({$reference_no}): " . ($_POST['description'] ?? '') .
+    $tool_id_val   = 0;
+    $rental_id_val = 0;
+
+    /* ─────────────────────────────
+       Get reservation + rental data
+    ───────────────────────────── */
+    $rq = $conn->prepare("
+        SELECT 
+            r.reservation_id,
+            r.tool_id,
+            rt.rental_id
+        FROM reservations r
+        LEFT JOIN rentals rt 
+            ON rt.reservation_id = r.reservation_id
+        WHERE r.reservation_id = ?
+        LIMIT 1
+    ");
+
+    $rq->bind_param("i", $res_id);
+    $rq->execute();
+
+    $rv = $rq->get_result()->fetch_assoc();
+
+    if ($rv) {
+        $tool_id_val   = intval($rv['tool_id']);
+        $rental_id_val = intval($rv['rental_id']);
+    }
+
+    /* ─────────────────────────────
+       Create dispute only if rental exists
+    ───────────────────────────── */
+    if ($rental_id_val > 0) {
+
+        $reason_esc =
+            "Damage Report ({$reference_no}): " .
+            ($_POST['description'] ?? '') .
             " | Type: " . ($_POST['damage_type'] ?? '') .
-            " | Severity: " . ($_POST['severity'] ?? '')
-        );
+            " | Severity: " . ($_POST['severity'] ?? '');
 
-        $conn->query("
+        $stmt = $conn->prepare("
             INSERT INTO dispute
-                (rental_id, reporter_id, tool_id, reason, evidence_path, status, created_at)
+            (
+                rental_id,
+                reporter_id,
+                tool_id,
+                reason,
+                evidence_path,
+                status,
+                created_at
+            )
             VALUES
-                ($rental_id_val, $uid, $tool_id_val, '$reason_esc', '$first_photo', 'open', NOW())
+            (?, ?, ?, ?, ?, 'open', NOW())
         ");
 
-        echo json_encode(['success' => true, 'reference' => $reference_no]);
-    } else {
-        echo json_encode(['success' => false, 'error' => $conn->error]);
+        $stmt->bind_param(
+            "iiiss",
+            $rental_id_val,
+            $uid,
+            $tool_id_val,
+            $reason_esc,
+            $first_photo
+        );
+
+        $stmt->execute();
     }
+
+    header("Location: my-reports.php?success=1&ref=" . urlencode($reference_no));
     exit();
+
+} else {
+
+    header("Location: DamageDeclaration.php?error=" . urlencode($conn->error));
+    exit();
+}
+
 }
 ?>
 <!DOCTYPE html>
@@ -185,6 +232,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <a href="my-reservations.php" class="nav-link">
             <i class="fa fa-calendar-check"></i> My Reservations
         </a>
+
+        <a href="my-reports.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reports
+        </a>
         <a href="chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>
@@ -212,6 +263,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
+
+    <?php if (isset($_GET['error'])): ?>
+    <div class="alert" style="background:#ff2e2e22;color:#ff2e2e;border:1px solid #ff2e2e44;
+        padding:12px 18px;border-radius:10px;margin-bottom:18px;font-size:.83rem;">
+        <i class="fa fa-circle-xmark"></i> Error: <?= htmlspecialchars($_GET['error']) ?>
+    </div>
+    <?php endif; ?>
         <div class="damage-page">
 
             <!-- PROGRESS BAR -->
@@ -516,42 +574,59 @@ function capitalize(str) { return str.charAt(0).toUpperCase()+str.slice(1); }
 
 function submitReport() {
     if (!document.getElementById('agree-checkbox').checked) {
-        showToast('Please confirm the accuracy of the report.','error'); return;
+        showToast('Please confirm the accuracy of the report.', 'error');
+        return;
     }
+
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
     btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Submitting...';
 
-    const formData = new FormData();
-    formData.append('action',         'submit_damage');
-    formData.append('reservation_id', document.querySelector('[name="reservation_id"]').value.trim());
-    formData.append('tool_name',      document.querySelector('[name="tool_name"]').value.trim());
-    formData.append('damage_date',    document.querySelector('[name="damage_date"]').value);
-    formData.append('location',       document.querySelector('[name="location"]').value.trim());
-    formData.append('damage_type',    document.querySelector('[name="damage_type"]').value);
-    formData.append('severity',       (document.querySelector('[name="severity"]:checked')||{}).value||'low');
-    formData.append('description',    document.querySelector('[name="description"]').value.trim());
-    formData.append('witness',        document.querySelector('[name="witness"]').value.trim());
+    // بناء الـ form وبنعمل submit عادي مش fetch
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = window.location.href;
+    form.enctype = 'multipart/form-data';
 
-    Array.from(document.getElementById('photo-input').files).slice(0,5).forEach(f=>formData.append('photos[]',f));
+    const fields = {
+        action:         'submit_damage',
+        reservation_id: document.querySelector('[name="reservation_id"]').value.trim(),
+        tool_name:      document.querySelector('[name="tool_name"]').value.trim(),
+        damage_date:    document.querySelector('[name="damage_date"]').value,
+        location:       document.querySelector('[name="location"]').value.trim(),
+        damage_type:    document.querySelector('[name="damage_type"]').value,
+        severity:       (document.querySelector('[name="severity"]:checked') || {}).value || 'low',
+        description:    document.querySelector('[name="description"]').value.trim(),
+        witness:        document.querySelector('[name="witness"]').value.trim(),
+    };
+
+    Object.entries(fields).forEach(([key, val]) => {
+        const input = document.createElement('input');
+        input.type  = 'hidden';
+        input.name  = key;
+        input.value = val;
+        form.appendChild(input);
+    });
+
+    // الصور
+    const photoInput = document.getElementById('photo-input');
+    if (photoInput && photoInput.files.length > 0) {
+        // نضطر نستخدم fetch هنا بس للـ files فقط
+        // الحل: نخلي الـ form يحتوي على الـ file inputs الأصليين
+        const clonedPhotos = photoInput.cloneNode(true);
+        clonedPhotos.name = 'photos[]';
+        form.appendChild(clonedPhotos);
+    }
+
     const docInput = document.querySelector('[name="document"]');
-    if (docInput && docInput.files[0]) formData.append('document', docInput.files[0]);
+    if (docInput && docInput.files.length > 0) {
+        const clonedDoc = docInput.cloneNode(true);
+        clonedDoc.name = 'document';
+        form.appendChild(clonedDoc);
+    }
 
-    fetch(window.location.href, {method:'POST', body:formData})
-        .then(res=>res.json())
-        .then(json=>{
-            if (json.success) {
-                document.getElementById('modal-ref-id').textContent = json.reference;
-                document.getElementById('success-modal').classList.add('show');
-            } else {
-                showToast('Submission failed: '+json.error,'error');
-                btn.disabled=false; btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Report';
-            }
-        })
-        .catch(()=>{
-            showToast('Network error. Please try again.','error');
-            btn.disabled=false; btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Report';
-        });
+    document.body.appendChild(form);
+    form.submit();
 }
 
 function closeModal() { document.getElementById('success-modal').classList.remove('show'); }
