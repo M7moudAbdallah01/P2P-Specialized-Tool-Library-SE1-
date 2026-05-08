@@ -259,7 +259,7 @@ while ($row = $resUnread->fetch_assoc()) {
 
     <!-- TOPBAR -->
     <div class="topbar">
-        <div class="topbar-title">Chat with Admin</div>
+        <div class="topbar-title">Chat with people</div>
         <div class="topbar-right">
             <button class="avatar-btn" style="background:#6366f1;color:#fff;border:none;cursor:default;">
                 <?= htmlspecialchars($_SESSION['name']) ?> <span>Client</span>
@@ -278,7 +278,7 @@ while ($row = $resUnread->fetch_assoc()) {
             <!-- ADMINS LIST -->
             <div class="chat-users">
                 <div class="chat-users-header">
-                    <i class="fa fa-user-shield"></i> Admin Team
+                    <i class="fa fa-user-shield"></i>  
                 </div>
 
                 <?php while ($admin = $admins->fetch_assoc()): ?>

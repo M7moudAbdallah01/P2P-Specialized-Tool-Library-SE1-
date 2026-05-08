@@ -18,6 +18,9 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = (int) $_SESSION['user_id'];
 $error   = "";
 $success = "";
+$uid  = intval($_SESSION['user_id']);
+$r = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id = $uid AND is_read = 0");
+$unread_msgs = $r->fetch_assoc()['cnt'];
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $warranty_date  = !empty($_POST['warranty_expiry_date']) ? $_POST['warranty_expiry_date'] : null;
     $video_link     = trim($_POST['video_link'] ?? '');
 
+
+    
     /*
     |--------------------------------------------------------------------------
     | FILE PATHS
@@ -266,7 +271,12 @@ if ($catQuery) {
         <a href="my-reservations.php" class="nav-link">
             <i class="fa fa-calendar-check"></i> My Reservations
         </a>
-        <a href="chat.php" class="nav-link"><i class="fa fa-comments"></i> Chat</a>
+                <a href="chat.php" class="nav-link">
+            <i class="fa fa-comments"></i> Chat
+            <?php if ($unread_msgs > 0): ?>
+                <span class="nav-count"><?= $unread_msgs ?></span>
+            <?php endif; ?>
+        </a>
         <!-- <a href="reports.php" class="nav-link"><i class="fa fa-scale-balanced"></i> Reports</a> -->
         <a href="ToolCompatibility.php" class="nav-link"><i class="fa fa-circle-check"></i> Compatibility Checker</a>
         <a href="DamageDeclaration.php" class="nav-link">

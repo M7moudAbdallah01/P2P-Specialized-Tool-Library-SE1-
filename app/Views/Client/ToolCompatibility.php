@@ -4,7 +4,9 @@ require_once __DIR__ . "/../../../Core/database.php";
 
 $db   = Database::getInstance();
 $conn = $db->getConnection();
-
+$uid  = intval($_SESSION['user_id']);
+$r = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id = $uid AND is_read = 0");
+$unread_msgs = $r->fetch_assoc()['cnt'];
 $conn->query("
     CREATE TABLE IF NOT EXISTS tool_compatibility_checks (
         id              INT AUTO_INCREMENT PRIMARY KEY,
@@ -93,6 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         </a>
         <a href="chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat
+            <?php if ($unread_msgs > 0): ?>
+                <span class="nav-count"><?= $unread_msgs ?></span>
+            <?php endif; ?>
         </a>
         <a href="ToolCompatibility.php" class="nav-link active">
             <i class="fa fa-circle-check"></i> Compatibility Checker

@@ -17,7 +17,9 @@ $db   = Database::getInstance();
 $conn = $db->getConnection();
 
 $user_id = $_SESSION['user_id'];
-
+$uid  = intval($_SESSION['user_id']);
+$r = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id = $uid AND is_read = 0");
+$unread_msgs = $r->fetch_assoc()['cnt'];
 /* =========================================================
    3) FETCH MY RESERVATIONS
 ========================================================= */
