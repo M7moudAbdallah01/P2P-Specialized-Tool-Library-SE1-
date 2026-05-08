@@ -8,6 +8,16 @@ $conn = $db->getConnection();
 $username = "";
 $email    = "";
 $error    = "";
+$selected_zone = "";
+
+// Fetch zones from DB
+$zones = [];
+$zones_result = $conn->query("SELECT zone_id, zone_name FROM zones ORDER BY zone_name ASC");
+if ($zones_result) {
+    while ($row = $zones_result->fetch_assoc()) {
+        $zones[] = $row;
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -15,8 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email            = trim($_POST['email']);
     $password         = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
+    $selected_zone    = trim($_POST['zone_id']);
 
-    if (empty($username) || empty($email) || empty($password)) {
+    if (empty($username) || empty($email) || empty($password) || empty($selected_zone)) {
         $error = "All fields are required.";
     } elseif ($password !== $confirm_password) {
         $error = "Passwords do not match.";
@@ -35,8 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $hashed = password_hash($password, PASSWORD_DEFAULT);
             $role   = "client";
 
-            $stmt2 = $conn->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
-            $stmt2->bind_param("ssss", $username, $email, $hashed, $role);
+            $stmt2 = $conn->prepare("INSERT INTO users (name, email, password, role, zone_id) VALUES (?, ?, ?, ?, ?)");
+            $stmt2->bind_param("ssssi", $username, $email, $hashed, $role, $selected_zone);
 
             if ($stmt2->execute()) {
                 $stmt2->close();
@@ -128,13 +139,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="input-group">
                         <i class="fa fa-lock"></i>
-                        <input type="password" name="password" placeholder="Password" required>
+                        <input type="password" name="password" placeholder="Password" required minlength="6" maxlength="10">
                     </div>
                     <p class="pass-hint">Minimum 8 characters recommended</p>
 
                     <div class="input-group">
                         <i class="fa fa-lock"></i>
-                        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                        <input type="password" name="confirm_password" placeholder="Confirm Password" required minlength="6" maxlength="10">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fa fa-map-location-dot"></i>
+                        <select name="zone_id" required>
+                            <option value="" disabled <?= $selected_zone === "" ? "selected" : "" ?>>Select Your Governorate</option>
+                            <?php foreach ($zones as $zone): ?>
+                                <option value="<?= (int)$zone['zone_id'] ?>"
+                                    <?= $selected_zone == $zone['zone_id'] ? "selected" : "" ?>>
+                                    <?= htmlspecialchars($zone['zone_name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
                     <button type="submit" class="auth-btn">

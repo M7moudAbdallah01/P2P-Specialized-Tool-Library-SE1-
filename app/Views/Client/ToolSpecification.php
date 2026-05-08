@@ -375,6 +375,18 @@ if ($catQuery) {
                         </div>
                     </div>
 
+                    <div class="input-group">
+                        <label>Tool Image (JPG, PNG, WEBP – max 5MB)</label>
+                        <div class="input-box">
+                            <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp" id="toolImageInput">
+                        </div>
+                        <div id="imagePreviewWrapper" style="display:none; margin-top:10px;">
+                            <img id="imagePreview" src="" alt="Image Preview"
+                                 style="max-width:200px; max-height:180px; border-radius:8px;
+                                        border:1px solid #ddd; object-fit:cover; display:block;">
+                        </div>
+                    </div>
+
                     <div class="grid-inputs">
 
                         <div class="input-group">
@@ -404,6 +416,27 @@ if ($catQuery) {
 
     </div>
 </div>
+
+<script>
+    // Live preview when user picks an image
+    document.getElementById('toolImageInput').addEventListener('change', function () {
+        const file = this.files[0];
+        const wrapper = document.getElementById('imagePreviewWrapper');
+        const preview = document.getElementById('imagePreview');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                wrapper.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            wrapper.style.display = 'none';
+            preview.src = '';
+        }
+    });
+</script>
 
 </body>
 </html>

@@ -247,12 +247,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- ── HERO CARD ── -->
     <section class="hero-card card">
 
-        <div class="hero-image">
-            <img src="<?= !empty($tool['image_path']) 
-                ? '../uploads/tools/' . htmlspecialchars($tool['image_path']) 
-                : '../assets/img/default-tool.png' ?>" 
-                alt="Tool Image">
-        </div>
+    <img src="<?= !empty($tool['image_path']) 
+        ? '../Client/' . htmlspecialchars($tool['image_path']) 
+        : '../../assets/img/default-tool.png' ?>" 
+        alt="Tool Image" style="width: 170px;">
 
         <!-- Info -->
         <div class="hero-info">
