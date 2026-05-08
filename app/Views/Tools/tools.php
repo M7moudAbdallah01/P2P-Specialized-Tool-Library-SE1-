@@ -285,7 +285,9 @@ $my_tools = $conn->query("
             </a>
         <?php else: ?>
 
-
+        <a href="../Client/my-reservations.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reservations
+        </a>
         <a href="../Client/chat.php" class="nav-link">
             <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>

@@ -164,6 +164,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="../Tech/reservations.php"  class="nav-link"><i class="fa fa-calendar"></i> Reservations</a>
             <a href="../Admin/reports.php"      class="nav-link"><i class="fa fa-scale-balanced"></i> Reports</a>
         <?php else: ?>
+        <a href="../Client/my-reservations.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reservations
+        </a>
             <a href="../Client/chat.php"          class="nav-link"><i class="fa fa-comments"></i> Chat</a>
 
 

@@ -218,7 +218,7 @@ while ($row = $resUnread->fetch_assoc()) {
                 </svg> Categories
             </a>
 
-        <a href="my-reservations.php" class="nav-link active">
+        <a href="my-reservations.php" class="nav-link">
             <i class="fa fa-calendar-check"></i> My Reservations
         </a>
 
