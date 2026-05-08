@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php elseif ($isTech): ?>
             <a href="../Tech/dashboard.php" class="nav-link"><i class="fa fa-gauge"></i> Dashboard</a>
         <?php else: ?>
-            <a href="../Client/client_dashboard.php" class="nav-link"><i class="fa fa-gauge"></i> Dashboard</a>
+            <a href="../Client/dashboard.php" class="nav-link"><i class="fa fa-gauge"></i> Dashboard</a>
         <?php endif; ?>
 
         <a href="tools.php" class="nav-link active"><i class="fa fa-wrench"></i> Tools</a>
