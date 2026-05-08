@@ -16,7 +16,13 @@ $user_role = strtolower($_SESSION['role'] ?? 'client');
 
 $isClient = $user_role === 'client';
 $isTech   = $user_role === 'technical';
+$uid  = intval($_SESSION['user_id']);
 
+$r = $conn->query("SELECT COUNT(*) AS c FROM messages WHERE receiver_id = $uid AND is_read = 0");
+$unread_msgs = $r->fetch_assoc()['c'];
+
+$r = $conn->query("SELECT COUNT(*) AS c FROM repair_requests WHERE status = 'pending'");
+$pending_damage = $r->fetch_assoc()['c'];
 /*
 |--------------------------------------------------------------------------
 | SEND MESSAGE TO ADMIN
@@ -147,11 +153,6 @@ if ($selected_user > 0) {
     $stmt->close();
 }
 
-/*
-|--------------------------------------------------------------------------
-| UNREAD COUNTS FROM ADMINS
-|--------------------------------------------------------------------------
-*/
 $unread = [];
 
 $resUnread = $conn->query("
@@ -177,7 +178,7 @@ while ($row = $resUnread->fetch_assoc()) {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="../../assets/Css/style.css">
 <link rel="stylesheet" href="../../assets/Css/admin.css">
-
+<link rel="stylesheet" href="../../assets/Css/chat.css">
 
 
 </head>
@@ -192,35 +193,22 @@ while ($row = $resUnread->fetch_assoc()) {
         <div class="brand-text">TOOL HUB</div>
     </div>
 
-    <div class="role-badge" style="background:#2563eb;color:#fff;">
-        <?= strtoupper($user_role) ?>
-    </div>
+<div class="role-badge" style="background:#0ea5e9;color:#fff;">TECH</div>
+
 
     <div class="sidebar-nav">
-
-        <?php if ($isClient): ?>
-            <a href="dashboard.php" class="nav-link">
-                <i class="fa fa-gauge"></i> Dashboard
-            </a>
-            <a href="my-tools.php" class="nav-link">
-                <i class="fa fa-wrench"></i> My Tools
-            </a>
-            <a href="reservations.php" class="nav-link">
-                <i class="fa fa-calendar"></i> Reservations
-            </a>
-        <?php endif; ?>
-
-        <?php if ($isTech): ?>
-            <a href="dashboard.php" class="nav-link">
-                <i class="fa fa-gauge"></i> Dashboard
-            </a>
-            <a href="../Tools/tools.php" class="nav-link">
-                <i class="fa fa-wrench"></i> Tools
-            </a>
-        <?php endif; ?>
-
+        <a href="dashboard.php" class="nav-link"><i class="fa fa-gauge"></i> Dashboard</a>
+        <a href="repair_estimator.php" class="nav-link"><i class="fa fa-calculator"></i> Repair Estimator</a>
+        <a href="external_repair.php" class="nav-link"><i class="fa fa-arrow-up-right-from-square"></i> External Repairs</a>
+        <a href="reports.php" class="nav-link ">
+            <i class="fa fa-screwdriver-wrench"></i> Repair Requests
+            <?php if ($pending_damage > 0): ?>
+                <span class="nav-count"><?= $pending_damage ?></span>
+            <?php endif; ?>
+        </a>
         <a href="chat.php" class="nav-link active">
-            <i class="fa fa-comments"></i> Chat
+            <i class="fa fa-comments  "></i> Chat
+            <?php if ($unread_msgs > 0): ?><span class="nav-count"><?= $unread_msgs ?></span><?php endif; ?>
         </a>
     </div>
 </div>

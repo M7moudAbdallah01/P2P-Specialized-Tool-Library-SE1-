@@ -98,7 +98,7 @@ if ($search) {
 $damage_q = $conn->query("
     SELECT dd.*, u.name AS reporter_name, u.email AS reporter_email,
            u.trust_score, u.user_id AS reporter_uid
-    FROM damage_declarations dd
+    FROM repair_requests dd
     LEFT JOIN users u ON dd.reporter_id = u.user_id
     $dmg_where
     ORDER BY dd.submitted_at DESC
@@ -139,7 +139,7 @@ $disputes_q = $conn->query("
 ========================================================= */
 $dmg_cnt = [];
 foreach (['pending','reviewing','resolved'] as $s) {
-    $r = $conn->query("SELECT COUNT(*) AS c FROM damage_declarations WHERE status='$s'");
+    $r = $conn->query("SELECT COUNT(*) AS c FROM repair_requests WHERE status='$s'");
     $dmg_cnt[$s] = $r->fetch_assoc()['c'];
 }
 $dmg_cnt['total'] = array_sum($dmg_cnt);
