@@ -263,6 +263,9 @@ if ($catQuery) {
                 <line x1="12" y1="17" x2="12" y2="21" />
             </svg> Categories
         </a>
+        <a href="my-reservations.php" class="nav-link active">
+            <i class="fa fa-calendar-check"></i> My Reservations
+        </a>
         <a href="chat.php" class="nav-link"><i class="fa fa-comments"></i> Chat</a>
         <!-- <a href="reports.php" class="nav-link"><i class="fa fa-scale-balanced"></i> Reports</a> -->
         <a href="ToolCompatibility.php" class="nav-link"><i class="fa fa-circle-check"></i> Compatibility Checker</a>

@@ -321,7 +321,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div style="margin-top:auto; padding-top:12px; border-top:1px solid var(--border);">
                 <button class="btn btn-solid"
                         style="width:100%;"
-                        onclick="openModal('reserveModal', <?= $tool['tool_id'] ?>)">
+                        onclick="window.location.href='../Client/PricingEngine.php?tool_id=<?= $tool['tool_id'] ?>'">
                     <i class="fa fa-calendar-plus"></i> Reserve
                 </button>
             </div>
@@ -733,7 +733,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="button" class="modal-close" onclick="closeModal('reserveModal')">✕</button>
         </div>
 
-        <form method="POST" action="../Client/reserve.php">
+        <form method="POST" action="../Client/PricingEngine.php">
             <input type="hidden" name="tool_id" value="<?= intval($tool['tool_id']) ?>">
 
             <div class="modal-body">
