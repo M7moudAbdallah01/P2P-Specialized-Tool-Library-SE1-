@@ -11,9 +11,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $db   = Database::getInstance();
 $conn = $db->getConnection();
 
-/* =========================================================
-   ACTIONS — ADD CATEGORY
-========================================================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_category'])) {
     $cat_name = $conn->real_escape_string(trim($_POST['cat_name']));
     $cat_desc = $conn->real_escape_string(trim($_POST['cat_description'] ?? ''));
@@ -24,9 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_category'])) {
     exit();
 }
 
-/* =========================================================
-   ACTIONS — ADD COUPON
-========================================================= */
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_coupon'])) {
     $code      = $conn->real_escape_string(trim($_POST['code']));
     $discount  = intval($_POST['discount_percent']);
@@ -42,15 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_coupon'])) {
     exit();
 }
 
-/* =========================================================
-   ACTIVE SECTION
-========================================================= */
+
 $active_section = $_GET['section'] ?? 'overview';
 
-/* =========================================================
-   STATS
-========================================================= */
-// ── Factory Pattern ──────────────────────────────
+
 $zones        = ModelFactory::getZones();
 $reportModel  = ModelFactory::create('report');
 $totalRevenue = $reportModel->getTotalRevenue();
@@ -68,15 +58,11 @@ $pending = $r->fetch_assoc()['c'];
 $r = $conn->query("SELECT COUNT(*) AS c FROM dispute WHERE status='open'");
 $disputes = $r->fetch_assoc()['c'];
 
-/* =========================================================
-   CATEGORIES
-========================================================= */
+
 $cat_result = $conn->query("SELECT * FROM category ORDER BY name");
 $categories = $cat_result ? $cat_result->fetch_all(MYSQLI_ASSOC) : [];
 
-/* =========================================================
-   COUPONS  (LEFT JOIN to get category name)
-========================================================= */
+
 $coup_result = $conn->query("
     SELECT cp.*, c.name AS category_name
     FROM coupons cp

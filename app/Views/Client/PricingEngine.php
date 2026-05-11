@@ -10,14 +10,10 @@ if (!isset($_SESSION['user_id'])) {
 $db   = Database::getInstance();
 $conn = $db->getConnection();
 
-/* =========================================================
-   بيانات اليوزر
-========================================================= */
+
 $user_id = $_SESSION['user_id'];
 
-/* =========================================================
-   بيانات الأداة
-========================================================= */
+
 $tool       = null;
 $tool_id    = intval($_GET['tool_id'] ?? 0);
 $start_date = $_GET['start_date'] ?? '';
@@ -25,7 +21,6 @@ $end_date   = $_GET['end_date'] ?? '';
 
 if ($tool_id > 0) {
 
-    // مهم: اسم الجدول categories مش category
     $stmt = $conn->prepare("
         SELECT t.*, c.name AS category_name
         FROM tools t
@@ -40,9 +35,7 @@ if ($tool_id > 0) {
     $tool = $stmt->get_result()->fetch_assoc();
 }
 
-/* =========================================================
-   Membership
-========================================================= */
+
 $membership = 'basic';
 $u = $conn->prepare("
     SELECT membership_tier
@@ -59,9 +52,6 @@ if ($urow) {
     $membership = strtolower($urow['membership_tier'] ?? 'standard');
 }
 
-/* =========================================================
-   الخصومات
-========================================================= */
 $membership_discounts = [
     'basic'   => 0,
     'premium' => 15,
@@ -70,16 +60,12 @@ $membership_discounts = [
 
 $user_discount = $membership_discounts[$membership] ?? 0;
 
-/* =========================================================
-   POST REQUESTS
-========================================================= */
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     header('Content-Type: application/json');
 
-    /* =====================================================
-       CALCULATE
-    ===================================================== */
+
     if (isset($_POST['action']) && $_POST['action'] === 'calculate') {
 
         $tool_id_post = intval($_POST['tool_id'] ?? 0);
@@ -141,9 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    /* =====================================================
-       CONFIRM RESERVATION
-    ===================================================== */
+
     if (isset($_POST['action']) && $_POST['action'] === 'confirm_reservation') {
 
         $tool_id_c   = intval($_POST['tool_id'] ?? 0);
@@ -165,9 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
 
-        /* =================================================
-           INSERT RESERVATION
-        ================================================= */
+
         $r = $conn->prepare("
             INSERT INTO reservations
             (
@@ -203,9 +185,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $reservation_id = $conn->insert_id;
 
-        /* =================================================
-           INSERT RENTAL
-        ================================================= */
         $tier      = $_POST['tier'] ?? 'daily';
         $quantity  = intval($_POST['quantity'] ?? 1);
 
@@ -252,9 +231,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-/* =========================================================
-   حساب الأيام تلقائي
-========================================================= */
+
 $auto_days = 1;
 
 if ($start_date && $end_date) {

@@ -14,7 +14,6 @@ $total_users = $r->fetch_assoc()['c'];
 $r            = $conn->query("SELECT COUNT(*) AS c FROM reservations");
 $total_rents  = $r->fetch_assoc()['c'];
 
-/* ── Categories ── */
 $categories = $conn->query("
     SELECT c.*, COUNT(t.tool_id) AS tool_count
     FROM category c
@@ -24,7 +23,6 @@ $categories = $conn->query("
     LIMIT 4
 ");
 
-/* ── Top Tools ── */
 $top_tools = $conn->query("
     SELECT t.*, c.name AS cat_name
     FROM tools t

@@ -16,18 +16,10 @@ $success = "";
 $uid  = intval($_SESSION['user_id']);
 $r = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id = $uid AND is_read = 0");
 $unread_msgs = $r->fetch_assoc()['cnt'];
-/*
-|--------------------------------------------------------------------------
-| HANDLE FORM SUBMISSION
-|--------------------------------------------------------------------------
-*/
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    /*
-    |--------------------------------------------------------------------------
-    | TOOLS TABLE FIELDS
-    |--------------------------------------------------------------------------
-    */
+
     $tool_name      = trim($_POST['tool_name'] ?? '');
     $description    = trim($_POST['description'] ?? '');
     $base_price     = floatval($_POST['base_price'] ?? 0);
@@ -38,20 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $video_link     = trim($_POST['video_link'] ?? '');
 
 
-    
-    /*
-    |--------------------------------------------------------------------------
-    | FILE PATHS
-    |--------------------------------------------------------------------------
-    */
+
     $manual_path = null;
     $image_path  = null;
 
-    /*
-    |--------------------------------------------------------------------------
-    | VALIDATION
-    |--------------------------------------------------------------------------
-    */
+
     if (empty($tool_name) || empty($description)) {
         $error = "Tool name and description are required.";
     }
@@ -60,11 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $error = "Base price must be valid.";
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | HANDLE PDF MANUAL
-    |--------------------------------------------------------------------------
-    */
+
     if (
         empty($error) &&
         isset($_FILES['manual']) &&
@@ -97,11 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | HANDLE TOOL IMAGE
-    |--------------------------------------------------------------------------
-    */
+
     if (
         empty($error) &&
         isset($_FILES['image']) &&
@@ -135,11 +110,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | DATABASE INSERT INTO TOOLS ONLY
-    |--------------------------------------------------------------------------
-    */
     if (empty($error)) {
 
         try {
@@ -197,22 +167,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | FINAL ERROR REDIRECT
-    |--------------------------------------------------------------------------
-    */
+
     if (!empty($error)) {
         header("Location: ToolSpecification.php?error=" . urlencode($error));
         exit();
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| FETCH CATEGORIES
-|--------------------------------------------------------------------------
-*/
+
 $categories = [];
 $catQuery = $conn->query("SELECT category_id, name FROM category ORDER BY name ASC");
 if ($catQuery) {

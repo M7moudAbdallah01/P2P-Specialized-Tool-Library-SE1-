@@ -12,7 +12,6 @@ class CouponController {
     }
 
     public function index() {
-        // معالجة الفورم لو تم الإرسال
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_coupon'])) {
             $this->couponModel->addCoupon(
                 $_POST['code'],
@@ -21,10 +20,8 @@ class CouponController {
                 $_POST['start_date'],
                 $_POST['end_date']
             );
-            // ريفريش في نفس الصفحة لرؤية النتائج
         }
 
-        // جلب البيانات للعرض
         $coupons = $this->couponModel->getAllCoupons();
         $categories = $this->categoryModel->getAllCategories(); // من وظيفة 24
         

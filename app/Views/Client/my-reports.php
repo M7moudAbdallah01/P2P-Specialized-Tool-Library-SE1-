@@ -12,9 +12,7 @@ $conn = $db->getConnection();
 
 $uid = intval($_SESSION['user_id']);
 
-/* ═══════════════════════════════
-   FILTERS — read raw first, escape for SQL separately
-═══════════════════════════════ */
+
 
 $status_filter_raw = $_GET['status'] ?? '';
 $search_raw        = trim($_GET['search'] ?? '');
@@ -31,9 +29,7 @@ if ($search_raw !== '') {
     $where .= " AND (tool_name LIKE '%$s%' OR reference_no LIKE '%$s%')";
 }
 
-/* ═══════════════════════════════
-   FETCH REPORTS
-═══════════════════════════════ */
+
 
 $reports_q = $conn->query("
     SELECT *
@@ -42,10 +38,7 @@ $reports_q = $conn->query("
     ORDER BY id DESC
 ");
 
-/* ═══════════════════════════════
-   COUNTS  (always per-user, no filter)
-   FIX: renamed $s to $status_key and $q to $count_q to avoid variable conflicts
-═══════════════════════════════ */
+
 
 $cnt = [];
 foreach (['pending','reviewing','resolved'] as $status_key) {
@@ -55,10 +48,7 @@ foreach (['pending','reviewing','resolved'] as $status_key) {
 }
 $cnt['total'] = $cnt['pending'] + $cnt['reviewing'] + $cnt['resolved'];
 
-/* ═══════════════════════════════
-   UNREAD MESSAGES
-   FIX: renamed $r to $unread_q to avoid conflict with the while loop $r below
-═══════════════════════════════ */
+
 $unread_q    = $conn->query("SELECT COUNT(*) AS cnt FROM messages
                               WHERE receiver_id = $uid AND is_read = 0");
 $unread_msgs = $unread_q->fetch_assoc()['cnt'];

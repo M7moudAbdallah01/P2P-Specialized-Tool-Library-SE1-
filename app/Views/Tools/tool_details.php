@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$role     = $_SESSION['role']; // 'admin' | 'technical' | 'client'
+$role     = $_SESSION['role']; 
 $isAdmin  = ($role === 'admin');
 $isTech   = ($role === 'technical');
 $isClient = ($role === 'client');
@@ -16,7 +16,6 @@ $maintenance    = $maintenance ? $maintenance->fetch_all(MYSQLI_ASSOC) : [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // EDIT TOOL
     if (isset($_POST['edit_tool'])) {
         $id    = intval($_POST['tool_id']);
         $name  = $_POST['name'];
@@ -34,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
     }
 
-    // ADD CERTIFICATION
     if (isset($_POST['add_cert'])) {
         $stmt = $conn->prepare("
             INSERT INTO certifications (tool_id, type, issue_date, expiry_date)
@@ -50,14 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
     }
 
-    // DELETE CERT
     if (isset($_POST['delete_cert'])) {
         $stmt = $conn->prepare("DELETE FROM certifications WHERE id=?");
         $stmt->bind_param("i", $_POST['delete_cert']);
         $stmt->execute();
     }
 
-    // ADD MAINTENANCE
     if (isset($_POST['add_maintenance'])) {
         $stmt = $conn->prepare("
             INSERT INTO maintenance_logs (tool_id, action, notes, date)
@@ -73,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
     }
 
-    // UPDATE BATTERY
     if (isset($_POST['update_battery'])) {
         $stmt = $conn->prepare("
             INSERT INTO battery_logs (tool_id, charge_cycles, health_status, last_checked)
@@ -89,7 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
     }
 
-    // refresh الصفحة عشان يظهر التحديث
     header("Location: tool_details.php?id=" . $_POST['tool_id']);
     exit();
 }

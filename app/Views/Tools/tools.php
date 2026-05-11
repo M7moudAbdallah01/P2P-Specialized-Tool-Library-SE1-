@@ -1,7 +1,5 @@
 <?php
-/* =========================================================
-   1) SESSION + AUTH CHECK
-========================================================= */
+
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
 
@@ -11,17 +9,13 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$role = $_SESSION['role']; // 'admin' | 'technical' | 'client'
+$role = $_SESSION['role']; 
 
-/* =========================================================
-   2) DATABASE CONNECTION
-========================================================= */
+
 $db = Database::getInstance();
 $conn = $db->getConnection();
 
-/* =========================================================
-   3) ACTIONS — CONSUMABLES RESTOCK (admin / technical only)
-========================================================= */
+
 if (
     in_array($role, ['admin', 'technical']) &&
     $_SERVER['REQUEST_METHOD'] === 'POST' &&
@@ -34,11 +28,8 @@ if (
     exit();
 }
 
-/* =========================================================
-   4) ACTIONS — TOOLS (admin / technical)
-========================================================= */
 
-// Delete tool (admin only)
+
 if ($role === 'admin' && isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
     $conn->query("DELETE FROM tools WHERE tool_id = $id");
@@ -46,7 +37,6 @@ if ($role === 'admin' && isset($_GET['delete'])) {
     exit();
 }
 
-// Toggle availability (admin + technical)
 if (in_array($role, ['admin', 'technical']) && isset($_GET['toggle'])) {
     $id = intval($_GET['toggle']);
     $conn->query("UPDATE tools SET availability = NOT availability WHERE tool_id = $id");
@@ -54,9 +44,7 @@ if (in_array($role, ['admin', 'technical']) && isset($_GET['toggle'])) {
     exit();
 }
 
-/* =========================================================
-   5) FILTERS (SEARCH + CATEGORY)
-========================================================= */
+
 $search     = trim($_GET['search'] ?? '');
 $cat_filter = intval($_GET['category'] ?? 0);
 
@@ -71,9 +59,7 @@ if ($cat_filter > 0) {
     $where .= " AND t.category_id = $cat_filter";
 }
 
-/* =========================================================
-   6) FETCH TOOLS
-========================================================= */
+
 $tools = $conn->query("
     SELECT 
         t.*, 
@@ -86,10 +72,8 @@ $tools = $conn->query("
     ORDER BY t.created_at DESC
 ");
 
-// categories (for filter dropdown)
 $categories = $conn->query("SELECT * FROM category ORDER BY name");
 
-// current category name
 $current_cat_name = '';
 if ($cat_filter > 0) {
     $res = $conn->query("SELECT name FROM category WHERE category_id = $cat_filter");
@@ -98,9 +82,7 @@ if ($cat_filter > 0) {
     }
 }
 
-/* =========================================================
-   7) FETCH CONSUMABLES (admin / technical only)
-========================================================= */
+
 $consumables = [];
 if (in_array($role, ['admin', 'technical'])) {
     $result = $conn->query("SELECT * FROM consumable ORDER BY name");
@@ -109,9 +91,7 @@ if (in_array($role, ['admin', 'technical'])) {
     }
 }
 
-/* =========================================================
-   8) USER DASHBOARD COUNTS
-========================================================= */
+
 $uid = intval($_SESSION['user_id']);
 
 $r = $conn->query("SELECT COUNT(*) AS cnt FROM tools WHERE owner_id = $uid");
@@ -129,9 +109,7 @@ $unread_msgs = $r->fetch_assoc()['cnt'];
 $r = $conn->query("SELECT COUNT(*) AS cnt FROM dispute d JOIN reservations r ON d.rental_id = r.reservation_id JOIN tools t ON r.tool_id = t.tool_id WHERE t.owner_id = $uid AND d.status = 'open'");
 $open_reports = $r->fetch_assoc()['cnt'];
 
-/* =========================================================
-   9) ACTIVE SECTION (tools | consumables)
-========================================================= */
+
 $active_section = $_GET['section'] ?? 'tools';
 if (!in_array($role, ['admin', 'technical'])) {
     $active_section = 'tools'; // clients can't access consumables

@@ -1,7 +1,5 @@
 <?php
-/* =========================================================
-   1) SESSION + AUTH CHECK
-========================================================= */
+
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
 
@@ -10,15 +8,11 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 $role = $_SESSION['role']; 
-/* =========================================================
-   2) DATABASE CONNECTION
-========================================================= */
+
 $db = Database::getInstance();
 $conn = $db->getConnection();
 
-/* =========================================================
-   3) FETCH CATEGORIES WITH TOOL COUNT
-========================================================= */
+
 $categories = $conn->query("
     SELECT c.*, COUNT(t.tool_id) AS tool_count
     FROM category c
@@ -53,14 +47,7 @@ $r = $conn->query("
 ");
 $open_reports = $r->fetch_assoc()['cnt'];
 
-// $r = $conn->query("SELECT COALESCE(SUM(total_price),0) AS total FROM reservations r
-//                    JOIN tools t ON r.tool_id = t.tool_id
-//                    WHERE t.owner_id = $uid AND r.status = 'completed'");
-// $total_earned = $r->fetch_assoc()['total'];
 
-/* =========================================================
-   4) MY TOOLS (latest 6)
-========================================================= */
 $my_tools = $conn->query("
     SELECT t.*, c.name AS category_name
     FROM tools t

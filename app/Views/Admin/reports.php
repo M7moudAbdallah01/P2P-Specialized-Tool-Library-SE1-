@@ -33,9 +33,6 @@ if ($chk && $chk->num_rows > 0) {
 }
 
 
-/* ═══════════════════════════════════════
-   TRUST SCORE HANDLING
-═══════════════════════════════════════ */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_trust'])) {
     $target_uid   = intval($_POST['target_user_id']);
     $dmg_id       = intval($_POST['damage_id']);
@@ -92,9 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_trust'])) {
 }
 
 
-/* ═══════════════════════════════════════
-   SEND TO TECHNICIAN
-═══════════════════════════════════════ */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_repair'])) {
     $dmg_id   = intval($_POST['damage_id']);
     $tech_id  = intval($_POST['technician_id']);
@@ -114,9 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_repair'])) {
 }
 
 
-/* ═══════════════════════════════════════
-   ADMIN UPDATE REPAIR STATUS
-═══════════════════════════════════════ */
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['admin_update_repair'])) {
     $rid = intval($_POST['repair_id']);
 
@@ -141,15 +133,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['admin_update_repair']
 }
 
 
-/* ═══════════════════════════════════════
-   ACTIVE TAB
-═══════════════════════════════════════ */
 $tab = $_GET['tab'] ?? 'client';
 
 
-/* ═══════════════════════════════════════
-   CLIENT FILTERS
-═══════════════════════════════════════ */
+
 $c_search_raw        = trim($_GET['c_search'] ?? '');
 $c_status_filter_raw = $_GET['c_status'] ?? '';
 
@@ -172,7 +159,6 @@ if ($c_search_raw !== '') {
 }
 
 
-/* CLIENT REPORTS QUERY */
 $damage_q = $conn->query("
     SELECT dd.*,
            u.name        AS reporter_name,
@@ -188,9 +174,7 @@ $damage_q = $conn->query("
 ");
 
 
-/* ═══════════════════════════════════════
-   TECH FILTERS
-═══════════════════════════════════════ */
+
 $t_search_raw        = trim($_GET['t_search'] ?? '');
 $t_status_filter_raw = $_GET['t_status'] ?? '';
 
@@ -211,7 +195,6 @@ if ($t_search_raw !== '') {
 }
 
 
-/* TECH REPORTS QUERY */
 $repairs_q = $conn->query("
     SELECT dd.*,
            u.name    AS reporter_name,
@@ -225,11 +208,8 @@ $repairs_q = $conn->query("
 ");
 
 
-/* ═══════════════════════════════════════
-   FIXED COUNTERS
-═══════════════════════════════════════ */
 
-/* CLIENT COUNTERS */
+
 $c_cnt = [];
 
 foreach (['pending', 'reviewing', 'resolved'] as $s) {
@@ -249,7 +229,6 @@ $c_cnt['total'] =
     ($c_cnt['resolved'] ?? 0);
 
 
-/* TECH COUNTERS */
 $t_cnt = [];
 
 foreach (['reviewing', 'in_progress', 'completed'] as $s) {
@@ -271,9 +250,6 @@ $t_cnt['total'] =
     ($t_cnt['completed'] ?? 0);
 
 
-/* ═══════════════════════════════════════
-   TECHNICIANS LIST
-═══════════════════════════════════════ */
 $techs_q = $conn->query("
     SELECT user_id, name
     FROM users
@@ -290,9 +266,6 @@ if ($techs_q) {
 }
 
 
-/* ═══════════════════════════════════════
-   DIAGNOSIS LABELS
-═══════════════════════════════════════ */
 $diagnosis_labels = [
     'electrical_fault'   => 'Electrical Fault',
     'mechanical_damage'  => 'Mechanical / Physical Damage',

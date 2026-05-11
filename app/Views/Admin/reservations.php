@@ -13,7 +13,6 @@ $db   = Database::getInstance();
 $conn = $db->getConnection();
 
 
-// Update reservation status
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $rid    = intval($_POST['reservation_id']);
     $status = $conn->real_escape_string($_POST['status']);
@@ -24,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     exit();
 }
 
-// Delete reservation
 if (isset($_GET['delete'])) {
     $rid = intval($_GET['delete']);
     $conn->query("DELETE FROM reservations WHERE reservation_id = $rid");

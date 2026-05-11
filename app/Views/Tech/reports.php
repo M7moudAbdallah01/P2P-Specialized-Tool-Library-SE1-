@@ -11,9 +11,7 @@ $db   = Database::getInstance();
 $conn = $db->getConnection();
 $uid  = intval($_SESSION['user_id']);
 
-/* =========================================================
-   ENSURE EXTRA COLUMNS EXIST IN damage_declarations
-========================================================= */
+
 $extra_cols = [
     "technician_id"  => "INT DEFAULT NULL",
     "tech_note"      => "TEXT DEFAULT NULL",
@@ -28,21 +26,14 @@ foreach ($extra_cols as $col => $def) {
     }
 }
 
-/* ── unread messages ── 
-   FIX: renamed $r to $unread_q
-*/
 $unread_q    = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id=$uid AND is_read=0");
 $unread_msgs = $unread_q ? $unread_q->fetch_assoc()['cnt'] : 0;
 
-/* ── pending count (sidebar badge) ──
-   FIX: renamed $r to $pending_q
-*/
+
 $pending_q     = $conn->query("SELECT COUNT(*) AS c FROM damage_declarations WHERE technician_id=$uid AND status='pending'");
 $pending_count = $pending_q ? $pending_q->fetch_assoc()['c'] : 0;
 
-/* =========================================================
-   UPDATE — technician submits diagnosis + note + status
-========================================================= */
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_repair'])) {
     $rid            = intval($_POST['repair_id']);
     $new_status     = $conn->real_escape_string($_POST['new_status']);
@@ -62,9 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_repair'])) {
     exit();
 }
 
-/* =========================================================
-   FILTERS
-========================================================= */
+
 $status_filter = $_GET['status'] ?? '';
 $search        = trim($_GET['search'] ?? '');
 
@@ -77,9 +66,7 @@ if ($search) {
     $where .= " AND (dd.tool_name LIKE '%$search_escaped%' OR dd.reference_no LIKE '%$search_escaped%')";
 }
 
-/* =========================================================
-   FETCH FROM damage_declarations
-========================================================= */
+
 $repairs_q = $conn->query("
     SELECT dd.*,
            u.name  AS reporter_name,
@@ -90,9 +77,7 @@ $repairs_q = $conn->query("
     ORDER BY dd.submitted_at DESC
 ");
 
-/* ── counts ──
-   FIX: renamed $s to $status_key and $rq to $count_q
-*/
+
 $cnt = [];
 foreach (['pending','reviewing','resolved'] as $status_key) {
     $count_q        = $conn->query("SELECT COUNT(*) AS c FROM damage_declarations WHERE technician_id=$uid AND status='$status_key'");
@@ -101,9 +86,7 @@ foreach (['pending','reviewing','resolved'] as $status_key) {
 $cnt['completed'] = $cnt['resolved'] ?? 0;
 $cnt['total']     = $cnt['pending'] + $cnt['reviewing'] + $cnt['resolved'];
 
-/* =========================================================
-   Diagnosis options
-========================================================= */
+
 $diagnosis_options = [
     ''                    => '— Select Diagnosis —',
     'electrical_fault'    => 'Electrical Fault',

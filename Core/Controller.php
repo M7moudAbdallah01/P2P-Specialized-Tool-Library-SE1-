@@ -2,7 +2,6 @@
 
 class Controller
 {
-    // عرض View
     public function view($view, $data = [])
     {
         $viewPath = "../app/Views/" . $view . ".php";

@@ -6,7 +6,6 @@ $db   = Database::getInstance();
 $conn = $db->getConnection();
 $uid  = intval($_SESSION['user_id']);
 
-// Fetch user's reservations for dropdown
 $reservations = [];
 $res_query = $conn->prepare("
     SELECT r.reservation_id, t.name AS tool_name, r.start_date, r.end_date, r.status
@@ -25,7 +24,6 @@ while ($row = $reservations_result->fetch_assoc()) {
 $r = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id = $uid AND is_read = 0");
 $unread_msgs = $r->fetch_assoc()['cnt'];
 
-/* ── ensure tables / columns exist ── */
 $conn->query("
     CREATE TABLE IF NOT EXISTS damage_declarations (
         id              INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,13 +44,10 @@ $conn->query("
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ");
 
-// Add reporter_id column if it doesn't exist yet (safe migration)
 $conn->query("ALTER TABLE damage_declarations ADD COLUMN IF NOT EXISTS reporter_id INT DEFAULT NULL AFTER id");
 
-// Add trust_score to users if missing
 $conn->query("ALTER TABLE users ADD COLUMN IF NOT EXISTS trust_score INT NOT NULL DEFAULT 100");
 
-// Create repair_requests table for technician
 $conn->query("
     CREATE TABLE IF NOT EXISTS repair_requests (
         id               INT AUTO_INCREMENT PRIMARY KEY,
@@ -69,9 +64,7 @@ $conn->query("
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ");
 
-/* ════════════════════════════════════════
-   POST: submit damage report
-════════════════════════════════════════ */
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'submit_damage') {
 
     $reservation_id = mysqli_real_escape_string($conn, $_POST['reservation_id'] ?? '');
@@ -85,7 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     $reference_no = 'DMG-' . date('Y') . '-' . rand(1000, 9999);
 
-    /* -- document upload -- */
     $document_path = '';
     if (!empty($_FILES['document']['name'])) {
         $doc_dir = __DIR__ . "/uploads/damage_docs/";
@@ -99,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
     }
 
-    /* -- photo uploads -- */
     $photo_paths = [];
     if (!empty($_FILES['photos']['name'][0])) {
         $photo_dir = __DIR__ . "/uploads/damage_photos/";
@@ -121,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $reference_esc = mysqli_real_escape_string($conn, $reference_no);
     $first_photo   = !empty($photo_paths) ? mysqli_real_escape_string($conn, $photo_paths[0]) : '';
 
-    /* ── 1) Insert into damage_declarations ── */
     $sql = "INSERT INTO damage_declarations
                 (reporter_id, reservation_id, tool_name, damage_date, location, damage_type,
                  severity, description, witness, document_path, photos, reference_no)
@@ -129,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 ($uid,'$reservation_id','$tool_name','$damage_date','$location','$damage_type',
                  '$severity','$description','$witness','$document_esc','$photos_json','$reference_esc')";
 
-   // غير السطر ده في PHP بعد الـ insert
 if ($conn->query($sql) === TRUE) {
 
     $damage_id = $conn->insert_id;
@@ -139,9 +128,7 @@ if ($conn->query($sql) === TRUE) {
     $tool_id_val   = 0;
     $rental_id_val = 0;
 
-    /* ─────────────────────────────
-       Get reservation + rental data
-    ───────────────────────────── */
+
     $rq = $conn->prepare("
         SELECT 
             r.reservation_id,
@@ -164,9 +151,7 @@ if ($conn->query($sql) === TRUE) {
         $rental_id_val = intval($rv['rental_id']);
     }
 
-    /* ─────────────────────────────
-       Create dispute only if rental exists
-    ───────────────────────────── */
+
     if ($rental_id_val > 0) {
 
         $reason_esc =
@@ -175,7 +160,6 @@ if ($conn->query($sql) === TRUE) {
             " | Type: " . ($_POST['damage_type'] ?? '') .
             " | Severity: " . ($_POST['severity'] ?? '');
 
-        // Get default admin for handled_by (required NOT NULL FK)
         $admin_row  = $conn->query("SELECT user_id FROM users WHERE role = 'admin' LIMIT 1")->fetch_assoc();
         $handled_by = $admin_row ? intval($admin_row['user_id']) : null;
 
