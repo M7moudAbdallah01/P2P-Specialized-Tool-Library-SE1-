@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 08, 2026 at 11:55 PM
+-- Generation Time: May 11, 2026 at 04:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,18 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `available_date`
---
-
-CREATE TABLE `available_date` (
-  `id` int(11) NOT NULL,
-  `tool_id` int(11) NOT NULL,
-  `available_date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `battery_logs`
 --
 
@@ -46,15 +34,6 @@ CREATE TABLE `battery_logs` (
   `health_status` varchar(50) DEFAULT NULL,
   `last_checked` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `battery_logs`
---
-
-INSERT INTO `battery_logs` (`id`, `tool_id`, `charge_cycles`, `health_status`, `last_checked`) VALUES
-(1, 1, 2, 'Good', '2026-05-28'),
-(2, 1, 1, 'Good', '2026-05-28'),
-(3, 1, 4, 'Good', '2026-05-28');
 
 -- --------------------------------------------------------
 
@@ -88,8 +67,16 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`category_id`, `name`) VALUES
-(4, 'Electricity'),
-(1, 'General Tools');
+(3, 'Automotive Tools'),
+(6, 'Construction Equipment'),
+(2, 'Electrical & Energy Equipment'),
+(4, 'Hand Tools'),
+(5, 'Material Handling'),
+(10, 'Measurement Tools'),
+(7, 'Metalworking Tools'),
+(9, 'Outdoor Power Equipment'),
+(8, 'Pneumatic Tools'),
+(1, 'Power Tools');
 
 -- --------------------------------------------------------
 
@@ -104,14 +91,6 @@ CREATE TABLE `certifications` (
   `issue_date` date DEFAULT NULL,
   `expiry_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `certifications`
---
-
-INSERT INTO `certifications` (`id`, `tool_id`, `type`, `issue_date`, `expiry_date`) VALUES
-(1, 1, 'mmm', '2026-05-01', '2026-05-25'),
-(2, 4, 'mmm', '2026-05-05', '2026-05-09');
 
 -- --------------------------------------------------------
 
@@ -146,22 +125,20 @@ CREATE TABLE `damage_declarations` (
   `photos` text DEFAULT NULL,
   `reference_no` varchar(50) NOT NULL,
   `status` enum('pending','reviewing','resolved') DEFAULT 'pending',
-  `submitted_at` datetime DEFAULT current_timestamp()
+  `submitted_at` datetime DEFAULT current_timestamp(),
+  `technician_id` int(11) DEFAULT NULL,
+  `tech_note` text DEFAULT NULL,
+  `diagnosis_type` varchar(100) DEFAULT NULL,
+  `admin_note` text DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `damage_declarations`
 --
 
-INSERT INTO `damage_declarations` (`id`, `reporter_id`, `reservation_id`, `tool_name`, `damage_date`, `location`, `damage_type`, `severity`, `description`, `witness`, `document_path`, `photos`, `reference_no`, `status`, `submitted_at`) VALUES
-(1, 11, '5', 'Bosch Professional Hammer Drill', '2026-06-05', 'cc', 'cosmetic', 'high', 'nnnnnn', '', '', '[\"uploads\\/damage_photos\\/1778275572_0_Screenshot 2025-07-30 022646.png\",\"uploads\\/damage_photos\\/1778275572_1_Screenshot 2025-07-31 024457.png\"]', 'DMG-2026-2670', 'pending', '2026-05-09 00:26:12'),
-(2, 11, '5', 'Bosch Professional Hammer Drill', '2026-05-28', 'cc', 'electrical', 'medium', 'cc', '', '', '[\"uploads\\/damage_photos\\/1778275923_0_Screenshot 2025-07-02 131508.png\",\"uploads\\/damage_photos\\/1778275923_1_Screenshot 2025-07-05 185949.png\",\"uploads\\/damage_photos\\/1778275923_2_Screenshot 2025-07-05 190358.png\"]', 'DMG-2026-3641', 'pending', '2026-05-09 00:32:03'),
-(3, 11, '5', 'Bosch Professional Hammer Drill', '2026-05-28', 'cc', 'electrical', 'medium', 'cc', '', '', '[\"uploads\\/damage_photos\\/1778276042_0_Screenshot 2025-07-02 131508.png\",\"uploads\\/damage_photos\\/1778276042_1_Screenshot 2025-07-05 185949.png\",\"uploads\\/damage_photos\\/1778276042_2_Screenshot 2025-07-05 190358.png\"]', 'DMG-2026-2585', 'pending', '2026-05-09 00:34:02'),
-(4, 11, '5', 'Bosch Professional Hammer Drill', '2026-05-28', 'cc', 'electrical', 'medium', 'cc', '', '', '[\"uploads\\/damage_photos\\/1778276049_0_Screenshot 2025-07-02 131508.png\",\"uploads\\/damage_photos\\/1778276049_1_Screenshot 2025-07-05 185949.png\",\"uploads\\/damage_photos\\/1778276049_2_Screenshot 2025-07-05 190358.png\"]', 'DMG-2026-4189', 'pending', '2026-05-09 00:34:09'),
-(5, 11, '5', 'Bosch Professional Hammer Drill', '2026-04-30', 'cc', 'mechanical', 'medium', 'ؤؤ', '', '', '[\"uploads\\/damage_photos\\/1778276099_0_Screenshot 2025-02-22 233209.png\",\"uploads\\/damage_photos\\/1778276099_1_Screenshot 2025-09-28 010840.png\",\"uploads\\/damage_photos\\/1778276099_2_Screenshot 2025-09-28 230326.png\"]', 'DMG-2026-4343', 'pending', '2026-05-09 00:34:59'),
-(6, 11, '5', 'Bosch Professional Hammer Drill', '2026-04-30', 'cc', 'mechanical', 'medium', 'ؤؤ', '', '', '[\"uploads\\/damage_photos\\/1778276153_0_Screenshot 2025-02-22 233209.png\",\"uploads\\/damage_photos\\/1778276153_1_Screenshot 2025-09-28 010840.png\",\"uploads\\/damage_photos\\/1778276153_2_Screenshot 2025-09-28 230326.png\"]', 'DMG-2026-9669', 'pending', '2026-05-09 00:35:53'),
-(7, 11, '5', 'Bosch Professional Hammer Drill', '2026-04-30', 'cc', 'mechanical', 'medium', 'ؤؤ', '', '', '[\"uploads\\/damage_photos\\/1778276295_0_Screenshot 2025-02-22 233209.png\",\"uploads\\/damage_photos\\/1778276295_1_Screenshot 2025-09-28 010840.png\",\"uploads\\/damage_photos\\/1778276295_2_Screenshot 2025-09-28 230326.png\"]', 'DMG-2026-1082', 'pending', '2026-05-09 00:38:15'),
-(8, 11, '5', 'Bosch Professional Hammer Drill', '2026-04-30', 'cc', 'mechanical', 'medium', 'ؤؤ', '', '', '[\"uploads\\/damage_photos\\/1778276440_0_Screenshot 2025-02-22 233209.png\",\"uploads\\/damage_photos\\/1778276440_1_Screenshot 2025-09-28 010840.png\",\"uploads\\/damage_photos\\/1778276440_2_Screenshot 2025-09-28 230326.png\"]', 'DMG-2026-1591', 'pending', '2026-05-09 00:40:40');
+INSERT INTO `damage_declarations` (`id`, `reporter_id`, `reservation_id`, `tool_name`, `damage_date`, `location`, `damage_type`, `severity`, `description`, `witness`, `document_path`, `photos`, `reference_no`, `status`, `submitted_at`, `technician_id`, `tech_note`, `diagnosis_type`, `admin_note`, `updated_at`) VALUES
+(8, 4, '1', '3D printer', '2026-06-05', 'cc', 'electrical', 'low', 'zzzz', 'zz', '', '[\"uploads\\/damage_photos\\/1778499936_0_Screenshot 2025-04-07 214507.png\"]', 'DMG-2026-2170', '', '2026-05-11 14:45:36', 3, 'vbvbvb', 'missing_parts', 'kmkmkmmk', '2026-05-11 16:02:15');
 
 -- --------------------------------------------------------
 
@@ -241,24 +218,6 @@ CREATE TABLE `messages` (
   `is_read` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `messages`
---
-
-INSERT INTO `messages` (`message_id`, `sender_id`, `receiver_id`, `content`, `encrypted`, `is_read`) VALUES
-(1, 12, 10, 'ووو', 0, 0),
-(2, 11, 12, 'zzzzz', 0, 1),
-(3, 11, 12, 'zzzz', 0, 1),
-(4, 12, 11, 'zz', 0, 1),
-(5, 12, 14, 'mm', 0, 0),
-(6, 12, 6, 'mm', 0, 0),
-(7, 12, 9, 'mmm', 0, 0),
-(8, 12, 10, 'mm', 0, 0),
-(9, 12, 11, 'mm', 0, 1),
-(10, 12, 13, 'mmmm', 0, 1),
-(11, 12, 7, 'hello', 0, 0),
-(12, 11, 12, 'ok', 0, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -272,15 +231,6 @@ CREATE TABLE `orders` (
   `status` enum('pending','completed','cancelled') DEFAULT 'pending',
   `order_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`order_id`, `user_id`, `total_price`, `status`, `order_date`) VALUES
-(1, 1, 150.00, 'completed', '2026-05-03 18:15:34'),
-(2, 2, 200.00, 'completed', '2026-05-03 18:15:34'),
-(3, 3, 450.00, 'completed', '2026-05-03 18:15:34');
 
 -- --------------------------------------------------------
 
@@ -330,13 +280,6 @@ CREATE TABLE `rentals` (
   `late_fee` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `rentals`
---
-
-INSERT INTO `rentals` (`rental_id`, `reservation_id`, `tool_id`, `renter_id`, `duration`, `final_price`, `discount_applied`, `actual_return_date`, `late_fee`) VALUES
-(1, 1, 6, 11, 15, 900.00, 0.00, NULL, 0.00);
-
 -- --------------------------------------------------------
 
 --
@@ -365,13 +308,6 @@ CREATE TABLE `repair_requests` (
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `repair_requests`
---
-
-INSERT INTO `repair_requests` (`id`, `reporter_id`, `reservation_id`, `tool_name`, `damage_date`, `location`, `damage_type`, `severity`, `description`, `witness`, `document_path`, `photos`, `reference_no`, `status`, `submitted_at`, `technician_id`, `tech_note`, `admin_note`, `updated_at`) VALUES
-(12, 11, '2', '3D printer', '2026-05-29', 'kjkj', 'electrical', 'medium', 'zzz', '', '', '[\"uploads\\/damage_photos\\/1778266275_0_Screenshot 2025-01-15 154602.png\"]', 'DMG-2026-9136', 'completed', '2026-05-08 21:51:15', 13, 'fgfgf', '', '2026-05-09 00:17:59');
-
 -- --------------------------------------------------------
 
 --
@@ -386,13 +322,6 @@ CREATE TABLE `reservations` (
   `end_date` date NOT NULL,
   `status` enum('pending','confirmed','cancelled','completed') NOT NULL DEFAULT 'pending'
 ) ;
-
---
--- Dumping data for table `reservations`
---
-
-INSERT INTO `reservations` (`reservation_id`, `user_id`, `tool_id`, `start_date`, `end_date`, `status`) VALUES
-(1, 11, 6, '2026-05-14', '2026-05-29', 'confirmed');
 
 -- --------------------------------------------------------
 
@@ -421,10 +350,16 @@ CREATE TABLE `tools` (
 --
 
 INSERT INTO `tools` (`tool_id`, `owner_id`, `category_id`, `name`, `description`, `base_price`, `state`, `availability`, `warranty_expiry_date`, `created_at`, `manual_path`, `video_link`, `image_path`) VALUES
-(1, 6, 4, 'mmmm', 'nnnn', 50.00, 'good', 1, '2026-05-05', '2026-05-03 10:59:28', NULL, NULL, NULL),
-(4, 11, 4, 'Bosch Professional Hammer Drill', 'Heavy-duty electric hammer drill suitable for construction, woodwork, and industrial maintenance. Includes impact mode and safety clutch.', 75.00, 'Good', 0, '2026-05-13', '2026-05-05 22:53:42', 'uploads/manuals/1778021622_manual_Classdiagram.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', NULL),
-(5, 11, 4, '3D printer', 'bbbbbbbb', 30.00, 'Good', 1, '2026-05-22', '2026-05-07 22:32:05', 'uploads/manuals/1778193125_manual_DataStructureQuiz.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', NULL),
-(6, 14, 4, '3D printer', 'mmmmmmm', 60.00, 'Good', 1, '2026-05-27', '2026-05-08 12:42:04', 'uploads/manuals/1778244124_manual_DataStructureQuiz.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778244124_image_Screenshot2025-04-07214507.png');
+(3, 6, 1, 'Cordless Drill', 'Portable electric drilling tool used for drilling holes and driving screws in wood, metal, and plastic surfaces.', 50.00, 'Good', 1, '2026-05-20', '2026-05-11 14:18:10', 'uploads/manuals/1778509090_manual_ch5.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509090_image_shopping.webp'),
+(4, 6, 7, 'Angle Grinder', 'High-speed rotating power tool designed for cutting, grinding, polishing, and sharpening metal or stone materials.', 20.00, 'Good', 1, '2026-05-26', '2026-05-11 14:22:36', 'uploads/manuals/1778509356_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509356_image_download.webp'),
+(5, 7, 10, 'Laser Level', 'Precision leveling instrument that projects laser lines for accurate alignment in construction and installation work.', 60.00, 'Good', 1, '2026-05-30', '2026-05-11 14:23:55', 'uploads/manuals/1778509435_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509435_image_shopping1.webp'),
+(6, 7, 8, 'Air Compressor', 'Machine that compresses air for powering pneumatic tools, inflating tires, and industrial cleaning tasks.', 50.00, 'Good', 1, '2026-05-26', '2026-05-11 14:24:42', 'uploads/manuals/1778509482_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509482_image_download1.webp'),
+(7, 7, 9, 'Chainsaw', 'Motorized cutting tool with a rotating chain blade designed for cutting wood, trees, and heavy branches.', 20.00, 'Good', 1, '2026-05-27', '2026-05-11 14:25:40', 'uploads/manuals/1778509540_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509540_image_shopping2.webp'),
+(8, 8, 3, 'Hydraulic Jack', 'Lifts vehicles safely for tire changes or underbody repairs.', 45.00, 'Good', 1, '2026-06-06', '2026-05-11 14:28:30', 'uploads/manuals/1778509710_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509710_image_shopping3.webp'),
+(9, 8, 6, 'Excavator', 'Blends cement, sand, gravel, and water into concrete.', 56.00, 'Good', 1, '2026-05-28', '2026-05-11 14:29:44', 'uploads/manuals/1778509784_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509784_image_shopping4.webp'),
+(10, 8, 2, 'Circuit Breaker Tester', 'Checks if breakers function properly under load conditions.', 25.00, 'Good', 1, '2026-05-21', '2026-05-11 14:31:02', 'uploads/manuals/1778509862_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509862_image_shopping5.webp'),
+(11, 8, 4, 'Pliers', 'Grips, bends, or cuts wires and small objects', 8.00, 'Good', 1, '2026-05-30', '2026-05-11 14:31:58', 'uploads/manuals/1778509918_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509918_image_shopping6.webp'),
+(12, 8, 5, 'Hoist', 'Lifts heavy loads vertically using chains or cables.', 75.00, 'Good', 1, '2026-06-24', '2026-05-11 14:33:04', 'uploads/manuals/1778509984_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509984_image_shopping7.webp');
 
 -- --------------------------------------------------------
 
@@ -495,7 +430,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` enum('technical','client','admin') DEFAULT 'client',
   `membership_tier` enum('basic','premium','vip') NOT NULL DEFAULT 'basic',
-  `trust_score` decimal(3,2) DEFAULT 0.00,
+  `trust_score` decimal(5,2) NOT NULL DEFAULT 50.00,
   `status` varchar(20) NOT NULL DEFAULT 'active',
   `zone_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -505,16 +440,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `role`, `membership_tier`, `trust_score`, `status`, `zone_id`) VALUES
-(3, 'Mahmoud', 'mahmoud@gmail.com', '$2y$10$V1J9qk9v8b3cYh8m2x0vOe0nK1lGfXl8pQk8rZcQmZ8h0lWwE2m6e', 'admin', 'basic', 0.00, 'active', NULL),
-(6, 'Hassan', 'hass@gmail.com', '$2y$10$vQ8cWYe90o94.rI241CbyuxaLkCNnnU.vvDobcifn4Ve4fMvkJbsa', 'client', 'basic', 0.00, 'active', NULL),
-(7, 'aaa', 'aaa@gmail.com', '$2y$10$Noyvw9TKjyttG/94u56VH.L4MgGiTyZbOp1a.e.HXleSkL45MiBi6', 'technical', 'basic', 0.90, 'active', NULL),
-(8, 'Mahmoud', 'mahmoud123abdallah456@gmail.com', '$2y$10$8n8yyv.iPhTB8fi6I.79v.FwyvFnkLLPg3/RjWI8SeP655xpwGcGW', 'admin', 'basic', 0.00, 'active', NULL),
-(9, 'wiener', 'mmm@gmail.com', '$2y$10$u1sXMcST98C5RNZVZKBHd.V9TwYliFENFBcJacpxoB6pyIlSWlqXK', 'client', 'basic', 0.00, 'active', NULL),
-(10, 'wiener', 'm@gmail.com', '$2y$10$lDsfVJvG2nLdMc9hHfYoB.ytP1cHKQNbM.Ek.oQmaEwz56XP8Icoe', 'client', 'basic', 0.00, 'active', NULL),
-(11, 'wiener', 'client@gmail.com', '$2y$10$zKVgiaxhnlHYxxnB215eSOQ32AT2Y97TyulKdi/oXafNM90XImr.G', 'client', 'basic', 0.00, 'active', NULL),
-(12, 'Mahmoud', 'admin@gmail.com', '$2y$10$yO9Dpm7gnYk8EqPFshoS0.m/1epuN5BSj0vZeevMaupAj3YoHrCCi', 'admin', 'basic', 0.00, 'active', NULL),
-(13, 'techno', 'tech@gmail.com', '$2y$10$rnsoG.9DIzVR8uE6B1yOOuNZEqZvvHWhhkS8zCdsc3fSWp1V.EXUq', 'technical', 'basic', 0.00, 'active', NULL),
-(14, 'ali', 'all@gmail.com', '$2y$10$oAHrc2toz8gks19QlYuBi.Nl8OVE7NDWJObzyKaHD1c3GrnWTFrXy', 'client', 'basic', 0.70, 'active', 20);
+(6, 'Mahmoud', 'client@gmail.com', '$2y$10$ogP8AAQNohTrKSN4wHBUQOYyQQGuRkKnftXqCDitkm1M5aTwU.6Gm', 'client', 'basic', 50.00, 'active', 1),
+(7, 'Ali', 'client2@gmail.com', '$2y$10$d3kdG./pfVvibEleRxDbO.K3inNTk4m0E5LLbhAxFaE42KU3ektP2', 'client', 'basic', 50.00, 'active', 4),
+(8, 'Hassan', 'client3@gmail.com', '$2y$10$qF2HO8UnC39UgfO0GvfZweajWe3EeX0U6Ot5DNztxaHSa3BhhdTXe', 'client', 'basic', 50.00, 'active', 19),
+(9, 'youssif', 'tech@gmail.com', '$2y$10$/2oprL5YsnBWexujdfnd2OhXcF4LEXV4Ywa0yFY9J/FWPKjeqN3Mm', 'technical', 'basic', 50.00, 'active', 5),
+(10, 'yassen', 'admin@gmail.com', '$2y$10$Zk9BcJiI1WhJuilFzznO1eqerrCYBaIs6jn4J4X1E7QAH1B7Hy1je', 'admin', 'basic', 50.00, 'active', 3),
+(11, 'ali amr', 'tech2@gmail.com', '$2y$10$3MMtALka2Xx9cyNvJOrVbOKeGOfED2kGTGpLpQcd5VeXyvNXNeMZC', 'technical', 'basic', 50.00, 'active', 13);
 
 -- --------------------------------------------------------
 
@@ -563,13 +494,6 @@ INSERT INTO `zones` (`zone_id`, `zone_name`) VALUES
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `available_date`
---
-ALTER TABLE `available_date`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `tool_id` (`tool_id`);
 
 --
 -- Indexes for table `battery_logs`
@@ -745,16 +669,10 @@ ALTER TABLE `zones`
 --
 
 --
--- AUTO_INCREMENT for table `available_date`
---
-ALTER TABLE `available_date`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `battery_logs`
 --
 ALTER TABLE `battery_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `campaign`
@@ -766,13 +684,13 @@ ALTER TABLE `campaign`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `certifications`
 --
 ALTER TABLE `certifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `consumable`
@@ -784,7 +702,7 @@ ALTER TABLE `consumable`
 -- AUTO_INCREMENT for table `damage_declarations`
 --
 ALTER TABLE `damage_declarations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `deposit`
@@ -796,7 +714,7 @@ ALTER TABLE `deposit`
 -- AUTO_INCREMENT for table `dispute`
 --
 ALTER TABLE `dispute`
-  MODIFY `dispute_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `dispute_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `insurance_claim`
@@ -808,13 +726,13 @@ ALTER TABLE `insurance_claim`
 -- AUTO_INCREMENT for table `maintenance_logs`
 --
 ALTER TABLE `maintenance_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `parts`
@@ -838,7 +756,7 @@ ALTER TABLE `rentals`
 -- AUTO_INCREMENT for table `repair_requests`
 --
 ALTER TABLE `repair_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `reservations`
@@ -850,7 +768,7 @@ ALTER TABLE `reservations`
 -- AUTO_INCREMENT for table `tools`
 --
 ALTER TABLE `tools`
-  MODIFY `tool_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `tool_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tool_compatibility_checks`
@@ -868,7 +786,7 @@ ALTER TABLE `tool_document`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `zones`
@@ -879,12 +797,6 @@ ALTER TABLE `zones`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `available_date`
---
-ALTER TABLE `available_date`
-  ADD CONSTRAINT `available_date_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `battery_logs`
