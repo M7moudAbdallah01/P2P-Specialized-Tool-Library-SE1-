@@ -673,3 +673,82 @@ background: #1b1b1b;
 
 .btn-main:hover { background: #b91c1c; }
 
+.section-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #eee;
+    flex-wrap: wrap;
+}
+.section-tab {
+    padding: 10px 18px;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    text-decoration: none;
+    transition: color .2s, border-color .2s;
+    white-space: nowrap;
+}
+.section-tab:hover { color: #333; }
+.section-tab.active { color: #c62828; border-bottom-color: #c62828; }
+.section-tab i { margin-right: 6px; }
+
+/* ── Page sections ── */
+.page-section { display: none; }
+.page-section.visible { display: block; }
+
+/* ── Category / Campaign forms ── */
+.form-card {
+    background: var(--card-bg, #fff);
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+}
+.form-card h3 { margin: 0 0 16px; font-size: 15px; }
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group label { font-size: 12px; font-weight: 600; color: #666; }
+.form-group input,
+.form-group select {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    background: #fafafa;
+}
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #c62828;
+    background: #fff;
+}
+
+/* ── Status pills ── */
+.pill { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.pill-active  { background: #e8f5e9; color: #2e7d32; }
+.pill-pending { background: #fff3e0; color: #e65100; }
+.pill-expired { background: #ffebee; color: #c62828; }
+
+/* ── Alert ── */
+.alert-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+    border-radius: 6px;
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+}
