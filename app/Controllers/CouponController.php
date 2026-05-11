@@ -1,37 +1,33 @@
 <?php
+require_once '../app/Models/Coupon.php';
+require_once '../app/Models/Category.php';
 
-session_start();
-require_once __DIR__ . "/../../Core/database.php";
+class CouponController {
+    private $couponModel;
+    private $categoryModel;
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../Auth/login.php");
-    exit();
-}
- 
-
-$db   = Database::getInstance();
-$conn = $db->getConnection();
-
-if (isset($_POST['add_campaign'])) {
-    
-    if (!isset($conn)) {
-        die("Error: Connection variable \$conn is not defined in database.php");
+    public function __construct($db) {
+        $this->couponModel = new Coupon($db);
+        $this->categoryModel = new Category($db);
     }
 
-    $code = mysqli_real_escape_string($conn, $_POST['code']);
-    $discount = (int)$_POST['discount_percentage'];
-    $cat_id = (int)$_POST['category_id'];
-    $expiry = mysqli_real_escape_string($conn, $_POST['expiry_date']);
+    public function index() {
+        // معالجة الفورم لو تم الإرسال
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_coupon'])) {
+            $this->couponModel->addCoupon(
+                $_POST['code'],
+                $_POST['discount_percent'],
+                $_POST['category_id'],
+                $_POST['start_date'],
+                $_POST['end_date']
+            );
+            // ريفريش في نفس الصفحة لرؤية النتائج
+        }
 
-    $query = "INSERT INTO coupons (code, discount_percentage, category_id, expiry_date, status) 
-              VALUES ('$code', '$discount', '$cat_id', '$expiry', 1)";
-
-    if (mysqli_query($conn, $query)) {
-        echo "<h2 style='color:green;'>Success!</h2>";
-        echo "Campaign <b>$code</b> added successfully.";
-        echo "<br><a href='../views/Admin/dashboard.php'>Back to Dashboard</a>";
-    } else {
-        echo "SQL Error: " . mysqli_error($conn);
+        // جلب البيانات للعرض
+        $coupons = $this->couponModel->getAllCoupons();
+        $categories = $this->categoryModel->getAllCategories(); // من وظيفة 24
+        
+        require_once '../app/Views/Admin/manage_coupons.php';
     }
 }
-?>
