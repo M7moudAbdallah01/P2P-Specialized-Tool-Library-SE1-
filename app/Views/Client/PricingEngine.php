@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 "error" => "Invalid tool"
             ]);
             exit();
-        }
+        } 
 
         $t = $conn->prepare("
             SELECT name, base_price
