@@ -4,7 +4,6 @@ require_once __DIR__ . "../../../../Core/database.php";
 $db   = Database::getInstance();
 $conn = $db->getConnection();
 
-/* ── Stats ── */
 $r           = $conn->query("SELECT COUNT(*) AS c FROM tools WHERE availability = 1");
 $total_tools = $r->fetch_assoc()['c'];
 
