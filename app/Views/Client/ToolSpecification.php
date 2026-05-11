@@ -5,19 +5,6 @@ require_once __DIR__ . "/../../../Core/database.php";
 $db   = Database::getInstance();
 $conn = $db->getConnection();
 
-<<<<<<< HEAD
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
- 
-    $tool_name = mysqli_real_escape_string($conn, $_POST['tool_name']);
-    $description = mysqli_real_escape_string($conn, $_POST['description']);
-    $video_link = mysqli_real_escape_string($conn, $_POST['video_link']);
-    $warranty = mysqli_real_escape_string($conn, $_POST['warranty']);
-=======
-/*
-|--------------------------------------------------------------------------
-| SECURITY + ROLE CHECK
-|--------------------------------------------------------------------------
-*/
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../Auth/login.php");
     exit();
@@ -29,8 +16,6 @@ $success = "";
 $uid  = intval($_SESSION['user_id']);
 $r = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id = $uid AND is_read = 0");
 $unread_msgs = $r->fetch_assoc()['cnt'];
->>>>>>> 8bb711d625c2f9454741a88a7d5dea46510e5a0b
-
 /*
 |--------------------------------------------------------------------------
 | HANDLE FORM SUBMISSION

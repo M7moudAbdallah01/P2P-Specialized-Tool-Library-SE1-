@@ -43,8 +43,7 @@ if ($tool_id > 0) {
 /* =========================================================
    Membership
 ========================================================= */
-$membership = 'standard';
-
+$membership = 'basic';
 $u = $conn->prepare("
     SELECT membership_tier
     FROM users
@@ -64,10 +63,9 @@ if ($urow) {
    الخصومات
 ========================================================= */
 $membership_discounts = [
-    'standard' => 0,
-    'silver'   => 10,
-    'gold'     => 20,
-    'platinum' => 35
+    'basic'   => 0,
+    'premium' => 15,
+    'vip'     => 30
 ];
 
 $user_discount = $membership_discounts[$membership] ?? 0;
