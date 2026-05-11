@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
-
+ 
 $db   = Database::getInstance();
 $conn = $db->getConnection();
 

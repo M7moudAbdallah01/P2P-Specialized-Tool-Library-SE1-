@@ -6,7 +6,7 @@ $db = Database::getInstance();
 $conn = $db->getConnection();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
+ 
     $tool_name = mysqli_real_escape_string($conn, $_POST['tool_name']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     $video_link = mysqli_real_escape_string($conn, $_POST['video_link']);
