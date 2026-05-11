@@ -7,7 +7,6 @@ class RepairController extends Controller {
         $toolModel = $this->model('Tool');
         $data['tools'] = $toolModel->getAllTools(); 
         
-        // عرض الـ View اللي سميناها repair_estimator.php
         $this->view('tech/repair_estimator', $data);
     }
 

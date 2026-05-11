@@ -1,7 +1,4 @@
 <?php
-/* =========================================================
-   1) SESSION + AUTH CHECK
-========================================================= */
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
 
@@ -10,16 +7,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'client') {
     exit();
 }
 
-/* =========================================================
-   2) DATABASE CONNECTION
-========================================================= */
 $db   = Database::getInstance();
 $conn = $db->getConnection();
 $uid  = intval($_SESSION['user_id']);
 
-/* =========================================================
-   3) STATS
-========================================================= */
 
 $r = $conn->query("SELECT COUNT(*) AS cnt FROM tools WHERE owner_id = $uid");
 $total_tools = $r->fetch_assoc()['cnt'];

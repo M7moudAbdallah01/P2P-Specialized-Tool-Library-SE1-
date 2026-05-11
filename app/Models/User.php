@@ -1,6 +1,5 @@
 <?php
 
-// الخطة: نطلع خطوتين لبره (واحدة من Models وواحدة من app) عشان نلاقي Core
 require_once __DIR__ . "/../../Core/database.php";
 
 class User
@@ -20,14 +19,12 @@ class User
         return $stmt->get_result()->fetch_assoc();
     }
 
-    // جلب كل المستخدمين (ماعدا الأدمن)
     public function getAll()
     {
         $result = $this->conn->query("SELECT user_id, name, email, status FROM users WHERE role != 'admin'");
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // تحديث حالة المستخدم
     public function updateStatus($id, $status)
     {
         $stmt = $this->conn->prepare("UPDATE users SET status = ? WHERE user_id = ?");

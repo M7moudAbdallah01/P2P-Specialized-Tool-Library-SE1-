@@ -1,7 +1,5 @@
 <?php
-/* =========================================================
-   1) SESSION + AUTH
-========================================================= */
+
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
 
@@ -10,15 +8,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-/* =========================================================
-   2) DATABASE
-========================================================= */
+
 $db   = Database::getInstance();
 $conn = $db->getConnection();
 
-/* =========================================================
-   3) ACTIONS
-========================================================= */
 
 // Update reservation status
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
@@ -39,9 +32,6 @@ if (isset($_GET['delete'])) {
     exit();
 }
 
-/* =========================================================
-   4) FILTERS
-========================================================= */
 $status_filter = $_GET['status'] ?? '';
 $search        = trim($_GET['search'] ?? '');
 $date_from     = $_GET['date_from'] ?? '';
@@ -64,9 +54,6 @@ if ($date_to !== '') {
     $where .= " AND r.end_date <= '$dt'";
 }
 
-/* =========================================================
-   5) FETCH RESERVATIONS
-========================================================= */
 $reservations_q = $conn->query("
     SELECT
         r.*,
@@ -81,9 +68,6 @@ $reservations_q = $conn->query("
     ORDER BY r.reservation_id DESC
 ");
 
-/* =========================================================
-   6) COUNTS
-========================================================= */
 $cnt = [];
 foreach (['pending','confirmed','cancelled','completed'] as $s) {
     $res     = $conn->query("SELECT COUNT(*) AS c FROM reservations WHERE status = '$s'");
@@ -101,42 +85,7 @@ $cnt['total'] = array_sum($cnt);
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="../../assets/Css/style.css">
 <link rel="stylesheet" href="../../assets/Css/admin.css">
-<style>
-.stat-mini { display:flex; gap:14px; margin-bottom:24px; flex-wrap:wrap; }
-.stat-mini-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 22px; min-width:110px; }
-.stat-mini-card .num { font-size:1.6rem; font-weight:700; line-height:1; }
-.stat-mini-card .lbl { font-size:.72rem; color:var(--text-muted); text-transform:uppercase; margin-top:4px; }
-
-.filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
-.filters input, .filters select { background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:9px 14px; border-radius:var(--radius); font-size:.85rem; outline:none; }
-.filters input:focus, .filters select:focus { border-color:var(--red); }
-
-.res-table { width:100%; border-collapse:collapse; }
-.res-table th { background:var(--surface2); color:var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); }
-.res-table td { padding:13px 16px; border-bottom:1px solid var(--border); font-size:.85rem; vertical-align:middle; }
-.res-table tr:hover td { background:var(--surface2); }
-
-.status-pill { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px; font-size:.72rem; font-weight:600; text-transform:uppercase; }
-.pill-pending   { background:rgba(234,179,8,.12);  color:#eab308; }
-.pill-confirmed { background:rgba(45,190,108,.12); color:#2dbe6c; }
-.pill-cancelled { background:rgba(107,114,128,.12);color:#6b7280; }
-.pill-completed { background:rgba(99,102,241,.12); color:#6366f1; }
-
-.btn-sm { padding:5px 12px; border-radius:6px; font-size:.78rem; cursor:pointer; border:none; transition:.2s; }
-.btn-red { background:var(--red); color:#fff; }
-.btn-red:hover { background:var(--red-dim); }
-.btn-ghost { background:transparent; border:1px solid var(--border); color:var(--text-muted); }
-.btn-ghost:hover { border-color:var(--red); color:var(--red); }
-.btn-danger { background:transparent; border:1px solid #e63946; color:#e63946; }
-.btn-danger:hover { background:#e63946; color:#fff; }
-
-.empty-state { text-align:center; padding:60px; color:var(--text-muted); }
-.empty-state i { font-size:2.5rem; display:block; margin-bottom:12px; }
-
-.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; }
-
-select.status-select { background:var(--surface2); border:1px solid var(--border2); color:var(--text); padding:4px 8px; border-radius:6px; font-size:.8rem; cursor:pointer; }
-</style>
+<link rel="stylesheet" href="../../assets/Css/reservation.css">
 </head>
 <body>
 
@@ -177,7 +126,7 @@ select.status-select { background:var(--surface2); border:1px solid var(--border
             <i class="fa fa-comments"></i> Chat
         </a>
         <a href="reports.php" class="nav-link">
-            <i class="fa fa-scale-balanced"></i> Disputes &amp; Reports
+            <i class="fa fa-scale-balanced"></i> Reports
         </a>
     </div>
 </div>

@@ -1,7 +1,4 @@
 <?php
-/* =========================================================
-   SESSION + AUTH
-========================================================= */
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
 
@@ -19,9 +16,6 @@ $unread_msgs = $r->fetch_assoc()['c'];
 
 $r = $conn->query("SELECT COUNT(*) AS c FROM repair_requests WHERE status = 'pending'");
 $pending_damage = $r->fetch_assoc()['c'];
-/* =========================================================
-   HELPER
-========================================================= */
 function tableExists($conn, $table) {
     $t = $conn->real_escape_string($table);
     $r = $conn->query("SHOW TABLES LIKE '$t'");
@@ -30,19 +24,12 @@ function tableExists($conn, $table) {
 
 $HAS_EXT_TABLE = tableExists($conn, 'external_repairs');
 
-/* =========================================================
-   TOOLS LIST
-========================================================= */
 $tools_result = $conn->query("SELECT tool_id, name FROM tools ORDER BY name");
 $tools = [];
 if ($tools_result) while ($row = $tools_result->fetch_assoc()) $tools[] = $row;
 
-/* =========================================================
-   HANDLE ACTIONS
-========================================================= */
 $success = $error = '';
 
-// Add new external repair
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_repair'])) {
     $tool_id    = intval($_POST['tool_id'] ?? 0);
     $shop_name  = $conn->real_escape_string(trim($_POST['shop_name'] ?? ''));
@@ -72,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_repair'])) {
             }
         }
 
-        // Fallback: maintenance_logs only
         if (!$saved && !$error) {
             $action = $conn->real_escape_string("External Repair — sent to $shop_name");
             $conn->query("INSERT INTO maintenance_logs (tool_id, action, issue, date) VALUES ($tool_id, '$action', '$issue', NOW())");
@@ -84,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_repair'])) {
     }
 }
 
-// Update status (only if table exists)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status']) && $HAS_EXT_TABLE) {
     $repair_id = intval($_POST['repair_id'] ?? 0);
     $status    = $conn->real_escape_string($_POST['status'] ?? '');
@@ -99,9 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status']) && $
     }
 }
 
-/* =========================================================
-   FETCH RECORDS
-========================================================= */
 $repairs = [];
 if ($HAS_EXT_TABLE) {
     $repairs_result = $conn->query("
@@ -113,7 +95,6 @@ if ($HAS_EXT_TABLE) {
     if ($repairs_result) while ($row = $repairs_result->fetch_assoc()) $repairs[] = $row;
 }
 
-// Fallback: من maintenance_logs
 if (empty($repairs)) {
     $fallback = $conn->query("
         SELECT ml.id, ml.tool_id, ml.action AS issue, ml.date AS sent_date,

@@ -1,7 +1,4 @@
 <?php
-/* =========================================================
-   SESSION + AUTH
-========================================================= */
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
 
@@ -20,45 +17,30 @@ $unread_msgs = $r->fetch_assoc()['c'];
 
 $r = $conn->query("SELECT COUNT(*) AS c FROM repair_requests WHERE status = 'pending'");
 $pending_damage = $r->fetch_assoc()['c'];
-/* =========================================================
-   HELPER — check if table exists safely
-========================================================= */
 function tableExists($conn, $table) {
     $t = $conn->real_escape_string($table);
     $r = $conn->query("SHOW TABLES LIKE '$t'");
     return $r && $r->num_rows > 0;
 }
 
-/* =========================================================
-   PARTS CATALOG (optional — جدول parts)
-========================================================= */
 $parts = [];
 if (tableExists($conn, 'parts')) {
     $parts_result = $conn->query("SELECT * FROM parts ORDER BY name");
     if ($parts_result) while ($row = $parts_result->fetch_assoc()) $parts[] = $row;
 }
 
-/* =========================================================
-   COMMON FAULT TEMPLATES (optional — جدول fault_templates)
-========================================================= */
 $faults = [];
 if (tableExists($conn, 'fault_templates')) {
     $faults_result = $conn->query("SELECT * FROM fault_templates ORDER BY fault_name");
     if ($faults_result) while ($row = $faults_result->fetch_assoc()) $faults[] = $row;
 }
 
-/* =========================================================
-   TOOLS LIST
-========================================================= */
 $tools_result = $conn->query("SELECT tool_id, name FROM tools ORDER BY name");
 $tools = [];
 if ($tools_result) {
     while ($row = $tools_result->fetch_assoc()) $tools[] = $row;
 }
 
-/* =========================================================
-   HANDLE FORM SUBMISSION — SAVE ESTIMATE
-========================================================= */
 $success = $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_estimate'])) {
     $tool_id     = intval($_POST['tool_id'] ?? 0);
@@ -71,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_estimate'])) {
 
     if ($tool_id && $fault) {
         $saved = false;
-        // محاولة الحفظ في repair_estimates لو موجود
         if (tableExists($conn, 'repair_estimates')) {
             $stmt = $conn->prepare("
                 INSERT INTO repair_estimates (tool_id, fault_description, parts_cost, labor_hours, labor_rate, total_cost, notes, created_by, created_at)
@@ -84,10 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_estimate'])) {
                 $stmt->close();
             }
         }
-        // Fallback: حفظ في maintenance_logs بالأعمدة الموجودة فقط
         if (!$saved && !$error) {
             $action_text = $conn->real_escape_string("Repair Estimate — $fault (Total: " . number_format($total,2) . " EGP)");
-            // نتحقق من الأعمدة الموجودة
             $chk = $conn->query("SHOW COLUMNS FROM maintenance_logs");
             $ml_c = [];
             if ($chk) while ($cc = $chk->fetch_assoc()) $ml_c[] = $cc['Field'];
@@ -97,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_estimate'])) {
             } elseif (in_array('description', $ml_c)) {
                 $conn->query("INSERT INTO maintenance_logs (tool_id, description, date) VALUES ($tool_id, '$action_text', NOW())");
             } else {
-                // أدنى حد — tool_id فقط
                 $conn->query("INSERT INTO maintenance_logs (tool_id) VALUES ($tool_id)");
             }
             $success = "Estimate recorded in maintenance logs.";
@@ -107,9 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_estimate'])) {
     }
 }
 
-/* =========================================================
-   RECENT ESTIMATES — من repair_estimates أو maintenance_logs
-========================================================= */
 $estimates = [];
 if (tableExists($conn, 'repair_estimates')) {
     $res = $conn->query("
@@ -120,14 +95,11 @@ if (tableExists($conn, 'repair_estimates')) {
     ");
     if ($res) while ($row = $res->fetch_assoc()) $estimates[] = $row;
 }
-// Fallback من maintenance_logs — بدون أعمدة غير موجودة
 if (empty($estimates)) {
-    // نجيب الأعمدة الموجودة فعلاً في maintenance_logs
     $ml_cols_res = $conn->query("SHOW COLUMNS FROM maintenance_logs");
     $ml_cols = [];
     if ($ml_cols_res) while ($c = $ml_cols_res->fetch_assoc()) $ml_cols[] = $c['Field'];
 
-    // نبني الـ SELECT بناءً على الأعمدة الموجودة فقط
     $sel_action = in_array('action', $ml_cols)   ? 'ml.action' : "''";
     $sel_date   = in_array('date', $ml_cols)      ? 'ml.date'   : (in_array('created_at', $ml_cols) ? 'ml.created_at' : 'NULL');
     $where_part = in_array('action', $ml_cols)    ? "WHERE ml.action LIKE '%Estimate%'" : '';

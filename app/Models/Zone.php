@@ -5,7 +5,6 @@ class Zone {
     public static function addZone($name){
         $db = Database::getInstance()->getConnection();
         $safe_name = mysqli_real_escape_string($db, $name);
-        // بنستخدم zone_name عشان التقارير تشتغل
         $query = "INSERT INTO zones (zone_name) VALUES ('$safe_name')";
         return mysqli_query($db, $query);
     }

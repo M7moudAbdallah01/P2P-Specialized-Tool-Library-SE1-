@@ -167,11 +167,6 @@ if ($user_col) {
                 <div class="stat-num" style="color:#2dbe6c;"><?= $available_tools ?></div>
                 <div class="stat-lbl">Available</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fa fa-comments"></i></div>
-                <div class="stat-num" style="color:<?= $unread_msgs > 0 ? 'var(--red)' : 'inherit' ?>;"><?= $unread_msgs ?></div>
-                <div class="stat-lbl">Unread Msgs</div>
-            </div>
         </div>
 
         <div class="two-col">

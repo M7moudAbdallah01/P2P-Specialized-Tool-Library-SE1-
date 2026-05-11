@@ -13,9 +13,6 @@ $conn = $db->getConnection();
 $admin_id = intval($_SESSION['user_id']);
 $error    = '';
 
-/* =========================================================
-   SEND MESSAGE
-========================================================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
     $receiver_id = intval($_POST['receiver_id'] ?? 0);
@@ -51,14 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     }
 }
 
-/* =========================================================
-   SELECTED USER
-========================================================= */
+
 $selected_user_id = intval($_GET['user'] ?? 0);
 
-/* =========================================================
-   FETCH USERS
-========================================================= */
 $users = $conn->query("
     SELECT 
         u.user_id,
@@ -78,9 +70,6 @@ $users = $conn->query("
     ORDER BY unread_count DESC, u.name ASC
 ");
 
-/* =========================================================
-   MARK AS READ
-========================================================= */
 if ($selected_user_id > 0) {
     $conn->query("
         UPDATE messages
@@ -91,9 +80,6 @@ if ($selected_user_id > 0) {
     ");
 }
 
-/* =========================================================
-   FETCH CHAT
-========================================================= */
 $messages = null;
 
 if ($selected_user_id > 0) {
@@ -125,9 +111,6 @@ if ($selected_user_id > 0) {
     $messages = $stmt->get_result();
 }
 
-/* =========================================================
-   FETCH SELECTED USER INFO
-========================================================= */
 $selected_user = null;
 
 if ($selected_user_id > 0) {
@@ -190,7 +173,7 @@ if ($selected_user_id > 0) {
             <i class="fa fa-comments"></i> Chat
         </a>
         <a href="reports.php" class="nav-link">
-            <i class="fa fa-scale-balanced"></i> Disputes & Reports
+            <i class="fa fa-scale-balanced"></i> Reports
         </a>
     </div>
 </div>

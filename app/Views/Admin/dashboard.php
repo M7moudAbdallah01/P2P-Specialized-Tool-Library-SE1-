@@ -89,7 +89,7 @@ $disputes = $r->fetch_assoc()['c'];
         </a>
 
         <a class="nav-link" href="reports.php">
-            <i class="fa fa-scale-balanced"></i> Disputes & Reports
+            <i class="fa fa-scale-balanced"></i> Reports
         </a>
     </div>
 

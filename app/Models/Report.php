@@ -9,11 +9,9 @@ class Report {
     }
 
     public function getTotalRevenue() {
-        // تأكد أن جدول orders موجود وأن أسماء الأعمدة صحيحة
         $sql = "SELECT SUM(total_price) as total FROM orders WHERE status = 'completed'";
         $result = $this->conn->query($sql);
 
-        // لو الكويري فيها غلط في الداتا بيز هتعمل die وتوريك الغلط فين
         if ($result === false) {
             die("SQL Error in getTotalRevenue: " . $this->conn->error);
         }
@@ -23,7 +21,6 @@ class Report {
     }
 
     public function getRevenueByZone() {
-        // تأكد أن العلاقات بين الجداول (zones, users, orders) مطابقة للداتا بيز عندك
         $sql = "SELECT z.zone_name, SUM(o.total_price) as revenue 
                 FROM zones z 
                 JOIN users u ON z.zone_id = u.zone_id 
@@ -34,7 +31,6 @@ class Report {
         $result = $this->conn->query($sql);
 
         if ($result === false) {
-            // لو الجدول مش موجود أو فيه غلط، هيرجع مصفوفة فاضية بدل ما يوقع الصفحة
             return []; 
         }
 

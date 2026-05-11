@@ -371,15 +371,15 @@ if ($start_date && $end_date) {
                                     <option value="">-- Choose a tool --</option>
                                     <?php
                                     // الأدوات الـ hardcoded + الأداة من DB لو موجودة
-                                    $hardcoded = [
-                                        ["val"=>"drill",       "label"=>"Power Drill",     "h"=>15,  "d"=>80,  "w"=>400],
-                                        ["val"=>"saw",         "label"=>"Circular Saw",    "h"=>20,  "d"=>110, "w"=>550],
-                                        ["val"=>"compressor",  "label"=>"Air Compressor",  "h"=>25,  "d"=>130, "w"=>650],
-                                        ["val"=>"welder",      "label"=>"Arc Welder",      "h"=>35,  "d"=>180, "w"=>900],
-                                        ["val"=>"excavator",   "label"=>"Mini Excavator",  "h"=>120, "d"=>600, "w"=>2800],
-                                        ["val"=>"generator",   "label"=>"Generator 5kW",   "h"=>30,  "d"=>160, "w"=>750],
-                                        ["val"=>"scaffolding", "label"=>"Scaffolding Set", "h"=>18,  "d"=>95,  "w"=>460],
-                                    ];
+                                    // $hardcoded = [
+                                    //     ["val"=>"drill",       "label"=>"Power Drill",     "h"=>15,  "d"=>80,  "w"=>400],
+                                    //     ["val"=>"saw",         "label"=>"Circular Saw",    "h"=>20,  "d"=>110, "w"=>550],
+                                    //     ["val"=>"compressor",  "label"=>"Air Compressor",  "h"=>25,  "d"=>130, "w"=>650],
+                                    //     ["val"=>"welder",      "label"=>"Arc Welder",      "h"=>35,  "d"=>180, "w"=>900],
+                                    //     ["val"=>"excavator",   "label"=>"Mini Excavator",  "h"=>120, "d"=>600, "w"=>2800],
+                                    //     ["val"=>"generator",   "label"=>"Generator 5kW",   "h"=>30,  "d"=>160, "w"=>750],
+                                    //     ["val"=>"scaffolding", "label"=>"Scaffolding Set", "h"=>18,  "d"=>95,  "w"=>460],
+                                    // ];
 
                                     // لو في أداة من DB، حطها أول
                                     if ($tool) {
