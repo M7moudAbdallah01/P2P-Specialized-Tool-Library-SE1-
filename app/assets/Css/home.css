@@ -322,9 +322,11 @@
     color: var(--text-muted, #7a7a7a);
     font-size: 0.9rem;
     pointer-events: none;
+    z-index: 1;
 }
 
-.input-group input {
+.input-group input,
+.input-group select {
     width: 100%;
     padding: 11px 14px 11px 38px;
     border: 1px solid var(--border2, #303030);
@@ -335,9 +337,24 @@
     outline: none;
     transition: border-color .15s, background .15s;
     background: var(--surface2, #1e1e1e);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
 }
+
 .input-group input::placeholder { color: var(--text-dim, #444); }
-.input-group input:focus {
+
+.input-group select option {
+    background: var(--surface2, #1e1e1e);
+    color: var(--text, #eaeaea);
+}
+
+.input-group select option:disabled {
+    color: var(--text-dim, #444);
+}
+
+.input-group input:focus,
+.input-group select:focus {
     border-color: var(--red, #e63946);
     background: var(--surface, #161616);
 }
@@ -597,7 +614,7 @@ body {
 
 .container {
   width: 100%;
-  max-width: 1200px; /* بدل 960 */
+  max-width: 1200px;
   margin: 30px auto;
   padding: 0 20px;
 }

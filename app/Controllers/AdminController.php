@@ -1,4 +1,6 @@
 <?php
+session_start();
+require_once __DIR__ . '/../../Core/Controller.php';
 class AdminController extends Controller {
     public function lockout() {
         $toolModel = $this->model('Tool');

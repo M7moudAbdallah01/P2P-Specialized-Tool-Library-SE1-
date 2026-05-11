@@ -4,7 +4,9 @@ require_once __DIR__ . "/../../../Core/database.php";
  
 $db   = Database::getInstance();
 $conn = $db->getConnection();
-
+$uid  = intval($_SESSION['user_id']);
+$r = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id = $uid AND is_read = 0");
+$unread_msgs = $r->fetch_assoc()['cnt'];
 $conn->query("
     CREATE TABLE IF NOT EXISTS tool_compatibility_checks (
         id              INT AUTO_INCREMENT PRIMARY KEY,
@@ -74,8 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <a href="dashboard.php" class="nav-link">
             <i class="fa fa-gauge"></i> Dashboard
         </a>
-        <a href="my-tools.php" class="nav-link">
-            <i class="fa fa-wrench"></i> My Tools
+
+        <a href="../Tools/tools.php" class="nav-link">
+            <i class="fa fa-wrench"></i> Tools
         </a>
         <a href="ToolSpecification.php" class="nav-link">
             <i class="fa fa-plus"></i> Add Tool
@@ -87,18 +90,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <line x1="12" y1="17" x2="12" y2="21"/>
             </svg> Categories
         </a>
-        <a href="reservations.php" class="nav-link">
-            <i class="fa fa-calendar"></i> Reservations
+        <a href="my-reservations.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reservations
+        </a>
+
+
+        <a href="my-reports.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reports
         </a>
         <a href="chat.php" class="nav-link">
-            <i class="fa fa-comments"></i> Messages
-        </a>
-        <a href="reports.php" class="nav-link">
-            <i class="fa fa-scale-balanced"></i> Reports
+            <i class="fa fa-comments"></i> Chat
+            <?php if ($unread_msgs > 0): ?>
+                <span class="nav-count"><?= $unread_msgs ?></span>
+            <?php endif; ?>
         </a>
         <a href="ToolCompatibility.php" class="nav-link active">
             <i class="fa fa-circle-check"></i> Compatibility Checker
         </a>
+
+        <a href="DamageDeclaration.php" class="nav-link">
+            <i class="fa fa-triangle-exclamation"></i> Damage Report
+         </a>
     </div>
 </div>
 
@@ -110,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="topbar-title">Tool Compatibility Checker</div>
         <div class="topbar-right">
             <button class="avatar-btn" style="background:#6366f1;color:#fff;border:none;cursor:default;">
-                <span>Client</span>
+                <?= htmlspecialchars($_SESSION['name']) ?> <span>Client</span>
             </button>
             <a href="../Auth/login.php" class="icon-btn">
                 <i class="fa fa-right-from-bracket"></i>

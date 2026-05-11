@@ -1,3 +1,4 @@
+
 <?php
 
 $tools = $data['tools'] ?? []; 
@@ -6,7 +7,7 @@ $status = $_GET['status'] ?? null;
 ?>
 
 
-<link rel="stylesheet" href="../../assets/css/lockout.css">
+<link rel="stylesheet" href="../../assets/Css/lockout.css">
 
 <div class="container">
     <div class="lock-card">

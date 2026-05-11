@@ -1,7 +1,6 @@
 <?php
 require_once "../../Models/Zone.php";
 $id = $_GET['id'] ?? null;
-// جلب بيانات المنطقة الحالية (تأكد من وجود ميثود getById في الموديل لو محتاجها، أو استخدم getAll وفلتر)
 $zones = Zone::getAll();
 $currentZone = null;
 foreach($zones as $z) {

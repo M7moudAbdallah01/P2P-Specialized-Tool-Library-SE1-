@@ -1,6 +1,6 @@
 <?php
 
-require_once "../../Core/Database.php";
+require_once "../../../Core/database.php";
 
 class MaintenanceLog
 {

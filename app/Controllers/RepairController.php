@@ -1,11 +1,12 @@
 <?php
+session_start();
+require_once __DIR__ . '/../../Core/Controller.php';
 class RepairController extends Controller {
     
     public function index() {
         $toolModel = $this->model('Tool');
         $data['tools'] = $toolModel->getAllTools(); 
         
-        // عرض الـ View اللي سميناها repair_estimator.php
         $this->view('tech/repair_estimator', $data);
     }
 

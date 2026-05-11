@@ -14,14 +14,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
- 
 $db = Database::getInstance();
 $conn = $db->getConnection();
 
-
-$db = Database::getInstance();
-$conn = $db->getConnection();
- 
 $r = $conn->query("SELECT COUNT(*) AS c FROM users WHERE role = 'client' or role = 'technical'");
 $total_users = $r->fetch_assoc()['c'];
  
@@ -94,7 +89,7 @@ $disputes = $r->fetch_assoc()['c'];
         </a>
 
         <a class="nav-link" href="reports.php">
-            <i class="fa fa-scale-balanced"></i> Disputes & Reports
+            <i class="fa fa-scale-balanced"></i> Reports
         </a>
     </div>
 
@@ -120,13 +115,6 @@ $disputes = $r->fetch_assoc()['c'];
         </div>
 
         <div class="topbar-right">
-
-            <div class="notif-wrap">
-                <button class="icon-btn">
-                    <i class="fa fa-bell"></i>
-                </button>
-                <div class="notif-dot">3</div>
-            </div>
 
             <button class="avatar-btn admin-avatar">
                 <?= htmlspecialchars($_SESSION['name']) ?>

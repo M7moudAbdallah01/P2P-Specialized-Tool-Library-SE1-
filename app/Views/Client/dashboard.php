@@ -1,7 +1,4 @@
 <?php
-/* =========================================================
-   1) SESSION + AUTH CHECK
-========================================================= */
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
 
@@ -10,16 +7,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'client') {
     exit();
 }
 
-/* =========================================================
-   2) DATABASE CONNECTION
-========================================================= */
 $db   = Database::getInstance();
 $conn = $db->getConnection();
 $uid  = intval($_SESSION['user_id']);
 
-/* =========================================================
-   3) STATS
-========================================================= */
 
 $r = $conn->query("SELECT COUNT(*) AS cnt FROM tools WHERE owner_id = $uid");
 $total_tools = $r->fetch_assoc()['cnt'];
@@ -47,14 +38,10 @@ $r = $conn->query("
 ");
 $open_reports = $r->fetch_assoc()['cnt'];
 
-// $r = $conn->query("SELECT COALESCE(SUM(total_price),0) AS total FROM reservations r
-//                    JOIN tools t ON r.tool_id = t.tool_id
-//                    WHERE t.owner_id = $uid AND r.status = 'completed'");
-// $total_earned = $r->fetch_assoc()['total'];
+$r = $conn->query("SELECT trust_score FROM users WHERE user_id = $uid");
+$trust = $r ? $r->fetch_assoc()['trust_score'] : 0;
+$trust_score = $trust ?? 0;
 
-/* =========================================================
-   4) MY TOOLS (latest 6)
-========================================================= */
 $my_tools = $conn->query("
     SELECT t.*, c.name AS category_name
     FROM tools t
@@ -64,43 +51,6 @@ $my_tools = $conn->query("
     LIMIT 6
 ");
 
-/* =========================================================
-   5) RECENT RESERVATIONS (latest 5)
-========================================================= */
-// $recent_res = $conn->query("
-//     SELECT r.*, t.name AS tool_name, u.name AS renter_name
-//     FROM reservations r
-//     JOIN tools t ON r.tool_id = t.tool_id
-//     JOIN users u ON r.user_id = u.user_id
-//     WHERE t.owner_id = $uid
-//     ORDER BY r.created_at DESC
-//     LIMIT 5
-// ");
-
-// /* =========================================================
-//    6) RECENT MESSAGES (latest 5)
-// ========================================================= */
-// $recent_msgs = $conn->query("
-//     SELECT m.*, u.name AS sender_name
-//     FROM messages m
-//     JOIN users u ON m.sender_id = u.user_id
-//     WHERE m.receiver_id = $uid
-//     ORDER BY m.created_at DESC
-//     LIMIT 5
-// ");
-
-// /* =========================================================
-//    7) RECENT REPORTS (latest 5)
-// ========================================================= */
-// $recent_reports = $conn->query("
-//     SELECT rp.*, t.name AS tool_name, u.name AS reporter_name
-//     FROM reports rp
-//     LEFT JOIN tools t  ON rp.tool_id     = t.tool_id
-//     LEFT JOIN users u  ON rp.reporter_id = u.user_id
-//     WHERE rp.reported_user_id = $uid OR rp.reporter_id = $uid
-//     ORDER BY rp.created_at DESC
-//     LIMIT 5
-// ");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -138,13 +88,6 @@ $my_tools = $conn->query("
             <i class="fa fa-wrench"></i> Tools
         </a>
 
-        <a href="my-tools.php" class="nav-link">
-            <i class="fa fa-wrench"></i> My Tools
-            <?php if ($total_tools > 0): ?>
-                <span class="nav-count"><?= $total_tools ?></span>
-            <?php endif; ?>
-        </a>
-
         <a href="ToolSpecification.php" class="nav-link">
             <i class="fa fa-plus"></i> Add Tool
         </a>
@@ -157,29 +100,28 @@ $my_tools = $conn->query("
             </svg> Categories
         </a>
 
-        <a href="reservations.php" class="nav-link">
-            <i class="fa fa-calendar"></i> Reservations
-            <?php if ($pending_res > 0): ?>
-                <span class="nav-count"><?= $pending_res ?></span>
-            <?php endif; ?>
+        <a href="my-reservations.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reservations
+        </a>
+
+        <a href="my-reports.php" class="nav-link">
+            <i class="fa fa-calendar-check"></i> My Reports
         </a>
 
         <a href="chat.php" class="nav-link">
-            <i class="fa fa-comments"></i> Messages
+            <i class="fa fa-comments"></i> Chat
             <?php if ($unread_msgs > 0): ?>
                 <span class="nav-count"><?= $unread_msgs ?></span>
             <?php endif; ?>
         </a>
 
-        <a href="reports.php" class="nav-link">
-            <i class="fa fa-scale-balanced"></i> Reports
-            <?php if ($open_reports > 0): ?>
-                <span class="nav-count"><?= $open_reports ?></span>
-            <?php endif; ?>
-        </a>
         <a href="ToolCompatibility.php" class="nav-link">
             <i class="fa fa-circle-check"></i> Compatibility Checker
         </a>
+
+        <a href="DamageDeclaration.php" class="nav-link">
+            <i class="fa fa-triangle-exclamation"></i> Damage Report
+         </a>
 
     </div>
 </div>
@@ -219,6 +161,14 @@ $my_tools = $conn->query("
             </div>
 
             <div class="stat-card">
+                <div class="stat-icon si-blue"><i class="fa fa-star"></i></div>
+                <div>
+                    <div class="stat-value"><?= $trust_score ?></div>
+                    <div class="stat-label">Trust Score</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
                 <div class="stat-icon si-blue"><i class="fa fa-circle-check"></i></div>
                 <div>
                     <div class="stat-value"><?= $active_res ?></div>
@@ -249,14 +199,6 @@ $my_tools = $conn->query("
                     <div class="stat-label">Open Reports</div>
                 </div>
             </div>
-<!-- 
-            <div class="stat-card">
-                <div class="stat-icon si-orange"><i class="fa fa-dollar-sign"></i></div>
-                <div>
-                    <div class="stat-value">$<?= number_format($total_earned, 0) ?></div>
-                    <div class="stat-label">Total Earned</div>
-                </div>
-            </div> -->
 
         </div>
 
@@ -269,13 +211,13 @@ $my_tools = $conn->query("
                     <i class="fa fa-wrench" style="color:#ef4444;"></i>
                     My Tools
                 </div>
-                <a href="tools.php">View All &rarr;</a>
+                <a href="../Tools/tools.php">View All &rarr;</a>
             </div>
 
             <?php if ($my_tools->num_rows === 0): ?>
                 <div class="tools-empty">
                     You have no tools yet.
-                    <a href="add_tool_page.php" style="color:#ef4444;">Add your first tool</a>.
+                    <a href="ToolSpecification.php" style="color:#ef4444;">Add your first tool</a>.
                 </div>
             <?php else: ?>
                 <div class="tools-cards">
