@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2026 at 04:35 PM
+-- Generation Time: May 11, 2026 at 11:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -34,6 +34,13 @@ CREATE TABLE `battery_logs` (
   `health_status` varchar(50) DEFAULT NULL,
   `last_checked` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `battery_logs`
+--
+
+INSERT INTO `battery_logs` (`id`, `tool_id`, `charge_cycles`, `health_status`, `last_checked`) VALUES
+(1, 10, 3, 'Good', '2026-05-11');
 
 -- --------------------------------------------------------
 
@@ -76,7 +83,8 @@ INSERT INTO `category` (`category_id`, `name`) VALUES
 (7, 'Metalworking Tools'),
 (9, 'Outdoor Power Equipment'),
 (8, 'Pneumatic Tools'),
-(1, 'Power Tools');
+(1, 'Power Tools'),
+(11, 'test');
 
 -- --------------------------------------------------------
 
@@ -92,6 +100,13 @@ CREATE TABLE `certifications` (
   `expiry_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `certifications`
+--
+
+INSERT INTO `certifications` (`id`, `tool_id`, `type`, `issue_date`, `expiry_date`) VALUES
+(1, 10, 'mmm', '2026-05-07', '2026-05-28');
+
 -- --------------------------------------------------------
 
 --
@@ -103,6 +118,46 @@ CREATE TABLE `consumable` (
   `name` varchar(150) NOT NULL,
   `quantity` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `consumable`
+--
+
+INSERT INTO `consumable` (`consumable_id`, `name`, `quantity`) VALUES
+(1, 'Safety Gloves', 50),
+(2, 'Cutting Discs', 60),
+(3, 'Welding Rods', 15),
+(4, 'Lubricant Oil', 30),
+(5, 'Drill Bits Set', 50),
+(6, 'Screws Pack', 100),
+(7, 'Nails Box', 200),
+(8, 'Protective Glasses', 25),
+(9, 'Extension Cable', 12),
+(10, 'Measuring Tape', 18);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coupons`
+--
+
+CREATE TABLE `coupons` (
+  `coupon_id` int(11) NOT NULL,
+  `code` varchar(50) NOT NULL,
+  `discount_percent` tinyint(4) NOT NULL CHECK (`discount_percent` between 1 and 100),
+  `category_id` int(11) DEFAULT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coupons`
+--
+
+INSERT INTO `coupons` (`coupon_id`, `code`, `discount_percent`, `category_id`, `start_date`, `end_date`) VALUES
+(1, 'SUMMER2026', 20, NULL, '2026-06-01', '2026-08-31'),
+(2, 'POWER10', 10, 1, '2026-05-01', '2026-05-31'),
+(3, '78DENG', 12, 2, '2026-05-06', '2026-05-13');
 
 -- --------------------------------------------------------
 
@@ -132,13 +187,6 @@ CREATE TABLE `damage_declarations` (
   `admin_note` text DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `damage_declarations`
---
-
-INSERT INTO `damage_declarations` (`id`, `reporter_id`, `reservation_id`, `tool_name`, `damage_date`, `location`, `damage_type`, `severity`, `description`, `witness`, `document_path`, `photos`, `reference_no`, `status`, `submitted_at`, `technician_id`, `tech_note`, `diagnosis_type`, `admin_note`, `updated_at`) VALUES
-(8, 4, '1', '3D printer', '2026-06-05', 'cc', 'electrical', 'low', 'zzzz', 'zz', '', '[\"uploads\\/damage_photos\\/1778499936_0_Screenshot 2025-04-07 214507.png\"]', 'DMG-2026-2170', '', '2026-05-11 14:45:36', 3, 'vbvbvb', 'missing_parts', 'kmkmkmmk', '2026-05-11 16:02:15');
 
 -- --------------------------------------------------------
 
@@ -176,6 +224,13 @@ CREATE TABLE `dispute` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `dispute`
+--
+
+INSERT INTO `dispute` (`dispute_id`, `rental_id`, `handled_by`, `status`, `resolution`, `reporter_id`, `reported_user_id`, `tool_id`, `reason`, `evidence_path`, `decision`, `admin_note`, `resolved_at`, `created_at`) VALUES
+(7, 3, 10, 'open', NULL, 6, NULL, 5, 'Damage Report (DMG-2026-3540): damage | Type: physical | Severity: medium', 'uploads/damage_photos/1778534142_0_qrcode_255428231_6c83fbf8b2dbaa48e0270404bca662ac.png', NULL, NULL, NULL, '2026-05-12 00:15:42');
+
 -- --------------------------------------------------------
 
 --
@@ -202,6 +257,13 @@ CREATE TABLE `maintenance_logs` (
   `notes` text DEFAULT NULL,
   `date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `maintenance_logs`
+--
+
+INSERT INTO `maintenance_logs` (`id`, `tool_id`, `action`, `notes`, `date`) VALUES
+(1, 10, 'no', 'no', '2026-05-10');
 
 -- --------------------------------------------------------
 
@@ -280,6 +342,14 @@ CREATE TABLE `rentals` (
   `late_fee` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `rentals`
+--
+
+INSERT INTO `rentals` (`rental_id`, `reservation_id`, `tool_id`, `renter_id`, `duration`, `final_price`, `discount_applied`, `actual_return_date`, `late_fee`) VALUES
+(2, 2, 5, 8, 5, 210.00, 90.00, NULL, 0.00),
+(3, 3, 5, 6, 4, 204.00, 36.00, NULL, 0.00);
+
 -- --------------------------------------------------------
 
 --
@@ -323,6 +393,14 @@ CREATE TABLE `reservations` (
   `status` enum('pending','confirmed','cancelled','completed') NOT NULL DEFAULT 'pending'
 ) ;
 
+--
+-- Dumping data for table `reservations`
+--
+
+INSERT INTO `reservations` (`reservation_id`, `user_id`, `tool_id`, `start_date`, `end_date`, `status`) VALUES
+(2, 8, 5, '2026-06-10', '2026-06-15', 'completed'),
+(3, 6, 5, '2026-05-26', '2026-05-30', 'confirmed');
+
 -- --------------------------------------------------------
 
 --
@@ -358,7 +436,7 @@ INSERT INTO `tools` (`tool_id`, `owner_id`, `category_id`, `name`, `description`
 (8, 8, 3, 'Hydraulic Jack', 'Lifts vehicles safely for tire changes or underbody repairs.', 45.00, 'Good', 1, '2026-06-06', '2026-05-11 14:28:30', 'uploads/manuals/1778509710_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509710_image_shopping3.webp'),
 (9, 8, 6, 'Excavator', 'Blends cement, sand, gravel, and water into concrete.', 56.00, 'Good', 1, '2026-05-28', '2026-05-11 14:29:44', 'uploads/manuals/1778509784_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509784_image_shopping4.webp'),
 (10, 8, 2, 'Circuit Breaker Tester', 'Checks if breakers function properly under load conditions.', 25.00, 'Good', 1, '2026-05-21', '2026-05-11 14:31:02', 'uploads/manuals/1778509862_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509862_image_shopping5.webp'),
-(11, 8, 4, 'Pliers', 'Grips, bends, or cuts wires and small objects', 8.00, 'Good', 1, '2026-05-30', '2026-05-11 14:31:58', 'uploads/manuals/1778509918_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509918_image_shopping6.webp'),
+(11, 8, 4, 'Pliers', 'Grips, bends, or cuts wires and small objects', 8.00, 'Good', 0, '2026-05-30', '2026-05-11 14:31:58', 'uploads/manuals/1778509918_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509918_image_shopping6.webp'),
 (12, 8, 5, 'Hoist', 'Lifts heavy loads vertically using chains or cables.', 75.00, 'Good', 1, '2026-06-24', '2026-05-11 14:33:04', 'uploads/manuals/1778509984_manual_Architecture.pdf', 'https://youtube.com/playlist?list=PLqyUgadpThTL0utmkfUB9s7VuBbvkz1km&si=UJXcYamwQD0amLhL', 'uploads/tools/1778509984_image_shopping7.webp');
 
 -- --------------------------------------------------------
@@ -440,9 +518,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `role`, `membership_tier`, `trust_score`, `status`, `zone_id`) VALUES
-(6, 'Mahmoud', 'client@gmail.com', '$2y$10$ogP8AAQNohTrKSN4wHBUQOYyQQGuRkKnftXqCDitkm1M5aTwU.6Gm', 'client', 'basic', 50.00, 'active', 1),
+(6, 'Mahmoud', 'client@gmail.com', '$2y$10$ogP8AAQNohTrKSN4wHBUQOYyQQGuRkKnftXqCDitkm1M5aTwU.6Gm', 'client', 'premium', 50.00, 'active', 1),
 (7, 'Ali', 'client2@gmail.com', '$2y$10$d3kdG./pfVvibEleRxDbO.K3inNTk4m0E5LLbhAxFaE42KU3ektP2', 'client', 'basic', 50.00, 'active', 4),
-(8, 'Hassan', 'client3@gmail.com', '$2y$10$qF2HO8UnC39UgfO0GvfZweajWe3EeX0U6Ot5DNztxaHSa3BhhdTXe', 'client', 'basic', 50.00, 'active', 19),
+(8, 'Hassan', 'client3@gmail.com', '$2y$10$qF2HO8UnC39UgfO0GvfZweajWe3EeX0U6Ot5DNztxaHSa3BhhdTXe', 'client', 'vip', 50.00, 'active', 19),
 (9, 'youssif', 'tech@gmail.com', '$2y$10$/2oprL5YsnBWexujdfnd2OhXcF4LEXV4Ywa0yFY9J/FWPKjeqN3Mm', 'technical', 'basic', 50.00, 'active', 5),
 (10, 'yassen', 'admin@gmail.com', '$2y$10$Zk9BcJiI1WhJuilFzznO1eqerrCYBaIs6jn4J4X1E7QAH1B7Hy1je', 'admin', 'basic', 50.00, 'active', 3),
 (11, 'ali amr', 'tech2@gmail.com', '$2y$10$3MMtALka2Xx9cyNvJOrVbOKeGOfED2kGTGpLpQcd5VeXyvNXNeMZC', 'technical', 'basic', 50.00, 'active', 13);
@@ -528,6 +606,14 @@ ALTER TABLE `certifications`
 --
 ALTER TABLE `consumable`
   ADD PRIMARY KEY (`consumable_id`);
+
+--
+-- Indexes for table `coupons`
+--
+ALTER TABLE `coupons`
+  ADD PRIMARY KEY (`coupon_id`),
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Indexes for table `damage_declarations`
@@ -672,7 +758,7 @@ ALTER TABLE `zones`
 -- AUTO_INCREMENT for table `battery_logs`
 --
 ALTER TABLE `battery_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `campaign`
@@ -684,25 +770,31 @@ ALTER TABLE `campaign`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `certifications`
 --
 ALTER TABLE `certifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `consumable`
 --
 ALTER TABLE `consumable`
-  MODIFY `consumable_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `consumable_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `coupons`
+--
+ALTER TABLE `coupons`
+  MODIFY `coupon_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `damage_declarations`
 --
 ALTER TABLE `damage_declarations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `deposit`
@@ -714,7 +806,7 @@ ALTER TABLE `deposit`
 -- AUTO_INCREMENT for table `dispute`
 --
 ALTER TABLE `dispute`
-  MODIFY `dispute_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `dispute_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `insurance_claim`
@@ -726,7 +818,7 @@ ALTER TABLE `insurance_claim`
 -- AUTO_INCREMENT for table `maintenance_logs`
 --
 ALTER TABLE `maintenance_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -750,7 +842,7 @@ ALTER TABLE `payment`
 -- AUTO_INCREMENT for table `rentals`
 --
 ALTER TABLE `rentals`
-  MODIFY `rental_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `rental_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `repair_requests`
@@ -809,6 +901,12 @@ ALTER TABLE `battery_logs`
 --
 ALTER TABLE `certifications`
   ADD CONSTRAINT `certifications_ibfk_1` FOREIGN KEY (`tool_id`) REFERENCES `tools` (`tool_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `coupons`
+--
+ALTER TABLE `coupons`
+  ADD CONSTRAINT `coupons_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `deposit`
