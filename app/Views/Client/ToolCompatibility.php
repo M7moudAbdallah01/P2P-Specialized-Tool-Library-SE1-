@@ -2,7 +2,7 @@
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
  
-$db   = Database::getInstance();
+$db   = Database::getInstance(); 
 $conn = $db->getConnection();
 $uid  = intval($_SESSION['user_id']);
 $r = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id = $uid AND is_read = 0");

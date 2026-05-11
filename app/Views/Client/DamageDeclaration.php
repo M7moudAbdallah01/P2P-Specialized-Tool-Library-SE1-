@@ -128,7 +128,6 @@ if ($conn->query($sql) === TRUE) {
     $tool_id_val   = 0;
     $rental_id_val = 0;
 
-
     $rq = $conn->prepare("
         SELECT 
             r.reservation_id,
