@@ -23,11 +23,7 @@ $unread_msgs = $r->fetch_assoc()['c'];
 
 $r = $conn->query("SELECT COUNT(*) AS c FROM repair_requests WHERE status = 'pending'");
 $pending_damage = $r->fetch_assoc()['c'];
-/*
-|--------------------------------------------------------------------------
-| SEND MESSAGE TO ADMIN
-|--------------------------------------------------------------------------
-*/
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
     $receiver_id = (int) ($_POST['receiver_id'] ?? 0);
@@ -63,11 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| GET ADMIN USERS ONLY
-|--------------------------------------------------------------------------
-*/
 $admins = $conn->query("
     SELECT user_id, name, email
     FROM users
@@ -75,11 +66,6 @@ $admins = $conn->query("
     ORDER BY name ASC
 ");
 
-/*
-|--------------------------------------------------------------------------
-| SELECT CURRENT CHAT ADMIN
-|--------------------------------------------------------------------------
-*/
 $selected_user = isset($_GET['user']) ? (int) $_GET['user'] : 0;
 
 if ($selected_user === 0) {
@@ -94,11 +80,6 @@ if ($selected_user === 0) {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| MARK RECEIVED MESSAGES AS READ
-|--------------------------------------------------------------------------
-*/
 if ($selected_user > 0) {
     $mark = $conn->prepare("
         UPDATE messages
@@ -111,11 +92,6 @@ if ($selected_user > 0) {
     $mark->close();
 }
 
-/*
-|--------------------------------------------------------------------------
-| FETCH CHAT MESSAGES
-|--------------------------------------------------------------------------
-*/
 $messages = [];
 
 if ($selected_user > 0) {

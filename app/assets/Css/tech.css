@@ -261,3 +261,214 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .pt-line.done{background:#2dbe6c;}
 
 @media(max-width:900px){.rc-body{grid-template-columns:1fr;}}
+
+/* ── Diagnosis badge ── */
+.diag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(99,102,241,.15);
+    color: #6366f1;
+    border: 1px solid rgba(99,102,241,.3);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: .75rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* ── Tech note sent indicator ── */
+.note-sent-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(45,190,108,.12);
+    color: #2dbe6c;
+    border: 1px solid rgba(45,190,108,.25);
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: .7rem;
+    margin-left: 8px;
+}
+
+/* ── Action footer upgrade ── */
+.rc-foot form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.rc-foot form .form-group label {
+    font-size: .72rem;
+    color: #888;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.rc-foot select,
+.rc-foot textarea {
+    background: #1a1a1a;
+    border: 1px solid #2e2e2e;
+    color: #e0e0e0;
+    border-radius: 7px;
+    padding: 7px 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: .82rem;
+    transition: border-color .2s;
+}
+.rc-foot select:focus,
+.rc-foot textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+.rc-foot textarea {
+    resize: vertical;
+    min-height: 70px;
+    width: 100%;
+}
+
+/* ── Empty state ── */
+.empty-state-big {
+    text-align: center;
+    padding: 60px 20px;
+    color: #555;
+}
+.empty-state-big i {
+    font-size: 3.5rem;
+    margin-bottom: 18px;
+    display: block;
+    color: #333;
+}
+.empty-state-big h3 {
+    font-size: 1.1rem;
+    color: #888;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* ── Row layout inside rc-foot ── */
+.foot-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.foot-row .fg-status  { min-width: 160px; }
+.foot-row .fg-diag    { min-width: 200px; }
+.foot-row .fg-note    { flex: 1; min-width: 200px; }
+.foot-row .fg-submit  { flex-shrink: 0; }
+
+/* ── Diagnosis in card body ── */
+.diag-row {
+    margin-top: 12px;
+}
+
+/* ── Photos fix ── */
+.photo-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 7px;
+    cursor: pointer;
+    border: 1px solid #2a2a2a;
+    transition: transform .2s;
+}
+.photo-thumb:hover { transform: scale(1.05); }
+
+.diag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(99,102,241,.15);
+    color: #6366f1;
+    border: 1px solid rgba(99,102,241,.3);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: .75rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+.note-sent-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(45,190,108,.12);
+    color: #2dbe6c;
+    border: 1px solid rgba(45,190,108,.25);
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: .7rem;
+    margin-left: 8px;
+}
+.rc-foot form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.rc-foot form .form-group label {
+    font-size: .72rem;
+    color: #888;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.rc-foot select,
+.rc-foot textarea {
+    background: #1a1a1a;
+    border: 1px solid #2e2e2e;
+    color: #e0e0e0;
+    border-radius: 7px;
+    padding: 7px 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: .82rem;
+    transition: border-color .2s;
+}
+.rc-foot select:focus,
+.rc-foot textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+.rc-foot textarea {
+    resize: vertical;
+    min-height: 70px;
+    width: 100%;
+}
+.empty-state-big {
+    text-align: center;
+    padding: 60px 20px;
+    color: #555;
+}
+.empty-state-big i {
+    font-size: 3.5rem;
+    margin-bottom: 18px;
+    display: block;
+    color: #333;
+}
+.empty-state-big h3 {
+    font-size: 1.1rem;
+    color: #888;
+    font-weight: 400;
+    margin: 0;
+}
+.foot-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.foot-row .fg-status  { min-width: 160px; }
+.foot-row .fg-diag    { min-width: 200px; }
+.foot-row .fg-note    { flex: 1; min-width: 200px; }
+.foot-row .fg-submit  { flex-shrink: 0; }
+.diag-row { margin-top: 12px; }
+.photo-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 7px;
+    cursor: pointer;
+    border: 1px solid #2a2a2a;
+    transition: transform .2s;
+}
+.photo-thumb:hover { transform: scale(1.05); }

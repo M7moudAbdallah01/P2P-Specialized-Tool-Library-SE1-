@@ -6,6 +6,22 @@ $db   = Database::getInstance();
 $conn = $db->getConnection();
 $uid  = intval($_SESSION['user_id']);
 
+// Fetch user's reservations for dropdown
+$reservations = [];
+$res_query = $conn->prepare("
+    SELECT r.reservation_id, t.name AS tool_name, r.start_date, r.end_date, r.status
+    FROM reservations r
+    JOIN tools t ON t.tool_id = r.tool_id
+    WHERE r.user_id = ?
+    ORDER BY r.start_date DESC
+");
+$res_query->bind_param("i", $uid);
+$res_query->execute();
+$reservations_result = $res_query->get_result();
+while ($row = $reservations_result->fetch_assoc()) {
+    $reservations[] = $row;
+}
+
 $r = $conn->query("SELECT COUNT(*) AS cnt FROM messages WHERE receiver_id = $uid AND is_read = 0");
 $unread_msgs = $r->fetch_assoc()['cnt'];
 
@@ -159,31 +175,39 @@ if ($conn->query($sql) === TRUE) {
             " | Type: " . ($_POST['damage_type'] ?? '') .
             " | Severity: " . ($_POST['severity'] ?? '');
 
-        $stmt = $conn->prepare("
-            INSERT INTO dispute
-            (
-                rental_id,
-                reporter_id,
-                tool_id,
-                reason,
-                evidence_path,
-                status,
-                created_at
-            )
-            VALUES
-            (?, ?, ?, ?, ?, 'open', NOW())
-        ");
+        // Get default admin for handled_by (required NOT NULL FK)
+        $admin_row  = $conn->query("SELECT user_id FROM users WHERE role = 'admin' LIMIT 1")->fetch_assoc();
+        $handled_by = $admin_row ? intval($admin_row['user_id']) : null;
 
-        $stmt->bind_param(
-            "iiiss",
-            $rental_id_val,
-            $uid,
-            $tool_id_val,
-            $reason_esc,
-            $first_photo
-        );
+        if ($handled_by) {
+            $stmt = $conn->prepare("
+                INSERT INTO dispute
+                (
+                    rental_id,
+                    reporter_id,
+                    tool_id,
+                    reason,
+                    evidence_path,
+                    handled_by,
+                    status,
+                    created_at
+                )
+                VALUES
+                (?, ?, ?, ?, ?, ?, 'open', NOW())
+            ");
 
-        $stmt->execute();
+            $stmt->bind_param(
+                "iiissi",
+                $rental_id_val,
+                $uid,
+                $tool_id_val,
+                $reason_esc,
+                $first_photo,
+                $handled_by
+            );
+
+            $stmt->execute();
+        }
     }
 
     header("Location: my-reports.php?success=1&ref=" . urlencode($reference_no));
@@ -310,18 +334,35 @@ if ($conn->query($sql) === TRUE) {
                         </div>
                     </div>
                     <div class="input-group">
-                        <label>Reservation ID</label>
-                        <div class="input-box">
+                        <label>Reservation</label>
+                        <div class="select-box">
                             <i class="fa fa-hashtag input-icon"></i>
-                            <input type="text" name="reservation_id" placeholder="e.g. RES-2024-0045" required>
+                            <select name="reservation_id" id="reservation-select" required onchange="autoFillTool(this)">
+                                <option value="">-- Select your reservation --</option>
+                                <?php foreach ($reservations as $res): ?>
+                                    <option value="<?= $res['reservation_id'] ?>"
+                                            data-tool="<?= htmlspecialchars($res['tool_name']) ?>">
+                                        #<?= $res['reservation_id'] ?> — <?= htmlspecialchars($res['tool_name']) ?>
+                                        (<?= date('d M Y', strtotime($res['start_date'])) ?> → <?= date('d M Y', strtotime($res['end_date'])) ?>)
+                                        [<?= ucfirst($res['status']) ?>]
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
+                        <?php if (empty($reservations)): ?>
+                            <small style="color:#ff2e2e;margin-top:6px;display:block;">
+                                <i class="fa fa-circle-info"></i> No reservations found for your account.
+                            </small>
+                        <?php endif; ?>
                     </div>
                     <div class="grid-inputs">
                         <div class="input-group">
                             <label>Tool Name</label>
                             <div class="input-box">
                                 <i class="fa fa-wrench input-icon"></i>
-                                <input type="text" name="tool_name" placeholder="e.g. Angle Grinder" required>
+                                <input type="text" name="tool_name" id="tool-name-field"
+                                       placeholder="Auto-filled from reservation" readonly
+                                       style="background:#1a1a2e;cursor:not-allowed;opacity:0.7;">
                             </div>
                         </div>
                         <div class="input-group">
@@ -571,6 +612,12 @@ function formatSelect(val) {
     return map[val] || val;
 }
 function capitalize(str) { return str.charAt(0).toUpperCase()+str.slice(1); }
+
+function autoFillTool(select) {
+    const opt = select.options[select.selectedIndex];
+    const toolField = document.getElementById('tool-name-field');
+    toolField.value = opt.dataset.tool || '';
+}
 
 function submitReport() {
     if (!document.getElementById('agree-checkbox').checked) {

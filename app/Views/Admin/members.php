@@ -1,7 +1,4 @@
 <?php
-/* =========================================================
-   1) SESSION + AUTH
-========================================================= */
 session_start();
 require_once __DIR__ . "/../../../Core/database.php";
 
@@ -10,15 +7,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
  
-/* =========================================================
-   2) DATABASE CONNECTION
-========================================================= */
 $db   = Database::getInstance();
 $conn = $db->getConnection();
 
-/* =========================================================
-   3) DELETE USER
-========================================================= */
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
     if ($id !== $_SESSION['user_id']) {
@@ -28,9 +19,7 @@ if (isset($_GET['delete'])) {
     exit();
 }
 
-/* =========================================================
-   4) CHANGE STATUS (suspend / blacklist / activate)
-========================================================= */
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $uid    = intval($_POST['user_id']);
     $action = $conn->real_escape_string($_POST['action']);
@@ -50,9 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     exit();
 }
 
-/* =========================================================
-   5) CHANGE ROLE
-========================================================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_role'])) {
     $uid  = intval($_POST['user_id']);
     $role = $conn->real_escape_string($_POST['role']);
@@ -61,9 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_role'])) {
     exit();
 }
 
-/* =========================================================
-   6) UPDATE TIER + TRUST
-========================================================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
     $uid   = intval($_POST['user_id']);
     $tier  = $conn->real_escape_string($_POST['membership_tier']);
@@ -73,9 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
     exit();
 }
 
-/* =========================================================
-   7) FILTERS
-========================================================= */
 $search      = trim($_GET['search'] ?? '');
 $role_filter = $_GET['role'] ?? '';
 $tab         = $_GET['tab'] ?? 'members'; // 'members' | 'status'
@@ -92,14 +72,10 @@ if (in_array($role_filter, ['technical', 'client'])) {
     $where .= " AND role = '$rf'";
 }
 
-/* =========================================================
-   8) FETCH USERS
-========================================================= */
+
 $users = $conn->query("SELECT * FROM users $where ORDER BY user_id DESC");
 
-/* =========================================================
-   9) COUNTS
-========================================================= */
+
 $counts = [];
 foreach (['technical', 'client'] as $r) {
     $res          = $conn->query("SELECT COUNT(*) AS c FROM users WHERE role = '$r'");
@@ -165,7 +141,7 @@ $total_members = $counts['technical'] + $counts['client'];
             <i class="fa fa-comments"></i> Chat
         </a>
         <a class="nav-link" href="reports.php">
-            <i class="fa fa-scale-balanced"></i> Disputes &amp; Reports
+            <i class="fa fa-scale-balanced"></i> Reports
         </a>
     </div>
 </div>

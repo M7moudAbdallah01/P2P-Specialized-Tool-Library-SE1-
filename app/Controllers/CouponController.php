@@ -1,7 +1,5 @@
 <?php
-/* =========================================================
-   1) SESSION + AUTH
-========================================================= */
+
 session_start();
 require_once __DIR__ . "/../../Core/database.php";
 
@@ -10,26 +8,21 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
  
-/* =========================================================
-   2) DATABASE CONNECTION
-========================================================= */
+
 $db   = Database::getInstance();
 $conn = $db->getConnection();
 
 if (isset($_POST['add_campaign'])) {
     
-    // 3. التأكد من أن المتغير $conn معرف في ملف database.php
     if (!isset($conn)) {
         die("Error: Connection variable \$conn is not defined in database.php");
     }
 
-    // جلب البيانات من الـ Form (استخدمنا الأسماء اللي في الفورم بتاعك)
     $code = mysqli_real_escape_string($conn, $_POST['code']);
     $discount = (int)$_POST['discount_percentage'];
     $cat_id = (int)$_POST['category_id'];
     $expiry = mysqli_real_escape_string($conn, $_POST['expiry_date']);
 
-    // 4. جملة الـ SQL مطابقة لأسماء الأعمدة في صورتك ****
     $query = "INSERT INTO coupons (code, discount_percentage, category_id, expiry_date, status) 
               VALUES ('$code', '$discount', '$cat_id', '$expiry', 1)";
 
