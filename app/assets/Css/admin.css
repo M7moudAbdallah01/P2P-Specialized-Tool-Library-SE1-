@@ -727,13 +727,11 @@ background: #1b1b1b;
     border-radius: 6px;
     font-family: inherit;
     font-size: 13px;
-    background: #fafafa;
 }
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
     border-color: #c62828;
-    background: #fff;
 }
 
 /* ── Status pills ── */

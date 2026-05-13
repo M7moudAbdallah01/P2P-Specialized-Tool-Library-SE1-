@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_repair'])) {
 
         if (!$saved && !$error) {
             $action = $conn->real_escape_string("External Repair — sent to $shop_name");
-            $conn->query("INSERT INTO maintenance_logs (tool_id, action, issue, date) VALUES ($tool_id, '$action', '$issue', NOW())");
+            $conn->query("INSERT INTO maintenance_logs (tool_id, action, notes, date) VALUES ($tool_id, '$action', '$issue', NOW())");
             $conn->query("UPDATE tools SET availability = 0 WHERE tool_id = $tool_id");
             $success = "Repair logged in maintenance records.";
         }
